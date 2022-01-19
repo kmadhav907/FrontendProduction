@@ -31,7 +31,7 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
         />
         <ActivityIndicator
           animating={this.state.animating}
-          color="#FFFFFF"
+          color="blue"
           size="large"
           style={styles.activityIndicator}
         />
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#307ecc',
+    backgroundColor: 'yellow',
   },
   activityIndicator: {
     alignItems: 'center',
