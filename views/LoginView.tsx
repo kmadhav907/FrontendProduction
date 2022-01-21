@@ -14,6 +14,7 @@ import {
 import OTPField from '../components/otpfield/OTPField';
 import Geolocation from 'react-native-geolocation-service';
 import {requestLocationPermission} from '../global/utils';
+import axios from 'axios';
 
 interface LoginViewState {
   stepsForLogin: number;
@@ -22,13 +23,14 @@ interface LoginViewState {
   errorMessage: string;
   errorFlag: boolean;
   otpToVerify: string;
+  OTP: string;
   latitude: number;
   longitude: number;
 }
 interface LoginViewProps {
   navigation: any;
 }
-const CELL_COUNT = 5;
+const CELL_COUNT = 6;
 class LoginView extends React.Component<LoginViewProps, LoginViewState> {
   constructor(props: any) {
     super(props);
@@ -39,6 +41,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       errorFlag: false,
       errorMessage: 'Please Put a valid Phone Number',
       otpToVerify: '',
+      OTP: '',
       latitude: 0,
       longitude: 0,
     };
@@ -60,7 +63,18 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       console.warn(err);
     }
   }
-  handleLogin = () => {
+  requestOtp = async number => {
+    await axios({
+      method: 'get',
+      url: 'https://askwebapp.herokuapp.com/getInOTP/${number}/sp',
+    }).then(res => {
+      console.log('Otp is ' + res);
+      this.setState({OTP: res});
+      return;
+    });
+  };
+
+  handleLogin = async () => {
     this.setState({loading: true});
     if (this.state.phoneNumber.length < 10) {
       this.setState({
@@ -69,6 +83,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       this.errorMessage('Enter a valid Phone Number');
       return;
     }
+    const OTP = await this.requestOtp(this.state.phoneNumber);
     setTimeout(() => {
       this.setState({
         loading: false,
@@ -77,7 +92,29 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
     }, 2000);
   };
 
-  handleVerifyOTP = () => {
+  getOtp = async OTP => {
+    const response = await axios.post(
+      `https://askwebapp.herokuapp.com/verifOtp`,
+      {
+        number: this.state.phoneNumber,
+        otp: OTP,
+        sp,
+      },
+    );
+    if (response === NaN) {
+      this.setState({
+        errorFlag: true,
+        errorMessage: 'Please Put a valid OTP',
+        loading: false,
+      });
+      this.errorMessage('Error in OTp');
+      return;
+    }
+    console.log(response);
+    return response;
+  };
+
+  handleVerifyOTP = async () => {
     this.setState({loading: true});
     console.log(this.state.otpToVerify);
     if (
@@ -90,6 +127,12 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       this.errorMessage('Enter a valid OTP');
       return;
     }
+
+    const response = await this.getOtp(this.state.otpToVerify);
+    if (response === true) {
+      console.log('Ok');
+    }
+
     setTimeout(() => {
       this.setState({
         loading: false,
