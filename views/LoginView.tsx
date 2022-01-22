@@ -63,16 +63,6 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       console.warn(err);
     }
   }
-  requestOtp = async number => {
-    await axios({
-      method: 'get',
-      url: 'https://askwebapp.herokuapp.com/getInOTP/${number}/sp',
-    }).then(res => {
-      console.log('Otp is ' + res);
-      this.setState({OTP: res});
-      return;
-    });
-  };
 
   handleLogin = async () => {
     this.setState({loading: true});
@@ -83,35 +73,19 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       this.errorMessage('Enter a valid Phone Number');
       return;
     }
-    const OTP = await this.requestOtp(this.state.phoneNumber);
+    const phone = this.state.phoneNumber;
+    await axios.get(
+      `https://askwebapp.herokuapp.com/getInOTP/${phone}/sp`,
+    ).then(res => {
+        console.log(res);
+    });
+
     setTimeout(() => {
       this.setState({
         loading: false,
         stepsForLogin: this.state.stepsForLogin + 1,
       });
     }, 2000);
-  };
-
-  getOtp = async OTP => {
-    const response = await axios.post(
-      `https://askwebapp.herokuapp.com/verifOtp`,
-      {
-        number: this.state.phoneNumber,
-        otp: OTP,
-        sp,
-      },
-    );
-    if (response === NaN) {
-      this.setState({
-        errorFlag: true,
-        errorMessage: 'Please Put a valid OTP',
-        loading: false,
-      });
-      this.errorMessage('Error in OTp');
-      return;
-    }
-    console.log(response);
-    return response;
   };
 
   handleVerifyOTP = async () => {
@@ -128,17 +102,49 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       return;
     }
 
-    const response = await this.getOtp(this.state.otpToVerify);
-    if (response === true) {
-      console.log('Ok');
-    }
+    const type_otp = this.state.otpToVerify;
+    const params = JSON.stringify({
+      number: this.state.phoneNumber,
+      otp: type_otp,
+      usertype: 'sp',
+    });
 
-    setTimeout(() => {
-      this.setState({
-        loading: false,
-        stepsForLogin: this.state.stepsForLogin + 1,
+    await axios
+      .post('https://askwebapp.herokuapp.com/verifOtp', params, {
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+      .then(response => {
+        console.log(response.data);
+        if (response.data.OtpVerification === true) {
+          this.setState({
+            loading: false,
+            stepsForLogin: this.state.stepsForLogin + 1,
+          });
+        } else {
+          console.log("Error in else")
+          this.setState({
+            loading: false
+          })
+          this.errorMessage('Enter a valid OTP');
+          return;
+        }
+      })
+      .catch(function (error) {
+        console.log("Error in catch");
+        this.setState({
+          loading: false
+        })
+        this.errorMessage('Enter a valid OTP');
+        return;
       });
-    }, 2000);
+      // setTimeout(() => {
+      //   this.setState({
+      //     loading: false,
+      //     stepsForLogin: this.state.stepsForLogin + 1,
+      //   });
+      // }, 2000);
   };
   handleNextPage = () => {
     ToastAndroid.show(this.state.latitude.toString(), ToastAndroid.SHORT);
@@ -152,7 +158,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
     }
   };
   render() {
-    if (!this.state.loading && this.state.stepsForLogin === 0)
+    if (!this.state.loading && this.state.stepsForLogin === 0) {
       return (
         <View style={styles.loginContainer}>
           <View style={styles.sectionStyle}>
@@ -172,7 +178,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
           </TouchableOpacity>
         </View>
       );
-    else if (!this.state.loading && this.state.stepsForLogin === 1)
+    } else if (!this.state.loading && this.state.stepsForLogin === 1) {
       return (
         <View style={styles.loginContainer}>
           <View>
@@ -180,7 +186,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
           </View>
           <View>
             <Text>
-              {'We have sent the OTP:' + this.state.phoneNumber.toString()}
+              {'We have sent the OTP to:' + this.state.phoneNumber.toString()}
             </Text>
           </View>
           <View>
@@ -198,7 +204,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
           </TouchableOpacity>
         </View>
       );
-    else if (!this.state.loading && this.state.stepsForLogin === 2) {
+    } else if (!this.state.loading && this.state.stepsForLogin === 2) {
       return (
         <View style={styles.loginContainer}>
           <TouchableOpacity
@@ -214,7 +220,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
           )} */}
         </View>
       );
-    } else
+    } else {
       return (
         <View style={styles.loginContainer}>
           {this.state.loading && (
@@ -227,6 +233,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
           )}
         </View>
       );
+    }
   }
 }
 const styles = StyleSheet.create({

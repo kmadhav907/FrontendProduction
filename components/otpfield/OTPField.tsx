@@ -8,7 +8,7 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 
-const CELL_COUNT = 5;
+const CELL_COUNT = 6;
 interface OTPFieldProps {
   otp: string;
   setOtp: any;
