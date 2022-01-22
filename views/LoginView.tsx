@@ -9,12 +9,16 @@ import {
   ToastAndroid,
   Platform,
   Alert,
-  PermissionsAndroid,
 } from 'react-native';
 import OTPField from '../components/otpfield/OTPField';
 import Geolocation from 'react-native-geolocation-service';
 import {requestLocationPermission} from '../global/utils';
 import axios from 'axios';
+import {
+  getOTPForAuthorization,
+  verifyOTPForAuthorization,
+} from '../apiServices/loginApis';
+import AsyncStorage from '@react-native-community/async-storage';
 
 interface LoginViewState {
   stepsForLogin: number;
@@ -73,19 +77,17 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       this.errorMessage('Enter a valid Phone Number');
       return;
     }
-    const phone = this.state.phoneNumber;
-    await axios.get(
-      `https://askwebapp.herokuapp.com/getInOTP/${phone}/sp`,
-    ).then(res => {
-        console.log(res);
+    getOTPForAuthorization(this.state.phoneNumber).then((response: any) => {
+      if (response.status === 200) {
+        this.setState({
+          loading: false,
+          stepsForLogin: this.state.stepsForLogin + 1,
+        });
+      } else {
+        this.setState({loading: false});
+        this.errorMessage('Something went bad :(');
+      }
     });
-
-    setTimeout(() => {
-      this.setState({
-        loading: false,
-        stepsForLogin: this.state.stepsForLogin + 1,
-      });
-    }, 2000);
   };
 
   handleVerifyOTP = async () => {
@@ -101,50 +103,41 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       this.errorMessage('Enter a valid OTP');
       return;
     }
-
-    const type_otp = this.state.otpToVerify;
-    const params = JSON.stringify({
-      number: this.state.phoneNumber,
-      otp: type_otp,
-      usertype: 'sp',
+    verifyOTPForAuthorization(
+      this.state.phoneNumber,
+      this.state.otpToVerify,
+    ).then(async response => {
+      console.log(response.data);
+      if (response.data.OtpVerification === true) {
+        const userObject = {
+          documentID: response.data.docID,
+          userPhoneNumber: response.data.number,
+          userType: response.data.userType,
+        };
+        try {
+          await AsyncStorage.setItem('userObject', JSON.stringify(userObject));
+        } catch (error) {
+          this.errorMessage('Something went wrong :(');
+        }
+        this.setState({
+          loading: false,
+          stepsForLogin: this.state.stepsForLogin + 1,
+        });
+      } else {
+        this.errorMessage('Enter a valid OTP');
+        this.setState({
+          loading: false,
+        });
+        return;
+      }
     });
 
-    await axios
-      .post('https://askwebapp.herokuapp.com/verifOtp', params, {
-        headers: {
-          'content-type': 'application/json',
-        },
-      })
-      .then(response => {
-        console.log(response.data);
-        if (response.data.OtpVerification === true) {
-          this.setState({
-            loading: false,
-            stepsForLogin: this.state.stepsForLogin + 1,
-          });
-        } else {
-          console.log("Error in else")
-          this.setState({
-            loading: false
-          })
-          this.errorMessage('Enter a valid OTP');
-          return;
-        }
-      })
-      .catch(function (error) {
-        console.log("Error in catch");
-        this.setState({
-          loading: false
-        })
-        this.errorMessage('Enter a valid OTP');
-        return;
-      });
-      // setTimeout(() => {
-      //   this.setState({
-      //     loading: false,
-      //     stepsForLogin: this.state.stepsForLogin + 1,
-      //   });
-      // }, 2000);
+    // setTimeout(() => {
+    //   this.setState({
+    //     loading: false,
+    //     stepsForLogin: this.state.stepsForLogin + 1,
+    //   });
+    // }, 2000);
   };
   handleNextPage = () => {
     ToastAndroid.show(this.state.latitude.toString(), ToastAndroid.SHORT);

@@ -16,11 +16,21 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
       animating: true,
     };
   }
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({animating: false});
-      this.props.navigation.navigate('LoginView');
-    }, 3000);
+  async componentDidMount() {
+    setTimeout(async () => {
+      try {
+        this.setState({animating: false});
+        const userObject = await AsyncStorage.getItem('userObject');
+        console.log(userObject);
+        if (userObject !== null) {
+          this.props.navigation.navigate('DashboardView');
+        } else {
+          this.props.navigation.navigate('LoginView');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }, 2000);
   }
   render() {
     return (
