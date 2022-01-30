@@ -23,6 +23,7 @@ const styles: any = StyleSheet.create({
   backgroundStyle: {
     flex: 1,
     backgroundColor: 'yellow',
+    fontFamily: 'Metropolis',
   },
 });
 export default App;

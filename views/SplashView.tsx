@@ -1,6 +1,6 @@
 import React from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import {ActivityIndicator, Image, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
 
 interface SplashViewState {
   animating: boolean;
@@ -37,8 +37,19 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
       <View style={styles.container}>
         <Image
           source={splashViewImage}
-          style={{width: '100%', resizeMode: 'contain', height: 100}}
+          style={{width: '100%', resizeMode: 'contain', height: 170}}
         />
+        <View
+          style={{
+            width: '100%',
+            height: 20,
+            margin: 20,
+          }}>
+          <Text style={{textAlign: 'center', fontSize: 16}}>By</Text>
+          <Text style={{textAlign: 'center', color: '#f9d342', fontSize: 18}}>
+            SIMPLE MECHANIAL SOLUTIONS
+          </Text>
+        </View>
         <ActivityIndicator
           animating={this.state.animating}
           color="yellow"
@@ -59,6 +70,7 @@ const styles = StyleSheet.create({
   activityIndicator: {
     alignItems: 'center',
     height: 80,
+    margin: 15,
   },
 });
 export default SplashView;

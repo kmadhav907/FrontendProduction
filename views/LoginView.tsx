@@ -246,13 +246,6 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
               <Text style={styles.buttonTextStyle}>{'Verify'}</Text>
             </TouchableOpacity>
           </View>
-          {/* <View style={styles.sectionStyle}>
-            
-            <View>
-          
-            </View>
-           
-          </View> */}
         </View>
       );
     } else {
@@ -276,7 +269,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ffee30',
+    backgroundColor: '#f9d342',
     width: '100%',
     height: '100%',
   },
@@ -319,7 +312,7 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   buttonStyle: {
-    backgroundColor: '#ffee30',
+    backgroundColor: '#f9d342',
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
