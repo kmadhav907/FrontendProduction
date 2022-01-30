@@ -209,15 +209,6 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
               <Text style={styles.buttonTextStyle}>Send OTP</Text>
             </TouchableOpacity>
           </View>
-          {/* <Text style={styles.textStyle}>Enter your Phone Number</Text>
-          <View style={styles.sectionStyle}>
-           
-          </View>
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={this.handleLogin}>
-            <Text style={styles.buttonTextStyle}>Login</Text>
-          </TouchableOpacity> */}
         </View>
       );
     } else if (!this.state.loading && this.state.stepsForLogin === 1) {
@@ -297,8 +288,8 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
     flexDirection: 'column',
     alignContent: 'center',
-    minHeight: '60%',
-    marginTop: 160,
+    minHeight: '70%',
+    marginTop: '30%',
     backgroundColor: 'white',
     width: '100%',
     shadowColor: '#000',
@@ -308,7 +299,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
-    borderRadius: 18,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
     elevation: 6,
   },
   buttonStyle: {
