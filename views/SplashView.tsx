@@ -8,7 +8,7 @@ interface SplashViewState {
 interface SplashViewProps {
   navigation: any;
 }
-const splashViewImage = require('../assets/dummy_splash.jpg');
+const splashViewImage = require('../assets/SplashScreen.png');
 class SplashView extends React.Component<SplashViewProps, SplashViewState> {
   constructor(props: SplashViewProps) {
     super(props);
@@ -37,11 +37,11 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
       <View style={styles.container}>
         <Image
           source={splashViewImage}
-          style={{width: '100%', resizeMode: 'contain'}}
+          style={{width: '100%', resizeMode: 'contain', height: 100}}
         />
         <ActivityIndicator
           animating={this.state.animating}
-          color="blue"
+          color="yellow"
           size="large"
           style={styles.activityIndicator}
         />
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'yellow',
+    backgroundColor: 'black',
   },
   activityIndicator: {
     alignItems: 'center',

@@ -26,3 +26,9 @@ export const verifyOTPForAuthorization = async (
   );
   return response;
 };
+export const resendOTP = async (phoneNumber: string) => {
+  const response: any = await axios.get(
+    `https://askwebapp.herokuapp.com/resendOtp/${phoneNumber}/sp`,
+  );
+  return response;
+};

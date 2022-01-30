@@ -1,11 +1,11 @@
 import {PermissionsAndroid, ToastAndroid} from 'react-native';
-
+import Geolocation from 'react-native-geolocation-service';
 export const requestLocationPermission = async () => {
   const granted = PermissionsAndroid.request(
     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     {
-      title: 'App Title',
-      message: 'App Name needs access to your device location ',
+      title: 'Require Location Access',
+      message: 'Need Permission for location Access',
       buttonNeutral: 'Ask Me Later',
       buttonNegative: 'Cancel',
       buttonPositive: 'OK',
@@ -14,7 +14,22 @@ export const requestLocationPermission = async () => {
   console.log('granted---------', granted);
   if ((await granted) === PermissionsAndroid.RESULTS.GRANTED) {
     console.log('You can use the device location');
+    return true;
   } else {
     console.log('device location permission denied');
+    return false;
   }
+};
+export const modifyPhoneNumber = (phoneNumber: string) => {
+  if (phoneNumber.startsWith('+91')) {
+    phoneNumber = phoneNumber.slice(3);
+    console.log(phoneNumber);
+  }
+  return phoneNumber;
+};
+export const checkValidPhoneNumber = (phoneNumber: string) => {
+  const regex = new RegExp(
+    '^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$',
+  );
+  return regex.test(phoneNumber);
 };

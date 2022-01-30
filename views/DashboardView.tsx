@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
 import {Text, View} from 'react-native';
 
@@ -13,13 +14,21 @@ class DashboardView extends React.Component<
     super(props);
     this.state = {};
   }
-  componentDidMount() {
+  async componentDidMount() {
+    const userObject = await AsyncStorage.getItem('userObject');
+    if (userObject === null) {
+      this.props.navigation.navigate('LoginView');
+    }
+    this.props.navigation.addListener('beforeRemove', (event: any) => {
+      event.preventDefault();
+      this.props.navigation.dispatch(event.data.action);
+    });
     // this.props.navigation.navigate('LoginView');
   }
   render() {
     return (
       <View>
-        <Text>DashBoard</Text>
+        <Text>DashBoard Hi Hleelejdgdjfjngdgnfnkn</Text>
       </View>
     );
   }

@@ -12,10 +12,10 @@ import {
 } from 'react-native';
 import OTPField from '../components/otpfield/OTPField';
 import Geolocation from 'react-native-geolocation-service';
-import {requestLocationPermission} from '../global/utils';
-import axios from 'axios';
+import {modifyPhoneNumber, requestLocationPermission} from '../global/utils';
 import {
   getOTPForAuthorization,
+  resendOTP,
   verifyOTPForAuthorization,
 } from '../apiServices/loginApis';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -27,9 +27,8 @@ interface LoginViewState {
   errorMessage: string;
   errorFlag: boolean;
   otpToVerify: string;
-  OTP: string;
-  latitude: number;
-  longitude: number;
+  latitude: number | undefined;
+  longitude: number | undefined;
 }
 interface LoginViewProps {
   navigation: any;
@@ -45,30 +44,36 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       errorFlag: false,
       errorMessage: 'Please Put a valid Phone Number',
       otpToVerify: '',
-      OTP: '',
-      latitude: 0,
-      longitude: 0,
+      latitude: undefined,
+      longitude: undefined,
     };
   }
   async componentDidMount() {
+    const userObject = await AsyncStorage.getItem('userObject');
+    console.log(userObject);
+    if (userObject !== null) {
+      this.props.navigation.navigate('DashboardView');
+    }
     try {
-      await requestLocationPermission();
-      Geolocation.getCurrentPosition(
-        position => {
-          const {latitude, longitude} = position.coords;
-          this.setState({latitude: latitude, longitude: longitude});
-        },
-        error => {
-          ToastAndroid.show(error.message, ToastAndroid.SHORT);
-        },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-      );
+      const permissionStatus = await requestLocationPermission();
+      if (permissionStatus === true) {
+        Geolocation.getCurrentPosition(
+          position => {
+            const {latitude, longitude} = position.coords;
+            this.setState({latitude: latitude, longitude: longitude});
+          },
+          error => {
+            ToastAndroid.show(error.message, ToastAndroid.SHORT);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
+      }
     } catch (err) {
       console.warn(err);
     }
   }
 
-  handleLogin = async () => {
+  handleLogin = () => {
     this.setState({loading: true});
     if (this.state.phoneNumber.length < 10) {
       this.setState({
@@ -77,11 +82,14 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       this.errorMessage('Enter a valid Phone Number');
       return;
     }
-    getOTPForAuthorization(this.state.phoneNumber).then((response: any) => {
+    const modifiedPhoneNumber = modifyPhoneNumber(this.state.phoneNumber);
+    getOTPForAuthorization(modifiedPhoneNumber).then((response: any) => {
+      console.log(response);
       if (response.status === 200) {
         this.setState({
           loading: false,
           stepsForLogin: this.state.stepsForLogin + 1,
+          phoneNumber: modifiedPhoneNumber,
         });
       } else {
         this.setState({loading: false});
@@ -89,10 +97,16 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       }
     });
   };
-
+  handleResendOTP = () => {
+    resendOTP(this.state.phoneNumber).then((response: any) => {
+      // console.log(response);
+      if (response.status !== 200) {
+        this.errorMessage('Something went wrong :(');
+      }
+    });
+  };
   handleVerifyOTP = async () => {
     this.setState({loading: true});
-    console.log(this.state.otpToVerify);
     if (
       this.state.stepsForLogin === 1 &&
       this.state.otpToVerify.length < CELL_COUNT
@@ -103,26 +117,57 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       this.errorMessage('Enter a valid OTP');
       return;
     }
+    if (
+      this.state.latitude === undefined &&
+      this.state.longitude === undefined
+    ) {
+      try {
+        const permissionStatus = await requestLocationPermission();
+        if (permissionStatus === true) {
+          Geolocation.getCurrentPosition(
+            position => {
+              const {latitude, longitude} = position.coords;
+              this.setState({latitude: latitude, longitude: longitude});
+            },
+            error => {
+              ToastAndroid.show(error.message, ToastAndroid.SHORT);
+            },
+            {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+          );
+        } else {
+          this.errorMessage('Need Location Permission');
+          this.setState({
+            loading: false,
+          });
+          return;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
     verifyOTPForAuthorization(
       this.state.phoneNumber,
       this.state.otpToVerify,
     ).then(async response => {
-      console.log(response.data);
+      console.log(response);
       if (response.data.OtpVerification === true) {
         const userObject = {
           documentID: response.data.docID,
           userPhoneNumber: response.data.number,
           userType: response.data.userType,
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
         };
         try {
           await AsyncStorage.setItem('userObject', JSON.stringify(userObject));
         } catch (error) {
           this.errorMessage('Something went wrong :(');
+          return;
         }
         this.setState({
           loading: false,
-          stepsForLogin: this.state.stepsForLogin + 1,
         });
+        this.props.navigation.navigate('DashboardView');
       } else {
         this.errorMessage('Enter a valid OTP');
         this.setState({
@@ -131,18 +176,8 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
         return;
       }
     });
+  };
 
-    // setTimeout(() => {
-    //   this.setState({
-    //     loading: false,
-    //     stepsForLogin: this.state.stepsForLogin + 1,
-    //   });
-    // }, 2000);
-  };
-  handleNextPage = () => {
-    ToastAndroid.show(this.state.latitude.toString(), ToastAndroid.SHORT);
-    this.props.navigation.navigate('DashboardView');
-  };
   errorMessage = (message: string) => {
     if (Platform.OS === 'android') {
       ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -155,62 +190,69 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       return (
         <View style={styles.loginContainer}>
           <View style={styles.sectionStyle}>
+            <Text style={styles.titleTextStyle}>
+              Continue with Mobile Number
+            </Text>
+            <Text style={styles.textStyle}>OTP will be sent to the number</Text>
             <TextInput
               style={styles.inputStyle}
-              placeholder="Enter your Phone Number"
+              defaultValue={'+91'}
               keyboardType="phone-pad"
               onChangeText={(number: any) => {
                 this.setState({phoneNumber: number});
+                console.log(this.state.phoneNumber);
               }}
             />
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={this.handleLogin}>
+              <Text style={styles.buttonTextStyle}>Send OTP</Text>
+            </TouchableOpacity>
+          </View>
+          {/* <Text style={styles.textStyle}>Enter your Phone Number</Text>
+          <View style={styles.sectionStyle}>
+           
           </View>
           <TouchableOpacity
             style={styles.buttonStyle}
             onPress={this.handleLogin}>
             <Text style={styles.buttonTextStyle}>Login</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       );
     } else if (!this.state.loading && this.state.stepsForLogin === 1) {
       return (
         <View style={styles.loginContainer}>
-          <View>
-            <Text>Enter the OTP:</Text>
-          </View>
-          <View>
-            <Text>
+          <View style={styles.sectionStyle}>
+            <Text style={styles.titleTextStyle}>Enter the OTP:</Text>
+            <Text style={styles.textStyle}>
               {'We have sent the OTP to:' + this.state.phoneNumber.toString()}
             </Text>
-          </View>
-          <View>
             <OTPField
               otp={this.state.otpToVerify}
               setOtp={(otp: any) => {
                 this.setState({otpToVerify: otp});
               }}
             />
+
+            <Text
+              style={[styles.textStyle, styles.resendLinkText]}
+              onPress={this.handleResendOTP}>
+              Resend
+            </Text>
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={this.handleVerifyOTP}>
+              <Text style={styles.buttonTextStyle}>{'Verify'}</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={this.handleVerifyOTP}>
-            <Text style={styles.buttonTextStyle}>{'Verify'}</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else if (!this.state.loading && this.state.stepsForLogin === 2) {
-      return (
-        <View style={styles.loginContainer}>
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={this.handleNextPage}>
-            <Text style={styles.buttonTextStyle}>Dashboard</Text>
-          </TouchableOpacity>
-          {/* {this.state.latitude && this.state.longitude && (
+          {/* <View style={styles.sectionStyle}>
+            
             <View>
-              <Text>{this.state.latitude.toString()}</Text>
-              <Text>{this.state.longitude.toString()}</Text>
+          
             </View>
-          )} */}
+           
+          </View> */}
         </View>
       );
     } else {
@@ -234,51 +276,71 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'yellow',
+    backgroundColor: '#ffee30',
+    width: '100%',
+    height: '100%',
   },
   activityIndicator: {
     alignItems: 'center',
     height: 80,
   },
   inputStyle: {
-    marginTop: 15,
+    marginTop: 25,
     backgroundColor: 'white',
     borderWidth: 1,
     borderRadius: 10,
     borderColor: 'grey',
     padding: 10,
-    fontSize: 15,
+    fontSize: 18,
     color: 'black',
     height: 50,
     width: '90%',
+    fontWeight: 'bold',
   },
   sectionStyle: {
-    flexDirection: 'row',
-    height: 40,
-    marginTop: 20,
-    marginLeft: 35,
-    marginRight: 35,
-    margin: 10,
+    flex: 1,
+    padding: 10,
+    paddingTop: 60,
+    paddingLeft: 30,
+    flexDirection: 'column',
+    alignContent: 'center',
+    minHeight: '60%',
+    marginTop: 160,
+    backgroundColor: 'white',
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    borderRadius: 18,
+    elevation: 6,
   },
   buttonStyle: {
-    backgroundColor: 'yellow',
-    borderWidth: 0.5,
-    borderColor: 'black',
-    height: 40,
+    backgroundColor: '#ffee30',
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 35,
-    marginRight: 35,
-    marginTop: 40,
-    marginBottom: 20,
-    width: 100,
+    position: 'absolute',
+    bottom: 0,
+    marginLeft: 20,
+    marginBottom: 40,
+    flex: 1,
+    width: '100%',
+    borderRadius: 5,
+    elevation: 6,
+    padding: 10,
+    // marginLeft: 35,
+    // marginRight: 35,
+    // marginTop: 40,
+    // marginBottom: 20,
   },
   buttonTextStyle: {
     color: 'black',
-    fontWeight: 'bold',
-    fontSize: 12,
-    padding: 8,
-    paddingHorizontal: 20,
+    fontWeight: '500',
+    fontSize: 18,
   },
   otpView: {
     width: '80%',
@@ -292,6 +354,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     color: 'black',
     borderBottomColor: '#17BED0',
+  },
+  titleTextStyle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  textStyle: {
+    fontSize: 14,
+    color: 'black',
+  },
+  resendLinkText: {
+    paddingLeft: '80%',
+    color: 'blue',
+    fontSize: 16,
   },
 });
 export default LoginView;

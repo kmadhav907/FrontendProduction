@@ -22,7 +22,6 @@ const OTPField = (props: OTPFieldProps) => {
 
   return (
     <SafeAreaView style={styles.root}>
-      <Text style={styles.title}>Authenticate</Text>
       <CodeField
         ref={ref}
         {...properties}
@@ -48,25 +47,25 @@ const OTPField = (props: OTPFieldProps) => {
   );
 };
 const styles = StyleSheet.create({
-  root: {padding: 20, minHeight: 300},
-  title: {textAlign: 'center', fontSize: 30},
+  root: {minHeight: 130, padding: 10, marginTop: 20},
+  title: {textAlign: 'center', fontSize: 30, color: 'black'},
   codeFiledRoot: {
     marginTop: 20,
-    width: '90%',
+    width: '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
   },
   cellRoot: {
-    width: 50,
+    width: 35,
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomColor: '#ccc',
+    borderBottomColor: 'black',
     borderBottomWidth: 1,
   },
   cellText: {
     color: '#000',
-    fontSize: 36,
+    fontSize: 32,
     textAlign: 'center',
   },
   focusCell: {
