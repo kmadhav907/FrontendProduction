@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Alert, BackHandler, Text, View} from 'react-native';
 
 interface DashboardViewState {}
 interface DashboardViewProps {
@@ -21,7 +21,14 @@ class DashboardView extends React.Component<
     }
     this.props.navigation.addListener('beforeRemove', (event: any) => {
       event.preventDefault();
-      this.props.navigation.dispatch(event.data.action);
+      Alert.alert('Exit AskMechanics', 'Do you want to exit?', [
+        {
+          text: 'No',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'Yes', onPress: () => BackHandler.exitApp()},
+      ]);
     });
     // this.props.navigation.navigate('LoginView');
   }
