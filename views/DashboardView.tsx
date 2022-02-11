@@ -1,43 +1,42 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
-import {Alert, BackHandler, Text, View } from 'react-native';
+import {Alert, BackHandler, Text, View} from 'react-native';
 
-import ProfileView from '../components/bottonPanel/profileScreen';
-import HelpView from '../components/bottonPanel/helpScreen';
-import Infoview from '../components/bottonPanel/infoScreen';
+import ProfileView from '../components/bottomPanel/profileScreen';
+import HelpView from '../components/bottomPanel/helpScreen';
+import Infoview from '../components/bottomPanel/infoScreen';
+import Dashboard from '../components/dashboard/dashboard';
 
-import { createAppContainer } from 'react-navigation';
-import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
+import {createAppContainer} from 'react-navigation';
+import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 
-const TabNavigator =  createMaterialBottomTabNavigator(
+const TabNavigator = createMaterialBottomTabNavigator(
   {
-    Home: {
+    
+    Profile: {
       screen: ProfileView,
       navigationOptions: {
-        tabBarLabel: "Home",
-  
+        tabBarLabel: 'profile',
       },
     },
     User: {
       screen: Infoview,
       navigationOptions: {
-        tabBarLabel: "User",
-        
+        tabBarLabel: 'User',
       },
     },
     Setting: {
       screen: HelpView,
       navigationOptions: {
-        tabBarLabel: "Setting",
+        tabBarLabel: 'Setting',
       },
     },
   },
   {
-    initialRouteName: "Home",
-    barStyle: { backgroundColor: "#006600" },
-  }
+    barStyle: {backgroundColor: '#FFFFFF'},
+  },
 );
-  
+
 const Navigator = createAppContainer(TabNavigator);
 
 interface DashboardViewState {}
@@ -48,7 +47,6 @@ class DashboardView extends React.Component<
   DashboardViewProps,
   DashboardViewState
 > {
-
   constructor(props: any) {
     super(props);
     this.state = {};
@@ -73,12 +71,9 @@ class DashboardView extends React.Component<
   }
   render() {
     return (
-      // <View>
-      //   <Text>DashBoard Hi Hleelejdgdjfjngdgnfnkn</Text>
-      // </View>
       <Navigator>
-        <ProfileView />
-    </Navigator>
+        <Dashboard />
+      </Navigator>
     );
   }
 }

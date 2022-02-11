@@ -1,15 +1,15 @@
 import React from "react";
 import {View , Text} from 'react-native';
 
-class profileScreen extends React.Component {  
+class dashboard extends React.Component {  
     render() {  
         return (  
             <View>  
-                <Text>wo Screen</Text>  
+                <Text>Dashboard Screen</Text>  
             </View>  
         );  
     }  
 }  
 
 
-export default profileScreen;
+export default dashboard;
