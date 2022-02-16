@@ -39,10 +39,11 @@ class DashboardView extends React.Component<
   }
   render() {
     return (
-      <>
-      <Dashboard />
-      <Navigator>
-      </Navigator></> 
+      <View>
+        <Dashboard />
+          <Navigator>
+        </Navigator> 
+      </View>
     );
   }
 }
