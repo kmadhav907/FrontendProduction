@@ -1,13 +1,9 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
-import {Alert, BackHandler, Text, View} from 'react-native';
+import {Alert, BackHandler, StyleSheet, Text, View} from 'react-native';
 
-import ProfileView from '../components/bottomPanel/profileScreen';
-import StarRating from './CustFeedback';
 import Dashboard from '../components/dashboard/dashboard';
-
 import Navigator from '../components/bottomPanel/navigator';
-import Something from '../components/dashboard/smthg';
 
 interface DashboardViewState {}
 interface DashboardViewProps {
@@ -42,12 +38,22 @@ class DashboardView extends React.Component<
   render() {
     return (
       <>
-        <Something />
         <Dashboard />
         <Navigator></Navigator>
       </>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  loginContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f9d342',
+    width: '100%',
+    height: '100%',
+  },
+});
 
 export default DashboardView;
