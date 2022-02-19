@@ -3,9 +3,11 @@ import React from 'react';
 import {Alert, BackHandler, Text, View} from 'react-native';
 
 import ProfileView from '../components/bottomPanel/profileScreen';
+import StarRating from './CustFeedback';
 import Dashboard from '../components/dashboard/dashboard';
 
 import Navigator from '../components/bottomPanel/navigator';
+import Something from '../components/dashboard/smthg';
 
 interface DashboardViewState {}
 interface DashboardViewProps {
@@ -39,11 +41,11 @@ class DashboardView extends React.Component<
   }
   render() {
     return (
-      <View>
+      <>
+        <Something />
         <Dashboard />
-          <Navigator>
-        </Navigator> 
-      </View>
+        <Navigator></Navigator>
+      </>
     );
   }
 }
