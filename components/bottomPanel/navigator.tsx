@@ -1,10 +1,12 @@
+import React from 'react';
+
 import ProfileView from './profileScreen';
 import HelpView from './helpScreen';
 import Infoview from './infoScreen';
-import {View, Text} from 'react-native';
+
 import {createAppContainer} from 'react-navigation';
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {StyleSheet, Image} from 'react-native';
 
 const TabNavigator = createMaterialBottomTabNavigator(
   {
@@ -12,10 +14,11 @@ const TabNavigator = createMaterialBottomTabNavigator(
       screen: ProfileView,
       navigationOptions: {
         tabBarLabel: 'profile',
-        tabBarIcon: ({tintColor}) => (
-          <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'ios-home'} />
-          </View>
+        tabBarIcon: () => (
+          <Image
+            source={require('../../assets/phone.png')}
+            style={styles.iconStyle}
+          />
         ),
       },
     },
@@ -23,10 +26,11 @@ const TabNavigator = createMaterialBottomTabNavigator(
       screen: Infoview,
       navigationOptions: {
         tabBarLabel: 'User',
-        tabBarIcon: ({tintColor}) => (
-          <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'ios-person'} />
-          </View>
+        tabBarIcon: () => (
+          <Image
+            source={require('../../assets/information.png')}
+            style={styles.iconStyle}
+          />
         ),
       },
     },
@@ -34,19 +38,27 @@ const TabNavigator = createMaterialBottomTabNavigator(
       screen: HelpView,
       navigationOptions: {
         tabBarLabel: 'Setting',
-        tabBarIcon: ({tintColor}) => (
-          <View>
-            <Icon style={[{color: tintColor}]} size={25} name={'ios-home'} />
-          </View>
+        tabBarIcon: () => (
+          <Image
+            source={require('../../assets/user.png')}
+            style={styles.iconStyle}
+          />
         ),
       },
     },
   },
   {
+    initialRouteName: 'User',
     barStyle: {backgroundColor: '#FFFFFF'},
   },
 );
 
 const Navigator = createAppContainer(TabNavigator);
+const styles = StyleSheet.create({
+  iconStyle: {
+    width: 25,
+    height: 25,
+  },
+});
 
 export default Navigator;

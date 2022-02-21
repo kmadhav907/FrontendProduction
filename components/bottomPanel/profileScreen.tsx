@@ -5,7 +5,7 @@ class profileScreen extends React.Component {
   render() {
     return (
       <View>
-        <Text></Text>
+        <Text>Profie</Text>
       </View>
     );
   }

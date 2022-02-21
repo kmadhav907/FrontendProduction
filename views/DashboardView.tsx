@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
-import {Alert, BackHandler, StyleSheet, Text, View} from 'react-native';
+import {Alert, BackHandler, StyleSheet} from 'react-native';
 
 import Dashboard from '../components/dashboard/dashboard';
 import Navigator from '../components/bottomPanel/navigator';
