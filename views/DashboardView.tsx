@@ -51,7 +51,7 @@ class DashboardView extends React.Component<
   }
   render() {
     return (
-      <SafeAreaView style={styles.loginContainer}>
+      <View style={styles.loginContainer}>
         <View style={styles.dahsboardContainer}>
           <Text>Dashboard</Text>
         </View>
@@ -71,7 +71,7 @@ class DashboardView extends React.Component<
             style={styles.iconStyle}
           />
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 }
@@ -81,16 +81,35 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f9d342',
     width: '100%',
     height: '100%',
+    backgroundColor: '#f9d342',
   },
   iconStyle: {
     width: 30,
     height: 30,
   },
   dahsboardContainer: {
-    backgroundColor: '#f9d342',
+    flex: 1,
+    padding: 10,
+    paddingTop: 60,
+    paddingLeft: 30,
+    flexDirection: 'column',
+    alignContent: 'center',
+    minHeight: '70%',
+    marginTop: '30%',
+    backgroundColor: 'white',
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    elevation: 6,
   },
   bottomView: {
     backgroundColor: 'white',
@@ -101,6 +120,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingTop: 10,
+    elevation: 10,
   },
 });
 

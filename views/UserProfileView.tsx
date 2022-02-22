@@ -76,16 +76,11 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
           return;
         }
 
-        formData.append('photo', {
-          name: asset.fileName,
-          type: asset.type,
-          uri:
-            Platform.OS === 'android'
-              ? asset.uri
-              : asset.uri.replace('file://', ''),
-        });
+        formData.append('imageFile', asset.fileName);
+        formData.append('type', asset.type);
         const userObject = await AsyncStorage.getItem('userObject');
         const fixitID = JSON.parse(userObject as string).fixitId;
+        console.log(formData);
         uploadProfilePic(formData, fixitID)
           .then((response: any) => {
             console.log(response);
