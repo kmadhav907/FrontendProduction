@@ -7,10 +7,12 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
+import CheckBox from '@react-native-community/checkbox';
 import {uploadProfilePic} from '../apiServices/userProfileApi';
 import {errorMessage} from '../global/utils';
 
@@ -19,6 +21,8 @@ interface UserProfileProps {
 }
 interface UserProfileState {
   userProfileImage: any | null;
+  privacyPolicyCheck: boolean;
+  termsAndConditionsCheck: boolean;
 }
 const userProfileImage = require('../assets/userProfileImage.png');
 class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
@@ -26,6 +30,8 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     super(props);
     this.state = {
       userProfileImage: null,
+      privacyPolicyCheck: true,
+      termsAndConditionsCheck: true,
     };
   }
   async componentDidMount() {
@@ -58,7 +64,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     launchImageLibrary(options, async (response: any) => {
       console.log('Response = ', response);
       if (response.didCancel) {
-        errorMessage('Pic an image');
+        errorMessage('Pick an image');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
         errorMessage('Something went wrong :(');
@@ -75,7 +81,6 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
           errorMessage('Please select an image below 3MB');
           return;
         }
-
         formData.append('imageFile', asset.fileName);
         formData.append('type', asset.type);
         const userObject = await AsyncStorage.getItem('userObject');
@@ -117,6 +122,65 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
               />
             </TouchableOpacity>
           </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputTitle}>Name:</Text>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Enter your name"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputTitle}>Workshop Name:</Text>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Enter your workshop name"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputTitle}>Mobile Number:</Text>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Enter your Mobile Number"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputTitle}>Service Category:</Text>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Enter your service category"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputTitle}>Workshop Address:</Text>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Enter your address"
+              multiline={true}
+            />
+          </View>
+          <View style={{width: '100%', marginTop: 10}}>
+            <View style={styles.checkboxContainer}>
+              <CheckBox
+                value={this.state.privacyPolicyCheck}
+                onChange={() => {
+                  this.setState({
+                    privacyPolicyCheck: !this.state.privacyPolicyCheck,
+                  });
+                }}
+              />
+            </View>
+            <View style={styles.checkboxContainer}>
+              <CheckBox
+                value={this.state.termsAndConditionsCheck}
+                onChange={() => {
+                  this.setState({
+                    termsAndConditionsCheck:
+                      !this.state.termsAndConditionsCheck,
+                  });
+                }}
+              />
+            </View>
+          </View>
         </View>
       </View>
     );
@@ -138,7 +202,7 @@ const styles = StyleSheet.create({
   sectionStyle: {
     flex: 1,
     padding: 10,
-    paddingTop: 60,
+    paddingTop: 10,
     flexDirection: 'column',
     alignContent: 'center',
     minHeight: '70%',
@@ -160,6 +224,32 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '15%',
     alignContent: 'center',
+    marginBottom: 20,
+  },
+  inputContainer: {
+    width: '100%',
+    height: 45,
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: 3,
+  },
+  inputStyle: {
+    marginLeft: 10,
+    width: '65%',
+    height: '100%',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'grey',
+    fontSize: 14,
+    borderRadius: 4,
+    paddingLeft: 5,
+  },
+  inputTitle: {width: '30%', fontSize: 12, fontWeight: 'bold'},
+  checkboxContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

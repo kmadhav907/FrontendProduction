@@ -171,12 +171,11 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
           loading: false,
         });
         const newUserFlag = response.data.newUserFlag;
-        // if (newUserFlag === true) {
-        //   this.props.navigation.navigate('DashBoardView');
-        // } else {
-        //   this.props.navigation.navigate('UserProfileView');
-        // }
-        this.props.navigation.navigate('DashBoardView');
+        if (newUserFlag === true) {
+          this.props.navigation.navigate('DashBoardView');
+        } else {
+          this.props.navigation.navigate('UserProfileView');
+        }
       } else {
         errorMessage('Enter a valid OTP');
         this.setState({
