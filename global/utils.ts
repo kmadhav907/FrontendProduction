@@ -1,4 +1,4 @@
-import {PermissionsAndroid, ToastAndroid} from 'react-native';
+import {Alert, PermissionsAndroid, Platform, ToastAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 export const requestLocationPermission = async () => {
   const granted = PermissionsAndroid.request(
@@ -32,4 +32,11 @@ export const checkValidPhoneNumber = (phoneNumber: string) => {
     '^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$',
   );
   return regex.test(phoneNumber);
+};
+export const errorMessage = (message: string) => {
+  if (Platform.OS === 'android') {
+    ToastAndroid.show(message, ToastAndroid.SHORT);
+  } else {
+    Alert.alert(message);
+  }
 };

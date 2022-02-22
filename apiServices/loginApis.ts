@@ -1,8 +1,9 @@
 import axios from 'axios';
+import {ENDPOINT} from '../global/endPoint';
 
 export const getOTPForAuthorization = async (phoneNumber: string) => {
   const response: any = await axios.get(
-    `https://askwebapp.herokuapp.com/getInOTP/${phoneNumber}/sp`,
+    `${ENDPOINT}/getInOTP/${phoneNumber}/sp`,
   );
   return response;
 };
@@ -15,20 +16,16 @@ export const verifyOTPForAuthorization = async (
     otp: otpToVerify,
     usertype: 'sp',
   });
-  const response = await axios.post(
-    'https://askwebapp.herokuapp.com/verifOtp',
-    params,
-    {
-      headers: {
-        'content-type': 'application/json',
-      },
+  const response = await axios.post(`${ENDPOINT}/verifOtp`, params, {
+    headers: {
+      'content-type': 'application/json',
     },
-  );
+  });
   return response;
 };
 export const resendOTP = async (phoneNumber: string) => {
   const response: any = await axios.get(
-    `https://askwebapp.herokuapp.com/resendOtp/${phoneNumber}/sp`,
+    `${ENDPOINT}/resendOtp/${phoneNumber}/sp`,
   );
   return response;
 };

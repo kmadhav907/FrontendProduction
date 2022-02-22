@@ -12,7 +12,11 @@ import {
 } from 'react-native';
 import OTPField from '../components/otpfield/OTPField';
 import Geolocation from 'react-native-geolocation-service';
-import {modifyPhoneNumber, requestLocationPermission} from '../global/utils';
+import {
+  errorMessage,
+  modifyPhoneNumber,
+  requestLocationPermission,
+} from '../global/utils';
 import {
   getOTPForAuthorization,
   resendOTP,
@@ -79,7 +83,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       this.setState({
         loading: false,
       });
-      this.errorMessage('Enter a valid Phone Number');
+      errorMessage('Enter a valid Phone Number');
       return;
     }
     const modifiedPhoneNumber = modifyPhoneNumber(this.state.phoneNumber);
@@ -93,7 +97,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
         });
       } else {
         this.setState({loading: false});
-        this.errorMessage('Something went bad :(');
+        errorMessage('Something went bad :(');
       }
     });
   };
@@ -101,7 +105,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
     resendOTP(this.state.phoneNumber).then((response: any) => {
       // console.log(response);
       if (response.status !== 200) {
-        this.errorMessage('Something went wrong :(');
+        errorMessage('Something went wrong :(');
       }
     });
   };
@@ -114,7 +118,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       this.setState({
         loading: false,
       });
-      this.errorMessage('Enter a valid OTP');
+      errorMessage('Enter a valid OTP');
       return;
     }
     if (
@@ -135,7 +139,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
             {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
           );
         } else {
-          this.errorMessage('Need Location Permission');
+          errorMessage('Need Location Permission');
           this.setState({
             loading: false,
           });
@@ -152,24 +156,28 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       console.log(response);
       if (response.data.OtpVerification === true) {
         const userObject = {
-          documentID: response.data.docID,
-          userPhoneNumber: response.data.number,
+          fixitId: response.data.fixitId,
+          userPhoneNumber: this.state.phoneNumber,
           userType: response.data.userType,
-          latitude: this.state.latitude,
-          longitude: this.state.longitude,
+          newUser: response.data.newUserFlag,
         };
         try {
           await AsyncStorage.setItem('userObject', JSON.stringify(userObject));
         } catch (error) {
-          this.errorMessage('Something went wrong :(');
+          errorMessage('Something went wrong :(');
           return;
         }
         this.setState({
           loading: false,
         });
-        this.props.navigation.navigate('DashboardView');
+        const newUserFlag = response.data.newUserFlag;
+        if (newUserFlag === true) {
+          this.props.navigation.navigate('DashBoardView');
+        } else {
+          this.props.navigation.navigate('UserProfileView');
+        }
       } else {
-        this.errorMessage('Enter a valid OTP');
+        errorMessage('Enter a valid OTP');
         this.setState({
           loading: false,
         });
@@ -178,13 +186,6 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
     });
   };
 
-  errorMessage = (message: string) => {
-    if (Platform.OS === 'android') {
-      ToastAndroid.show(message, ToastAndroid.SHORT);
-    } else {
-      Alert.alert(message);
-    }
-  };
   render() {
     if (!this.state.loading && this.state.stepsForLogin === 0) {
       return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-class dashboard extends React.Component {
+class Dashboard extends React.Component {
   render() {
     return (
       <View>
@@ -21,4 +21,4 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
-export default dashboard;
+export default Dashboard;

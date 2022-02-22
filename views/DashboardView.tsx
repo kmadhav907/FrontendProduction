@@ -22,6 +22,10 @@ class DashboardView extends React.Component<
     if (userObject === null) {
       this.props.navigation.navigate('LoginView');
     }
+    const newUserFlag = JSON.parse(userObject as string).newUser;
+    if (!newUserFlag) {
+      this.props.navigation.navigate('UserProfileView');
+    }
     this.props.navigation.addListener('beforeRemove', (event: any) => {
       event.preventDefault();
       Alert.alert('Exit AskMechanics', 'Do you want to exit?', [
