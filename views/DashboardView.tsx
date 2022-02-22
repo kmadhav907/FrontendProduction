@@ -8,6 +8,7 @@ import {
   View,
   SafeAreaView,
   Image,
+  TextInput,
 } from 'react-native';
 
 import HelpScreen from '../components/bottomPanel/helpScreen';
@@ -52,8 +53,18 @@ class DashboardView extends React.Component<
   render() {
     return (
       <View style={styles.loginContainer}>
+        <View style={styles.drawerStyle}>
+          <Image
+            source={require('../assets/meat.png')}
+            style={styles.iconStyle}
+          />
+        </View>
+
         <View style={styles.dahsboardContainer}>
-          <Text>Dashboard</Text>
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Location of User Here"
+          />
         </View>
         <View style={styles.bottomView}>
           <Image
@@ -97,7 +108,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignContent: 'center',
     minHeight: '70%',
-    marginTop: '30%',
+    marginTop: '25%',
     backgroundColor: 'white',
     width: '100%',
     shadowColor: '#000',
@@ -111,6 +122,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 18,
     elevation: 6,
   },
+  drawerStyle: {
+    width: '100%',
+    justifyContent: 'flex-start',
+    marginTop: 35,
+    paddingLeft: 20,
+  },
   bottomView: {
     backgroundColor: 'white',
     width: '100%',
@@ -121,6 +138,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     paddingTop: 10,
     elevation: 10,
+  },
+  inputStyle: {
+    backgroundColor: 'white',
+    borderRadius: 50,
+    width: '95%',
+    marginTop: -30,
+    padding: 5,
+    elevation: 8,
   },
 });
 
