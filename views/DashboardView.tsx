@@ -10,13 +10,10 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import Switch from 'react-native-switch-toggles';
 
-import HelpScreen from '../components/bottomPanel/helpScreen';
-import InfoScreen from '../components/bottomPanel/infoScreen';
-import ProfileScreen from '../components/bottomPanel/profileScreen';
-
-interface DashboardViewState {}
+interface DashboardViewState {
+  isEnabled: boolean;
+}
 interface DashboardViewProps {
   navigation: any;
 }
@@ -26,7 +23,7 @@ class DashboardView extends React.Component<
 > {
   constructor(props: any) {
     super(props);
-    this.state = {isEnabled: 'false'};
+    this.state = {isEnabled: false};
     this.changeIsEnabled = this.changeIsEnabled.bind(this);
   }
   async componentDidMount() {
@@ -35,8 +32,10 @@ class DashboardView extends React.Component<
       this.props.navigation.navigate('LoginView');
     }
     const newUserFlag = JSON.parse(userObject as string).newUser;
-    if (!newUserFlag) {
+    console.log(userObject);
+    if (newUserFlag) {
       this.props.navigation.navigate('UserProfileView');
+      return;
       // this.props.navigation.navigate('DashboardView');
     }
     this.props.navigation.addListener('beforeRemove', (event: any) => {
@@ -59,7 +58,6 @@ class DashboardView extends React.Component<
     });
   }
   render() {
-    const isEnabled = this.state.isEnabled;
     return (
       <View style={styles.loginContainer}>
         <View style={styles.drawerStyle}>
@@ -150,10 +148,12 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     backgroundColor: '#feffff',
-    borderRadius: 15,
+    borderRadius: 12,
     width: '100%',
     marginLeft: -10,
     marginTop: -40,
+    height: 45,
+    paddingLeft: 10,
     padding: 2,
     elevation: 4,
   },
