@@ -21,8 +21,7 @@ interface UserProfileProps {
 }
 interface UserProfileState {
   userProfileImage: any | null;
-  privacyPolicyCheck: boolean;
-  termsAndConditionsCheck: boolean;
+  privacyPolicyAndTermsCheck: boolean;
 }
 const userProfileImage = require('../assets/userProfileImage.png');
 class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
@@ -30,8 +29,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     super(props);
     this.state = {
       userProfileImage: null,
-      privacyPolicyCheck: true,
-      termsAndConditionsCheck: true,
+      privacyPolicyAndTermsCheck: true,
     };
   }
   async componentDidMount() {
@@ -96,6 +94,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
       }
     });
   }
+  handleSubmitProfile = async () => {};
   render() {
     return (
       <View style={styles.userProfileContainer}>
@@ -158,28 +157,25 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
               multiline={true}
             />
           </View>
-          <View style={{width: '100%', marginTop: 10}}>
-            <View style={styles.checkboxContainer}>
-              <CheckBox
-                value={this.state.privacyPolicyCheck}
-                onChange={() => {
-                  this.setState({
-                    privacyPolicyCheck: !this.state.privacyPolicyCheck,
-                  });
-                }}
-              />
-            </View>
-            <View style={styles.checkboxContainer}>
-              <CheckBox
-                value={this.state.termsAndConditionsCheck}
-                onChange={() => {
-                  this.setState({
-                    termsAndConditionsCheck:
-                      !this.state.termsAndConditionsCheck,
-                  });
-                }}
-              />
-            </View>
+          <View style={styles.checkboxContainer}>
+            <Text style={{fontSize: 15, fontWeight: 'bold'}}>
+              Privacy Policy and Terms
+            </Text>
+            <CheckBox
+              value={this.state.privacyPolicyAndTermsCheck}
+              onChange={(event: any) => {
+                this.setState({
+                  privacyPolicyAndTermsCheck:
+                    !this.state.privacyPolicyAndTermsCheck,
+                });
+              }}></CheckBox>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={this.handleSubmitProfile}
+              style={styles.buttonStyle}>
+              <Text style={styles.buttonTextStyle}>Confirm</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -237,7 +233,7 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     marginLeft: 10,
-    width: '65%',
+    width: '60%',
     height: '100%',
     backgroundColor: 'white',
     borderWidth: 1,
@@ -246,10 +242,32 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingLeft: 5,
   },
-  inputTitle: {width: '30%', fontSize: 12, fontWeight: 'bold'},
+  inputTitle: {width: '35%', fontSize: 13, fontWeight: 'bold'},
   checkboxContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 15,
+  },
+  buttonContainer: {
+    width: '95%',
+    marginTop: 35,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  buttonStyle: {
+    backgroundColor: '#f9d342',
+    padding: 10,
+    width: 100,
+    alignItems: 'center',
+    elevation: 5,
+    borderRadius: 10,
+  },
+  buttonTextStyle: {
+    fontWeight: '900',
+    color: 'black',
+    fontSize: 16,
   },
 });
 
