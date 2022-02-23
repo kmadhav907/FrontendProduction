@@ -10,6 +10,7 @@ import {
   Image,
   TextInput,
 } from 'react-native';
+import Switch from 'react-native-switch-toggles';
 
 import HelpScreen from '../components/bottomPanel/helpScreen';
 import InfoScreen from '../components/bottomPanel/infoScreen';
@@ -25,7 +26,8 @@ class DashboardView extends React.Component<
 > {
   constructor(props: any) {
     super(props);
-    this.state = {};
+    this.state = {isEnabled: 'false'};
+    this.changeIsEnabled = this.changeIsEnabled.bind(this);
   }
   async componentDidMount() {
     const userObject = await AsyncStorage.getItem('userObject');
@@ -50,7 +52,14 @@ class DashboardView extends React.Component<
     });
     // this.props.navigation.navigate('LoginView');
   }
+
+  changeIsEnabled(event: any) {
+    this.setState({
+      isEnabled: event.target.value,
+    });
+  }
   render() {
+    const isEnabled = this.state.isEnabled;
     return (
       <View style={styles.loginContainer}>
         <View style={styles.drawerStyle}>
@@ -64,6 +73,18 @@ class DashboardView extends React.Component<
           <TextInput
             style={styles.inputStyle}
             placeholder="Location of User Here"
+          />
+          <Switch
+            size={50}
+            value={isEnabled}
+            onChange={value => this.changeIsEnabled(value)}
+            activeTrackColor={'#45D058'}
+            renderOffIndicator={() => (
+              <Text style={{fontSize: 24, color: 'red'}}>OFF</Text>
+            )}
+            renderOnIndicator={() => (
+              <Text style={{fontSize: 24, color: 'green'}}>ON</Text>
+            )}
           />
         </View>
         <View style={styles.bottomView}>
@@ -108,7 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignContent: 'center',
     minHeight: '70%',
-    marginTop: '25%',
+    marginTop: '20%',
     backgroundColor: 'white',
     width: '100%',
     shadowColor: '#000',
@@ -140,12 +161,13 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   inputStyle: {
-    backgroundColor: 'white',
-    borderRadius: 50,
-    width: '95%',
-    marginTop: -30,
-    padding: 5,
-    elevation: 8,
+    backgroundColor: '#feffff',
+    borderRadius: 15,
+    width: '100%',
+    marginLeft: -10,
+    marginTop: -40,
+    padding: 2,
+    elevation: 4,
   },
 });
 
