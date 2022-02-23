@@ -55,7 +55,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
   }
   async componentDidMount() {
     const userObject = await AsyncStorage.getItem('userObject');
-    console.log(userObject);
+    console.log('loginView' + userObject);
     if (userObject !== null) {
       this.props.navigation.navigate('DashboardView');
     }

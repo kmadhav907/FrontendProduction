@@ -26,19 +26,20 @@ class DashboardView extends React.Component<
 > {
   constructor(props: any) {
     super(props);
-    this.state = {isEnabled: 'false'};
-    this.changeIsEnabled = this.changeIsEnabled.bind(this);
+    this.state = {isEnabled: 'false', location_data: ''};
   }
   async componentDidMount() {
     const userObject = await AsyncStorage.getItem('userObject');
+    console.log('userobject' + userObject);
     if (userObject === null) {
       this.props.navigation.navigate('LoginView');
     }
     const newUserFlag = JSON.parse(userObject as string).newUser;
     if (!newUserFlag) {
-      this.props.navigation.navigate('UserProfileView');
-      // this.props.navigation.navigate('DashboardView');
+      // this.props.navigation.navigate('UserProfileView');
+      this.props.navigation.navigate('DashboardView');
     }
+
     this.props.navigation.addListener('beforeRemove', (event: any) => {
       event.preventDefault();
       Alert.alert('Exit AskMechanics', 'Do you want to exit?', [
@@ -53,13 +54,7 @@ class DashboardView extends React.Component<
     // this.props.navigation.navigate('LoginView');
   }
 
-  changeIsEnabled(event: any) {
-    this.setState({
-      isEnabled: event.target.value,
-    });
-  }
   render() {
-    const isEnabled = this.state.isEnabled;
     return (
       <View style={styles.loginContainer}>
         <View style={styles.drawerStyle}>
