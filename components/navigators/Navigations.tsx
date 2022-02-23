@@ -23,7 +23,7 @@ const Navigators = () => {
           component={LoginView}
         />
         <Stack.Screen
-          name="DashboardView"
+          name="DashBoardView"
           options={{headerShown: false, gestureEnabled: false}}
           component={DashboardView}
         />

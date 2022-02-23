@@ -36,8 +36,8 @@ class DashboardView extends React.Component<
     }
     const newUserFlag = JSON.parse(userObject as string).newUser;
     if (!newUserFlag) {
-      // this.props.navigation.navigate('UserProfileView');
-      this.props.navigation.navigate('DashboardView');
+      this.props.navigation.navigate('UserProfileView');
+      // this.props.navigation.navigate('DashboardView');
     }
     this.props.navigation.addListener('beforeRemove', (event: any) => {
       event.preventDefault();

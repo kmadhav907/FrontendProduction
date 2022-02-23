@@ -23,7 +23,7 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
         const userObject = await AsyncStorage.getItem('userObject');
         console.log(userObject);
         if (userObject !== null) {
-          this.props.navigation.navigate('DashboardView');
+          this.props.navigation.navigate('DashBoardView');
         } else {
           this.props.navigation.navigate('LoginView');
         }

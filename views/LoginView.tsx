@@ -13,6 +13,7 @@ import {
 import OTPField from '../components/otpfield/OTPField';
 import Geolocation from 'react-native-geolocation-service';
 import {
+  checkValidPhoneNumber,
   errorMessage,
   modifyPhoneNumber,
   requestLocationPermission,
@@ -79,7 +80,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
 
   handleLogin = () => {
     this.setState({loading: true});
-    if (this.state.phoneNumber.length < 10) {
+    if (!checkValidPhoneNumber(this.state.phoneNumber)) {
       this.setState({
         loading: false,
       });
@@ -171,12 +172,11 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
           loading: false,
         });
         const newUserFlag = response.data.newUserFlag;
-        // if (newUserFlag === true) {
-        //   this.props.navigation.navigate('DashBoardView');
-        // } else {
-        //   this.props.navigation.navigate('UserProfileView');
-        // }
-        this.props.navigation.navigate('DashBoardView');
+        if (newUserFlag === true) {
+          this.props.navigation.navigate('DashBoardView');
+        } else {
+          this.props.navigation.navigate('UserProfileView');
+        }
       } else {
         errorMessage('Enter a valid OTP');
         this.setState({
