@@ -5,6 +5,7 @@ import {
   BackHandler,
   Image,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -98,86 +99,88 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
   render() {
     return (
       <View style={styles.userProfileContainer}>
-        <View style={styles.sectionStyle}>
-          <View style={styles.profilePicSection}>
-            {/* <Image
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.sectionStyle}>
+            <View style={styles.profilePicSection}>
+              {/* <Image
               source={require(this.state.userProfileImage)}
               style={{width: 20, height: 20}}
             /> */}
 
-            <TouchableOpacity
-              style={{
-                marginTop: 5,
-                height: 100,
-                width: 100,
-                justifyContent: 'center',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-              }}
-              onPress={this.choosePhotoFromTheStorage}>
-              <Image
-                source={userProfileImage}
-                style={{width: '100%', height: '100%'}}
+              <TouchableOpacity
+                style={{
+                  marginTop: 5,
+                  height: 100,
+                  width: 100,
+                  justifyContent: 'center',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+                onPress={this.choosePhotoFromTheStorage}>
+                <Image
+                  source={userProfileImage}
+                  style={{width: '100%', height: '100%'}}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Name:</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Enter your name"
               />
-            </TouchableOpacity>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Workshop Name:</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Enter your workshop name"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Mobile Number:</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Enter your Mobile Number"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Service Category:</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Enter your service category"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Workshop Address:</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Enter your address"
+                multiline={true}
+              />
+            </View>
+            <View style={styles.checkboxContainer}>
+              <Text style={{fontSize: 15, fontWeight: 'bold'}}>
+                Privacy Policy and Terms
+              </Text>
+              <CheckBox
+                value={this.state.privacyPolicyAndTermsCheck}
+                onChange={(event: any) => {
+                  this.setState({
+                    privacyPolicyAndTermsCheck:
+                      !this.state.privacyPolicyAndTermsCheck,
+                  });
+                }}></CheckBox>
+            </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                onPress={this.handleSubmitProfile}
+                style={styles.buttonStyle}>
+                <Text style={styles.buttonTextStyle}>Confirm</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Name:</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter your name"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Workshop Name:</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter your workshop name"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Mobile Number:</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter your Mobile Number"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Service Category:</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter your service category"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Workshop Address:</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter your address"
-              multiline={true}
-            />
-          </View>
-          <View style={styles.checkboxContainer}>
-            <Text style={{fontSize: 15, fontWeight: 'bold'}}>
-              Privacy Policy and Terms
-            </Text>
-            <CheckBox
-              value={this.state.privacyPolicyAndTermsCheck}
-              onChange={(event: any) => {
-                this.setState({
-                  privacyPolicyAndTermsCheck:
-                    !this.state.privacyPolicyAndTermsCheck,
-                });
-              }}></CheckBox>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={this.handleSubmitProfile}
-              style={styles.buttonStyle}>
-              <Text style={styles.buttonTextStyle}>Confirm</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        </ScrollView>
       </View>
     );
   }

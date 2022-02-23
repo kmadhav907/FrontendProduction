@@ -74,18 +74,6 @@ class DashboardView extends React.Component<
             style={styles.inputStyle}
             placeholder="Location of User Here"
           />
-          <Switch
-            size={50}
-            value={isEnabled}
-            onChange={value => this.changeIsEnabled(value)}
-            activeTrackColor={'#45D058'}
-            renderOffIndicator={() => (
-              <Text style={{fontSize: 24, color: 'red'}}>OFF</Text>
-            )}
-            renderOnIndicator={() => (
-              <Text style={{fontSize: 24, color: 'green'}}>ON</Text>
-            )}
-          />
         </View>
         <View style={styles.bottomView}>
           <Image
