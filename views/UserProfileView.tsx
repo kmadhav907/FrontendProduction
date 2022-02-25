@@ -129,6 +129,8 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     let userObject = await AsyncStorage.getItem('userObject');
     const fixitId = JSON.parse(userObject as string).fixitId;
     const userType = JSON.parse(userObject as string).userType;
+    const latitude = JSON.parse(userObject as string).latitude;
+    const longitude = JSON.parse(userObject as string).longitude;
     editProfile(
       this.state.userEmail,
       this.state.userExperience,
@@ -143,12 +145,15 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
           await AsyncStorage.removeItem('userObject');
           const newUserObject = JSON.stringify({
             newUser: false,
+            userName: this.state.userName,
             userPhoneNumber: this.state.userPhoneNumber,
             fixitId: fixitId,
             userType: userType,
+            latitude: latitude,
+            longitude: longitude,
           });
+          console.log('Storage in profiel : ' + userObject);
           await AsyncStorage.setItem('userObject', newUserObject);
-          console.log('Hello world');
           this.props.navigation.navigate('DashBoardView');
         } else {
           errorMessage('Something went wrong :(');

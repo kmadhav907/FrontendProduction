@@ -11,6 +11,12 @@ import {
   TextInput,
 } from 'react-native';
 
+import {
+  getLocation,
+  saveLocation,
+  updateLocation,
+} from '../apiServices/dashboardApi';
+
 interface DashboardViewState {
   isEnabled: boolean;
 }
@@ -23,8 +29,11 @@ class DashboardView extends React.Component<
 > {
   constructor(props: any) {
     super(props);
-    this.state = {isEnabled: false};
-    this.changeIsEnabled = this.changeIsEnabled.bind(this);
+    this.state = {
+      isEnabled: false,
+      showingString: '',
+      errorMessage: 'somethign is not right',
+    };
   }
   async componentDidMount() {
     const userObject = await AsyncStorage.getItem('userObject');
@@ -39,6 +48,32 @@ class DashboardView extends React.Component<
       return;
       // this.props.navigation.navigate('DashboardView');
     }
+    const fixitID = JSON.parse(userObject as string).fixitId;
+    const latitude = JSON.parse(userObject as string).latitude;
+    const longitude = JSON.parse(userObject as string).longitude;
+    const userName = JSON.parse(userObject as string).userName;
+    await saveLocation(fixitID, latitude, longitude).then((response: any) => {
+      console.log('Response from saveLoc : ' + response);
+      if (response.status === 200) {
+        console.log('no Error in save loc');
+      } else {
+        console.log('Error in save loc');
+      }
+    });
+
+    await getLocation(fixitID).then((response: any) => {
+      console.log(response);
+      if (response.status === 200) {
+        const string = JSON.stringify(
+          userName + response.latitude + response.longitude,
+        );
+        this.setState({
+          showingString: string,
+        });
+      }
+    });
+    // const UserName =
+    console.log('fixitId in dash: ' + fixitID);
 
     this.props.navigation.addListener('beforeRemove', (event: any) => {
       event.preventDefault();

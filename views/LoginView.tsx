@@ -158,6 +158,8 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       if (response.data.OtpVerification === true) {
         const userObject = {
           fixitId: response.data.fixitId,
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
           userPhoneNumber: this.state.phoneNumber,
           userType: response.data.userType,
           newUser: response.data.newUserFlag,
