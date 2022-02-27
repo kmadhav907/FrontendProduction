@@ -19,6 +19,8 @@ import {
 
 interface DashboardViewState {
   isEnabled: boolean;
+  showingString: string;
+  errorMessage: string;
 }
 interface DashboardViewProps {
   navigation: any;
@@ -102,7 +104,7 @@ class DashboardView extends React.Component<
         <View style={styles.dahsboardContainer}>
           <TextInput
             style={styles.inputStyle}
-            placeholder="Location of User Here"
+            placeholder={this.state.showingString && this.state.showingString}
           />
         </View>
         <View style={styles.bottomView}>
