@@ -40,7 +40,6 @@ const userProfileImage = require('../assets/userProfileImage.png');
 class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
   constructor(props: UserProfileProps) {
     super(props);
-
     this.state = {
       userProfileImage: null,
       privacyPolicy: true,
@@ -59,17 +58,17 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     const userObject = await AsyncStorage.getItem('userObject');
     const phoneNumber = JSON.parse(userObject as string).userPhoneNumber;
     this.setState({userPhoneNumber: phoneNumber});
-    this.props.navigation.addListener('beforeRemove', (event: any) => {
-      event.preventDefault();
-      Alert.alert('Exit AskMechanics', 'Do you want to exit?', [
-        {
-          text: 'No',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'Yes', onPress: () => BackHandler.exitApp()},
-      ]);
-    });
+    // this.props.navigation.addListener('beforeRemove', (event: any) => {
+    //   event.preventDefault();
+    //   Alert.alert('Exit AskMechanics', 'Do you want to exit?', [
+    //     {
+    //       text: 'No',
+    //       onPress: () => console.log('Cancel Pressed'),
+    //       style: 'cancel',
+    //     },
+    //     {text: 'Yes', onPress: () => BackHandler.exitApp()},
+    //   ]);
+    // });
   }
   choosePhotoFromTheStorage() {
     var options: any = {
@@ -126,11 +125,25 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     console.log(this.state.userServiceProviderType);
   };
   handleSubmitProfile = async () => {
+    if (
+      !(
+        this.state.userName &&
+        this.state.userAddress &&
+        this.state.userEmail &&
+        this.state.userExperience &&
+        this.state.userServiceProviderType
+      )
+    ) {
+      errorMessage('Please fill everything');
+      return;
+    }
+    if (!(this.state.privacyPolicy && this.state.termsAndCondition)) {
+      errorMessage('Please accept the terms');
+      return;
+    }
     let userObject = await AsyncStorage.getItem('userObject');
     const fixitId = JSON.parse(userObject as string).fixitId;
     const userType = JSON.parse(userObject as string).userType;
-    const latitude = JSON.parse(userObject as string).latitude;
-    const longitude = JSON.parse(userObject as string).longitude;
     editProfile(
       this.state.userEmail,
       this.state.userExperience,
@@ -149,12 +162,11 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
             userPhoneNumber: this.state.userPhoneNumber,
             fixitId: fixitId,
             userType: userType,
-            latitude: latitude,
-            longitude: longitude,
           });
           console.log('Storage in profiel : ' + userObject);
-          await AsyncStorage.setItem('userObject', newUserObject);
-          this.props.navigation.navigate('DashBoardView');
+          AsyncStorage.setItem('userObject', newUserObject).then(() =>
+            this.props.navigation.navigate('DashBoardView'),
+          );
         } else {
           errorMessage('Something went wrong :(');
         }
@@ -164,10 +176,25 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
         errorMessage('Something went wrong :(');
       });
   };
+  handleBack = async () => {
+    let userObject = await AsyncStorage.getItem('userObject');
+    console.log(userObject);
+    const newUserFlag = JSON.parse(userObject as string).newUser;
+    console.log(newUserFlag);
+  };
   render() {
     return (
       <View style={styles.userProfileContainer}>
-        <ScrollView style={styles.sectionStyle} nestedScrollEnabled={true}>
+        <TouchableOpacity style={styles.drawerStyle} onPress={this.handleBack}>
+          <Image
+            source={require('../assets/meat.png')}
+            style={styles.iconStyle}
+          />
+        </TouchableOpacity>
+        <ScrollView
+          style={styles.sectionStyle}
+          nestedScrollEnabled={true}
+          contentContainerStyle={{justifyContent: 'center'}}>
           <View style={styles.profilePicSection}>
             {/* <Image
               source={require(this.state.userProfileImage)}
@@ -334,11 +361,10 @@ const styles = StyleSheet.create({
   sectionStyle: {
     flex: 1,
     padding: 10,
-    paddingTop: 10,
     flexDirection: 'column',
     alignContent: 'center',
     minHeight: '70%',
-    marginTop: '30%',
+    marginTop: '20%',
     backgroundColor: 'white',
     width: '100%',
     shadowColor: '#000',
@@ -352,16 +378,26 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 18,
     elevation: 6,
   },
+  drawerStyle: {
+    width: '100%',
+    justifyContent: 'flex-start',
+    marginTop: 35,
+    paddingLeft: 20,
+  },
+  iconStyle: {
+    width: 30,
+    height: 30,
+  },
   profilePicSection: {
     width: '100%',
     height: '15%',
     alignContent: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   inputContainer: {
     width: '100%',
     height: 45,
-    marginTop: 10,
+    marginTop: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -386,8 +422,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainer: {
-    width: '95%',
-    marginTop: 35,
+    width: '100%',
+    marginTop: 25,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',

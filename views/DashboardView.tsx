@@ -9,6 +9,8 @@ import {
   SafeAreaView,
   Image,
   TextInput,
+  TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 
 import {
@@ -16,11 +18,14 @@ import {
   saveLocation,
   updateLocation,
 } from '../apiServices/dashboardApi';
+import Geolocation from 'react-native-geolocation-service';
+import {errorMessage, requestLocationPermission} from '../global/utils';
 
 interface DashboardViewState {
   isEnabled: boolean;
   showingString: string;
-  errorMessage: string;
+  latitude: number | undefined;
+  longitude: number | undefined;
 }
 interface DashboardViewProps {
   navigation: any;
@@ -34,8 +39,10 @@ class DashboardView extends React.Component<
     this.state = {
       isEnabled: false,
       showingString: '',
-      errorMessage: 'somethign is not right',
+      latitude: undefined,
+      longitude: undefined,
     };
+    console.log('Created');
   }
   async componentDidMount() {
     const userObject = await AsyncStorage.getItem('userObject');
@@ -50,44 +57,48 @@ class DashboardView extends React.Component<
       return;
       // this.props.navigation.navigate('DashboardView');
     }
-    const fixitID = JSON.parse(userObject as string).fixitId;
-    const latitude = JSON.parse(userObject as string).latitude;
-    const longitude = JSON.parse(userObject as string).longitude;
-    const userName = JSON.parse(userObject as string).userName;
-    await saveLocation(fixitID, latitude, longitude).then((response: any) => {
-      console.log('Response from saveLoc : ' + response);
-      if (response.status === 200) {
-        console.log('no Error in save loc');
-      } else {
-        console.log('Error in save loc');
+    try {
+      const permissionStatus = await requestLocationPermission();
+      if (permissionStatus === true) {
+        Geolocation.getCurrentPosition(
+          position => {
+            const {latitude, longitude} = position.coords;
+            this.setState({latitude: latitude, longitude: longitude});
+          },
+          error => {
+            ToastAndroid.show(error.message, ToastAndroid.SHORT);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
       }
-    });
-
+    } catch (err) {
+      console.log(err);
+    }
+    const fixitID = JSON.parse(userObject as string).fixitId;
+    const userName = JSON.parse(userObject as string).userName;
+    await saveLocation(fixitID, this.state.latitude, this.state.longitude).then(
+      (response: any) => {
+        console.log('Response from saveLoc : ' + response);
+        if (response.status === 200) {
+          console.log('no Error in save loc');
+        } else {
+          errorMessage('Please check your connection');
+        }
+      },
+    );
     await getLocation(fixitID).then((response: any) => {
       console.log(response);
       if (response.status === 200) {
-        const string = JSON.stringify(
+        const locationString = JSON.stringify(
           userName + response.latitude + response.longitude,
         );
         this.setState({
-          showingString: string,
+          showingString: locationString,
         });
       }
     });
     // const UserName =
     console.log('fixitId in dash: ' + fixitID);
-
-    this.props.navigation.addListener('beforeRemove', (event: any) => {
-      event.preventDefault();
-      Alert.alert('Exit AskMechanics', 'Do you want to exit?', [
-        {
-          text: 'No',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'Yes', onPress: () => BackHandler.exitApp()},
-      ]);
-    });
     // this.props.navigation.navigate('LoginView');
   }
 
@@ -95,33 +106,44 @@ class DashboardView extends React.Component<
     return (
       <View style={styles.loginContainer}>
         <View style={styles.drawerStyle}>
-          <Image
-            source={require('../assets/meat.png')}
-            style={styles.iconStyle}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate('MapView');
+            }}>
+            <Image
+              source={require('../assets/meat.png')}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
         </View>
-
         <View style={styles.dahsboardContainer}>
           <TextInput
             style={styles.inputStyle}
-            placeholder={this.state.showingString && this.state.showingString}
+            placeholder="Location of User Here"
           />
         </View>
         <View style={styles.bottomView}>
-          <Image
-            source={require('../assets/information.png')}
-            style={styles.iconStyle}
-          />
-
-          <Image
-            source={require('../assets/phone.png')}
-            style={styles.iconStyle}
-          />
-
-          <Image
-            source={require('../assets/user.png')}
-            style={styles.iconStyle}
-          />
+          <View>
+            <Image
+              source={require('../assets/information.png')}
+              style={styles.iconStyle}
+            />
+          </View>
+          <View>
+            <Image
+              source={require('../assets/phone.png')}
+              style={styles.iconStyle}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate('UserProfileView');
+            }}>
+            <Image
+              source={require('../assets/user.png')}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     );

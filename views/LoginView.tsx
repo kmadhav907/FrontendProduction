@@ -173,6 +173,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
         this.setState({
           loading: false,
         });
+        console.log(response.data.newUserFlag);
         const newUserFlag = response.data.newUserFlag;
         if (newUserFlag === false) {
           this.props.navigation.navigate('DashBoardView');
