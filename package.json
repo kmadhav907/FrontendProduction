@@ -32,7 +32,8 @@
     "react-native-switch-toggles": "0.0.1",
     "react-navigation": "^4.4.4",
     "react-navigation-material-bottom-tabs": "^2.3.5",
-    "save": "^2.4.0"
+    "save": "^2.4.0",
+    "toggle-switch-react-native": "^3.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

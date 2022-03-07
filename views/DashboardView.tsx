@@ -18,14 +18,18 @@ import {
   saveLocation,
   updateLocation,
 } from '../apiServices/dashboardApi';
+import ToggleSwitch from 'toggle-switch-react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {errorMessage, requestLocationPermission} from '../global/utils';
 
 interface DashboardViewState {
   isEnabled: boolean;
   showingString: string;
+  username: string;
   latitude: number | undefined;
   longitude: number | undefined;
+  isOn: boolean | false;
+  dutyCall: string;
 }
 interface DashboardViewProps {
   navigation: any;
@@ -39,8 +43,11 @@ class DashboardView extends React.Component<
     this.state = {
       isEnabled: false,
       showingString: '',
+      username: '',
       latitude: undefined,
       longitude: undefined,
+      isOn: false,
+      dutyCall: 'OFF DUTY',
     };
     console.log('Created');
   }
@@ -80,6 +87,7 @@ class DashboardView extends React.Component<
       (response: any) => {
         console.log('Response from saveLoc : ' + response);
         if (response.status === 200) {
+          console.log('data is dash', response);
           console.log('no Error in save loc');
         } else {
           errorMessage('Please check your connection');
@@ -87,13 +95,12 @@ class DashboardView extends React.Component<
       },
     );
     await getLocation(fixitID).then((response: any) => {
-      console.log(response);
+      console.log('location reponse', response);
       if (response.status === 200) {
-        const locationString = JSON.stringify(
-          userName + response.latitude + response.longitude,
-        );
+        // const locationString =
+        //   userName + response.latitude + response.longitude;
         this.setState({
-          showingString: locationString,
+          username: userName,
         });
       }
     });
@@ -102,51 +109,134 @@ class DashboardView extends React.Component<
     // this.props.navigation.navigate('LoginView');
   }
 
+  handleToggle = async () => {
+    this.setState({
+      isOn: !this.state.isOn,
+      dutyCall: this.state.isOn === false ? 'ON DUTY' : 'OFF DUTY',
+    });
+  };
+
   render() {
-    return (
-      <View style={styles.loginContainer}>
-        <View style={styles.drawerStyle}>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate('MapView');
-            }}>
-            <Image
-              source={require('../assets/meat.png')}
-              style={styles.iconStyle}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.dahsboardContainer}>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Location of User Here"
-          />
-        </View>
-        <View style={styles.bottomView}>
-          <View>
-            <Image
-              source={require('../assets/information.png')}
-              style={styles.iconStyle}
+    if (this.state.isOn === true) {
+      return (
+        <View style={styles.loginContainer1}>
+          <View style={styles.drawerStyle}>
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate('MapView');
+              }}>
+              <Image
+                source={require('../assets/white-menu.png')}
+                style={styles.iconStyle}
+              />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.titleStyle1}>{this.state.dutyCall}</Text>
+          <View style={styles.switchStyle}>
+            <ToggleSwitch
+              isOn={this.state.isOn}
+              onColor="#f9d342"
+              offColor="black"
+              size="medium"
+              onToggle={this.handleToggle}
             />
           </View>
-          <View>
-            <Image
-              source={require('../assets/phone.png')}
-              style={styles.iconStyle}
+          <View style={styles.dahsboardContainer}>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder={`${this.state.username} , ${this.state.latitude} , ${this.state.longitude}`}
             />
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate('UserProfileView');
-            }}>
-            <Image
-              source={require('../assets/user.png')}
-              style={styles.iconStyle}
-            />
-          </TouchableOpacity>
+
+          <View style={styles.bottomView}>
+            <View>
+              <Image
+                source={require('../assets/2-01.png')}
+                style={styles.iconStyle}
+              />
+            </View>
+            <View>
+              <Image
+                source={require('../assets/3-01.png')}
+                style={styles.iconStyle}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate('UserProfileView');
+              }}>
+              <Image
+                source={require('../assets/4-01.png')}
+                style={styles.iconStyle}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    );
+      );
+    } else {
+      return (
+        <View style={styles.loginContainer}>
+          <View style={styles.drawerStyle}>
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate('MapView');
+              }}>
+              <Image
+                source={require('../assets/white-menu.png')}
+                style={styles.iconStyle}
+              />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.titleStyle}>{this.state.dutyCall}</Text>
+          <View style={styles.switchStyle}>
+            <ToggleSwitch
+              isOn={this.state.isOn}
+              onColor="#f9d342"
+              offColor="black"
+              size="medium"
+              onToggle={this.handleToggle}
+            />
+          </View>
+          <View style={styles.dahsboardContainer}>
+            <View>
+              <Image
+                style={styles.offlineContainer}
+                source={require('../assets/man-15.png')}
+              />
+            </View>
+            <View style={styles.oflfineText}>
+              <Text style={styles.midText1}>YOU ARE OFFLINE</Text>
+              <Text style={styles.midText2}>Please turn on above</Text>
+              <Text style={styles.midText3}>toggle button to get request</Text>
+            </View>
+          </View>
+
+          <View style={styles.bottomView}>
+            <View>
+              <Image
+                source={require('../assets/2-01.png')}
+                style={styles.iconStyle}
+              />
+            </View>
+            <View>
+              <Image
+                source={require('../assets/3-01.png')}
+                style={styles.iconStyle}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate('UserProfileView');
+              }}>
+              <Image
+                source={require('../assets/4-01.png')}
+                style={styles.iconStyle}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }
   }
 }
 
@@ -159,9 +249,17 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#f9d342',
   },
+  loginContainer1: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'black',
+  },
   iconStyle: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
   },
   dahsboardContainer: {
     flex: 1,
@@ -171,7 +269,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignContent: 'center',
     minHeight: '70%',
-    marginTop: '20%',
+    marginTop: '10%',
     backgroundColor: 'white',
     width: '100%',
     shadowColor: '#000',
@@ -188,7 +286,7 @@ const styles = StyleSheet.create({
   drawerStyle: {
     width: '100%',
     justifyContent: 'flex-start',
-    marginTop: 35,
+    marginTop: 30,
     paddingLeft: 20,
   },
   bottomView: {
@@ -199,7 +297,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingTop: 10,
+    paddingTop: 7,
     elevation: 10,
   },
   inputStyle: {
@@ -212,6 +310,51 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     padding: 2,
     elevation: 4,
+  },
+  titleStyle: {
+    fontSize: 25,
+    fontFamily: 'Metropolis',
+    fontWeight: 'bold',
+  },
+  titleStyle1: {
+    fontSize: 25,
+    color: 'white',
+    fontFamily: 'Metropolis',
+    fontWeight: 'bold',
+  },
+  switchStyle: {
+    paddingLeft: 250,
+  },
+  offlineContainer: {
+    width: 200,
+    height: 200,
+    // backgroundColor: 'orange',
+    marginLeft: 55,
+    marginTop: -15,
+  },
+  oflfineText: {
+    width: '70%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 40,
+  },
+  midText1: {
+    fontSize: 20,
+    fontFamily: 'Metropolis',
+    fontWeight: 'bold',
+    color: 'black',
+    marginBottom: 10,
+  },
+
+  midText2: {
+    fontFamily: 'Metropolis',
+    fontWeight: '300',
+    color: 'black',
+  },
+  midText3: {
+    fontFamily: 'Metropolis',
+    fontWeight: '300',
+    color: 'black',
   },
 });
 
