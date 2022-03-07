@@ -18,6 +18,7 @@ import {
   saveLocation,
   updateLocation,
 } from '../apiServices/dashboardApi';
+import Map from '../components/googleMap/Map';
 import ToggleSwitch from 'toggle-switch-react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {errorMessage, requestLocationPermission} from '../global/utils';
@@ -141,11 +142,17 @@ class DashboardView extends React.Component<
               onToggle={this.handleToggle}
             />
           </View>
-          <View style={styles.dahsboardContainer}>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder={`${this.state.username} , ${this.state.latitude} , ${this.state.longitude}`}
-            />
+          <View style={styles.dahsboardContainer1}>
+            <View style={styles.mapStyle}>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder={`${this.state.username} , ${this.state.latitude} , ${this.state.longitude}`}
+              />
+              <Map
+                latitude={this.state.latitude}
+                longitude={this.state.longitude}
+              />
+            </View>
           </View>
 
           <View style={styles.bottomView}>
@@ -300,17 +307,7 @@ const styles = StyleSheet.create({
     paddingTop: 7,
     elevation: 10,
   },
-  inputStyle: {
-    backgroundColor: '#feffff',
-    borderRadius: 12,
-    width: '100%',
-    marginLeft: -10,
-    marginTop: -40,
-    height: 45,
-    paddingLeft: 10,
-    padding: 2,
-    elevation: 4,
-  },
+
   titleStyle: {
     fontSize: 25,
     fontFamily: 'Metropolis',
@@ -355,6 +352,46 @@ const styles = StyleSheet.create({
     fontFamily: 'Metropolis',
     fontWeight: '300',
     color: 'black',
+  },
+  dahsboardContainer1: {
+    flex: 1,
+    padding: 10,
+    paddingTop: 60,
+    paddingLeft: 30,
+    flexDirection: 'column',
+    alignContent: 'center',
+    minHeight: '70%',
+    marginTop: '10%',
+    backgroundColor: 'white',
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    elevation: 6,
+  },
+  inputStyle: {
+    backgroundColor: '#feffff',
+    borderRadius: 12,
+    width: '100%',
+    // marginLeft: -10,
+    // marginTop: -40,
+    // height: 45,
+    paddingLeft: 10,
+    padding: 2,
+    elevation: 4,
+  },
+  mapStyle: {
+    marginTop: -60,
+    marginLeft: -30,
+    marginRight: -20,
+    width: '100%',
+    height: '70%',
   },
 });
 
