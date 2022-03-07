@@ -144,14 +144,18 @@ class DashboardView extends React.Component<
           </View>
           <View style={styles.dahsboardContainer1}>
             <View style={styles.mapStyle}>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder={`${this.state.username} , ${this.state.latitude} , ${this.state.longitude}`}
-              />
-              <Map
-                latitude={this.state.latitude}
-                longitude={this.state.longitude}
-              />
+              <View>
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder={`${this.state.username} , ${this.state.latitude} , ${this.state.longitude}`}
+                />
+              </View>
+              <View style={styles.mapStyle1}>
+                <Map
+                  latitude={this.state.latitude}
+                  longitude={this.state.longitude}
+                />
+              </View>
             </View>
           </View>
 
@@ -379,19 +383,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#feffff',
     borderRadius: 12,
     width: '100%',
-    // marginLeft: -10,
-    // marginTop: -40,
-    // height: 45,
-    paddingLeft: 10,
     padding: 2,
     elevation: 4,
   },
-  mapStyle: {
-    marginTop: -60,
-    marginLeft: -30,
-    marginRight: -20,
+  mapStyle1: {
+    flexDirection: 'column',
+    alignContent: 'center',
+    minHeight: '100%',
+    backgroundColor: 'white',
     width: '100%',
-    height: '70%',
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
   },
 });
 
