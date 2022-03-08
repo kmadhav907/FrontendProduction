@@ -401,14 +401,10 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   mapStyle1: {
-<<<<<<< HEAD
-    minHeight: '100%',
-=======
     flexDirection: 'column',
     alignContent: 'center',
     minHeight: '50%',
     backgroundColor: 'white',
->>>>>>> aab7ffc98d417ed1d95537f0aacd4c56eece178b
     width: '100%',
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
