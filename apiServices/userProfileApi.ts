@@ -41,3 +41,8 @@ export const editProfile = async (
   );
   return response;
 };
+
+export const getUserDetails = async (fixitId: string) => {
+  const response = await axios.get(`${ENDPOINT}/getprofiledetails/${fixitId}`);
+  return response;
+};
