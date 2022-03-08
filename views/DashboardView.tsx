@@ -387,10 +387,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   mapStyle1: {
-    flexDirection: 'column',
-    alignContent: 'center',
     minHeight: '100%',
-    backgroundColor: 'white',
     width: '100%',
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
