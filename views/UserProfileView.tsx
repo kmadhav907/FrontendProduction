@@ -12,10 +12,15 @@ import {
   TouchableOpacity,
   View,
   Linking,
+  ActivityIndicator,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import CheckBox from '@react-native-community/checkbox';
-import {editProfile, uploadProfilePic} from '../apiServices/userProfileApi';
+import {
+  editProfile,
+  getUserDetails,
+  uploadProfilePic,
+} from '../apiServices/userProfileApi';
 import {errorMessage} from '../global/utils';
 
 import {serviceProviders} from '../global/constant';
@@ -35,11 +40,14 @@ interface UserProfileState {
   dropDownOpen: boolean;
   userPhoneNumber: string;
   termsAndCondition: boolean;
+  showEditableContent: boolean;
+  loading: boolean;
 }
 const userProfileImage = require('../assets/userProfileImage.png');
 class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
   constructor(props: UserProfileProps) {
     super(props);
+
     this.state = {
       userProfileImage: null,
       privacyPolicy: true,
@@ -51,13 +59,23 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
       dropDownOpen: false,
       userPhoneNumber: '',
       termsAndCondition: true,
+      showEditableContent: true,
+      loading: false,
     };
     this.setServiceProviderType = this.setServiceProviderType.bind(this);
   }
   async componentDidMount() {
+    this.setState({loading: true});
     const userObject = await AsyncStorage.getItem('userObject');
     const phoneNumber = JSON.parse(userObject as string).userPhoneNumber;
+    const fixitID = JSON.parse(userObject as string).fixitId;
+    const newUserFlag = JSON.parse(userObject as string).newUser;
     this.setState({userPhoneNumber: phoneNumber});
+    if (newUserFlag) {
+      this.setState({showEditableContent: false});
+    }
+    if (!newUserFlag) this.getUserDetailsForReadableContent(fixitID);
+    this.setState({loading: false});
     // this.props.navigation.addListener('beforeRemove', (event: any) => {
     //   event.preventDefault();
     //   Alert.alert('Exit AskMechanics', 'Do you want to exit?', [
@@ -70,6 +88,20 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     //   ]);
     // });
   }
+  getUserDetailsForReadableContent = (fixitId: string) => {
+    getUserDetails(fixitId).then((response: any) => {
+      const userDetails = response.data;
+      this.setState({
+        userEmail: userDetails['Mr.Fixit Email'],
+        userAddress: userDetails['Mr.Fixit Worskshop Adress'],
+        userExperience: userDetails['Mr.Fixit Experience'],
+        userName: userDetails['Mr.FixitName'],
+        userServiceProviderType:
+          userDetails['Mr.Fixit Specialization'] &&
+          userDetails['Mr.Fixit Specialization'][0],
+      });
+    });
+  };
   choosePhotoFromTheStorage() {
     var options: any = {
       title: 'Select Image',
@@ -181,168 +213,278 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     console.log(userObject);
     const newUserFlag = JSON.parse(userObject as string).newUser;
     console.log(newUserFlag);
+    this.props.navigation.navigate('DashBoardView');
   };
   render() {
-    return (
-      <View style={styles.userProfileContainer}>
-        <TouchableOpacity style={styles.drawerStyle} onPress={this.handleBack}>
-          <Image
-            source={require('../assets/meat.png')}
-            style={styles.iconStyle}
+    if (this.state.loading) {
+      return (
+        <View style={styles.userProfileContainer}>
+          <ActivityIndicator
+            animating={this.state.loading}
+            color="blue"
+            size="large"
+            style={styles.activityIndicator}
           />
-        </TouchableOpacity>
-        <ScrollView
-          style={styles.sectionStyle}
-          nestedScrollEnabled={true}
-          contentContainerStyle={{justifyContent: 'center'}}>
-          <View style={styles.profilePicSection}>
-            {/* <Image
+        </View>
+      );
+    }
+    if (!this.state.loading && this.state.showEditableContent) {
+      return (
+        <View style={styles.userProfileContainer}>
+          <TouchableOpacity
+            style={styles.drawerStyle}
+            onPress={this.handleBack}>
+            <Image
+              source={require('../assets/meat.png')}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
+          <ScrollView
+            style={styles.sectionStyle}
+            nestedScrollEnabled={true}
+            contentContainerStyle={{justifyContent: 'center'}}>
+            <View style={styles.profilePicSection}>
+              {/* <Image
               source={require(this.state.userProfileImage)}
               style={{width: 20, height: 20}}
             /> */}
 
-            <TouchableOpacity
-              style={{
-                marginTop: 5,
-                height: 100,
-                width: 100,
-                justifyContent: 'center',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-              }}
-              onPress={this.choosePhotoFromTheStorage}>
-              <Image
-                source={userProfileImage}
-                style={{width: '100%', height: '100%'}}
+              <TouchableOpacity
+                style={{
+                  marginTop: 5,
+                  height: 100,
+                  width: 100,
+                  justifyContent: 'center',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+                onPress={this.choosePhotoFromTheStorage}>
+                <Image
+                  source={userProfileImage}
+                  style={{width: '100%', height: '100%'}}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.inputContainer, {marginTop: '10%'}]}>
+              <Text style={styles.readAbleTitle}>Name:</Text>
+              <Text style={styles.fieldTextStyle}>
+                {this.state.userName || 'Not Set'}
+              </Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.readAbleTitle}>User Type:</Text>
+              <Text style={styles.fieldTextStyle}>
+                {this.state.userServiceProviderType || 'Not Set'}
+              </Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.readAbleTitle]}>Phone Number:</Text>
+              <Text style={styles.fieldTextStyle}>
+                {this.state.userPhoneNumber}
+              </Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.readAbleTitle]}>Work-shop Address:</Text>
+              <Text style={styles.fieldTextStyle}>
+                {this.state.userAddress || 'Not set'}
+              </Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.readAbleTitle]}>Work Experience:</Text>
+              <Text style={styles.fieldTextStyle}>
+                {this.state.userExperience || 'Not set'}
+              </Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.readAbleTitle]}>Email:</Text>
+              <Text style={styles.fieldTextStyle}>
+                {this.state.userEmail || 'Not Set'}
+              </Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => {
+                  this.setState({
+                    showEditableContent: !this.state.showEditableContent,
+                  });
+                }}>
+                <Text style={styles.buttonTextStyle}>Edit</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
+      );
+    } else if (!this.state.loading && !this.state.showEditableContent) {
+      return (
+        <View style={styles.userProfileContainer}>
+          <TouchableOpacity
+            style={styles.drawerStyle}
+            onPress={this.handleBack}>
+            <Image
+              source={require('../assets/meat.png')}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
+          <ScrollView
+            style={styles.sectionStyle}
+            nestedScrollEnabled={true}
+            contentContainerStyle={{justifyContent: 'center'}}>
+            <View style={styles.profilePicSection}>
+              {/* <Image
+              source={require(this.state.userProfileImage)}
+              style={{width: 20, height: 20}}
+            /> */}
+
+              <TouchableOpacity
+                style={{
+                  marginTop: 5,
+                  height: 100,
+                  width: 100,
+                  justifyContent: 'center',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+                onPress={this.choosePhotoFromTheStorage}>
+                <Image
+                  source={userProfileImage}
+                  style={{width: '100%', height: '100%'}}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Name:</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Enter your workshop name"
+                onChangeText={(name: string) => {
+                  this.setState({userName: name});
+                }}
+                value={this.state.userName}
               />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Name:</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter your workshop name"
-              onChangeText={(name: string) => {
-                this.setState({userName: name});
-              }}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Email:</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter your Email"
-              onChangeText={(email: string) => {
-                this.setState({userEmail: email});
-              }}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Experience:</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter your Experience"
-              onChangeText={(experience: string) => {
-                this.setState({userExperience: experience});
-              }}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Service Category:</Text>
-            <DropDownPicker
-              open={this.state.dropDownOpen}
-              value={this.state.userServiceProviderType}
-              items={serviceProviders}
-              zIndex={1000}
-              zIndexInverse={3000}
-              setOpen={() => {
-                this.setState({dropDownOpen: !this.state.dropDownOpen});
-              }}
-              setValue={this.setServiceProviderType}
-              style={styles.inputStyle}
-              itemSeparator={true}
-            />
-          </View>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Email:</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Enter your Email"
+                onChangeText={(email: string) => {
+                  this.setState({userEmail: email});
+                }}
+                value={this.state.userEmail}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Experience:</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Enter your Experience"
+                onChangeText={(experience: string) => {
+                  this.setState({userExperience: experience});
+                }}
+                value={this.state.userExperience}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Service Category:</Text>
+              <DropDownPicker
+                open={this.state.dropDownOpen}
+                value={this.state.userServiceProviderType}
+                items={serviceProviders}
+                zIndex={1000}
+                zIndexInverse={3000}
+                setOpen={() => {
+                  this.setState({dropDownOpen: !this.state.dropDownOpen});
+                }}
+                setValue={this.setServiceProviderType}
+                style={styles.inputStyle}
+                itemSeparator={true}
+              />
+            </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputTitle}>Workshop Address:</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="Enter your address"
-              multiline={true}
-              onChangeText={(address: string) => {
-                this.setState({userAddress: address});
-              }}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text
-              style={[
-                styles.inputTitle,
-                {
-                  width: '100%',
-                  marginTop: 20,
-                  fontSize: 16,
-                  height: 20,
-                  color: 'black',
-                },
-              ]}>
-              {'Your Phone Number is ' + this.state.userPhoneNumber}
-            </Text>
-          </View>
-          <View style={styles.checkboxContainer}>
-            <Text
-              style={{
-                color: 'blue',
-                fontSize: 14,
-                fontWeight: '600',
-                marginRight: 5,
-              }}
-              onPress={() => {
-                Linking.openURL('https://askmechanics.in/privacy-policy');
-              }}>
-              Privacy Policy
-            </Text>
-            <CheckBox
-              value={this.state.privacyPolicy}
-              onChange={(event: any) => {
-                this.setState({
-                  privacyPolicy: !this.state.privacyPolicy,
-                });
-              }}></CheckBox>
-          </View>
-          <View style={styles.checkboxContainer}>
-            <Text
-              style={{
-                color: 'blue',
-                fontSize: 14,
-                fontWeight: '600',
-                marginRight: 5,
-              }}
-              onPress={() => {
-                Linking.openURL('https://askmechanics.in/terms-and-conditions');
-              }}>
-              Terms & Conditions
-            </Text>
-            <CheckBox
-              value={this.state.termsAndCondition}
-              onChange={(event: any) => {
-                this.setState({
-                  termsAndCondition: !this.state.termsAndCondition,
-                });
-              }}></CheckBox>
-          </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputTitle}>Workshop Address:</Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Enter your address"
+                multiline={true}
+                onChangeText={(address: string) => {
+                  this.setState({userAddress: address});
+                }}
+                value={this.state.userAddress}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text
+                style={[
+                  styles.inputTitle,
+                  {
+                    width: '100%',
+                    marginTop: 20,
+                    fontSize: 16,
+                    height: 20,
+                    color: 'black',
+                  },
+                ]}>
+                {'Your Phone Number is ' + this.state.userPhoneNumber}
+              </Text>
+            </View>
+            <View style={styles.checkboxContainer}>
+              <Text
+                style={{
+                  color: 'blue',
+                  fontSize: 14,
+                  fontWeight: '600',
+                  marginRight: 5,
+                }}
+                onPress={() => {
+                  Linking.openURL('https://askmechanics.in/privacy-policy');
+                }}>
+                Privacy Policy
+              </Text>
+              <CheckBox
+                value={this.state.privacyPolicy}
+                onChange={(event: any) => {
+                  this.setState({
+                    privacyPolicy: !this.state.privacyPolicy,
+                  });
+                }}></CheckBox>
+            </View>
+            <View style={styles.checkboxContainer}>
+              <Text
+                style={{
+                  color: 'blue',
+                  fontSize: 14,
+                  fontWeight: '600',
+                  marginRight: 5,
+                }}
+                onPress={() => {
+                  Linking.openURL(
+                    'https://askmechanics.in/terms-and-conditions',
+                  );
+                }}>
+                Terms & Conditions
+              </Text>
+              <CheckBox
+                value={this.state.termsAndCondition}
+                onChange={(event: any) => {
+                  this.setState({
+                    termsAndCondition: !this.state.termsAndCondition,
+                  });
+                }}></CheckBox>
+            </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={this.handleSubmitProfile}
-              style={styles.buttonStyle}>
-              <Text style={styles.buttonTextStyle}>Confirm</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </View>
-    );
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                onPress={this.handleSubmitProfile}
+                style={styles.buttonStyle}>
+                <Text style={styles.buttonTextStyle}>Confirm</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
+      );
+    }
   }
 }
 const styles = StyleSheet.create({
@@ -358,9 +500,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 80,
   },
+  fieldTextStyle: {
+    textAlign: 'left',
+    marginLeft: 5,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
+  },
   sectionStyle: {
     flex: 1,
-    padding: 10,
+    padding: 8,
     flexDirection: 'column',
     alignContent: 'center',
     minHeight: '70%',
@@ -392,12 +541,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '15%',
     alignContent: 'center',
-    marginBottom: 15,
+    marginBottom: 20,
   },
   inputContainer: {
     width: '100%',
     height: 45,
-    marginTop: 5,
+    marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -415,6 +564,12 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   inputTitle: {width: '35%', fontSize: 14, color: 'black', fontWeight: 'bold'},
+  readAbleTitle: {
+    width: '45%',
+    fontSize: 16,
+    color: 'black',
+    fontWeight: 'bold',
+  },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -11,6 +11,7 @@ import {
   TextInput,
   TouchableOpacity,
   ToastAndroid,
+  ActivityIndicator,
 } from 'react-native';
 
 import {
@@ -31,6 +32,7 @@ interface DashboardViewState {
   longitude: number | undefined;
   isOn: boolean | false;
   dutyCall: string;
+  loading: boolean;
 }
 interface DashboardViewProps {
   navigation: any;
@@ -49,10 +51,12 @@ class DashboardView extends React.Component<
       longitude: undefined,
       isOn: false,
       dutyCall: 'OFF DUTY',
+      loading: false,
     };
     console.log('Created');
   }
   async componentDidMount() {
+    this.setState({loading: true});
     const userObject = await AsyncStorage.getItem('userObject');
     console.log('userobject' + userObject);
     if (userObject === null) {
@@ -107,6 +111,7 @@ class DashboardView extends React.Component<
     });
     // const UserName =
     console.log('fixitId in dash: ' + fixitID);
+    this.setState({loading: false});
     // this.props.navigation.navigate('LoginView');
   }
 
@@ -118,13 +123,25 @@ class DashboardView extends React.Component<
   };
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={styles.loginContainer}>
+          <ActivityIndicator
+            animating={this.state.loading}
+            color="blue"
+            size="large"
+            style={styles.activityIndicator}
+          />
+        </View>
+      );
+    }
     if (this.state.isOn === true) {
       return (
         <View style={styles.loginContainer1}>
           <View style={styles.drawerStyle}>
             <TouchableOpacity
               onPress={() => {
-                this.props.navigation.navigate('MapView');
+                // this.props.navigation.navigate('MapView');
               }}>
               <Image
                 source={require('../assets/white-menu.png')}
@@ -143,17 +160,15 @@ class DashboardView extends React.Component<
             />
           </View>
           <View style={styles.dahsboardContainer1}>
-            <View style={styles.mapStyle}>
-              <View>
-                <TextInput
-                  style={styles.inputStyle}
-                  placeholder={`${this.state.username} , ${this.state.latitude} , ${this.state.longitude}`}
-                />
-              </View>
+            <View style={styles.mapContsiner}>
+              <TextInput
+                style={styles.inputStyle}
+                //placeholder={`${this.state.username} , ${this.state.latitude} , ${this.state.longitude}`}
+              />
               <View style={styles.mapStyle1}>
                 <Map
-                  latitude={this.state.latitude}
-                  longitude={this.state.longitude}
+                  latitude={this.state.latitude as number}
+                  longitude={this.state.longitude as number}
                 />
               </View>
             </View>
@@ -190,7 +205,7 @@ class DashboardView extends React.Component<
           <View style={styles.drawerStyle}>
             <TouchableOpacity
               onPress={() => {
-                this.props.navigation.navigate('MapView');
+                // this.props.navigation.navigate('MapView');
               }}>
               <Image
                 source={require('../assets/white-menu.png')}
@@ -361,7 +376,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     paddingTop: 60,
-    paddingLeft: 30,
     flexDirection: 'column',
     alignContent: 'center',
     minHeight: '70%',
@@ -389,13 +403,23 @@ const styles = StyleSheet.create({
   mapStyle1: {
     flexDirection: 'column',
     alignContent: 'center',
-    minHeight: '100%',
+    minHeight: '50%',
     backgroundColor: 'white',
     width: '100%',
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
     borderTopLeftRadius: 18,
     borderTopRightRadius: 18,
+  },
+  mapContsiner: {
+    minHeight: '50%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  activityIndicator: {
+    alignItems: 'center',
+    height: 80,
+    margin: 15,
   },
 });
 
