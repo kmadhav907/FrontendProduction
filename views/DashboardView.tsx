@@ -99,16 +99,20 @@ class DashboardView extends React.Component<
         }
       },
     );
-    await getLocation(fixitID).then((response: any) => {
-      console.log('location reponse', response);
-      if (response.status === 200) {
-        // const locationString =
-        //   userName + response.latitude + response.longitude;
-        this.setState({
-          username: userName,
-        });
-      }
-    });
+    await getLocation(fixitID)
+      .then((response: any) => {
+        console.log('location reponse', response);
+        if (response.status === 200) {
+          this.setState({
+            username: userName,
+            latitude: response.latitude,
+            longitude: response.longitude,
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err.message);
+      });
     // const UserName =
     console.log('fixitId in dash: ' + fixitID);
     this.setState({loading: false});
