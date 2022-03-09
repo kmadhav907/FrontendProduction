@@ -163,7 +163,7 @@ class DashboardView extends React.Component<
             <View style={styles.mapContsiner}>
               <TextInput
                 style={styles.inputStyle}
-                //placeholder={`${this.state.username} , ${this.state.latitude} , ${this.state.longitude}`}
+                placeholder={`${this.state.username} , ${this.state.latitude} , ${this.state.longitude}`}
               />
               <View style={styles.mapStyle1}>
                 <Map
