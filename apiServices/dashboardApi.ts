@@ -83,3 +83,8 @@ export const toggleOffStatus = async (fixitId: string) => {
   );
   return response;
 };
+
+export const getFixitStatus = async (fixitId: string) => {
+  const response = await axios.get(`${ENDPOINT}/getFixitStatus/${fixitId}`);
+  return response;
+};
