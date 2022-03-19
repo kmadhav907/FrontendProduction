@@ -111,7 +111,7 @@ class DashboardView extends React.Component<
         }
       })
       .catch(err => {
-        console.log(err.message);
+        console.log('Error is getLoc' + err.message);
       });
     // const UserName =
     console.log('fixitId in dash: ' + fixitID);
