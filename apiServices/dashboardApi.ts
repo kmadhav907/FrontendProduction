@@ -48,6 +48,43 @@ export const updateLocation = async (
 };
 
 export const getLocation = async (fixitId: string) => {
-  const response = await axios.get(`${ENDPOINT}/getLocation/${fixitId}`);
+  const response = await axios.get(`${ENDPOINT}/getFixitLocation/${fixitId}`);
+  return response;
+};
+
+export const toggleOnStatus = async (
+  latitude: any,
+  longitude: any,
+  fixitId: string,
+) => {
+  const body = JSON.stringify({
+    latitude: latitude,
+    longitude: longitude,
+  });
+  const response = await axios.post(`${ENDPOINT}/toggleOn/${fixitId}`, body, {
+    headers: {
+      accept: '*/*',
+      'Content-Type': 'application/json',
+    },
+  });
+  return response;
+};
+
+export const toggleOffStatus = async (fixitId: string) => {
+  const response = await axios.post(
+    `${ENDPOINT}/toggleOff/${fixitId}`,
+    {},
+    {
+      headers: {
+        accept: '*/*',
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+  return response;
+};
+
+export const getFixitStatus = async (fixitId: string) => {
+  const response = await axios.get(`${ENDPOINT}/getFixitStatus/${fixitId}`);
   return response;
 };

@@ -1,12 +1,9 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
 import {
-  Alert,
-  BackHandler,
   Text,
   StyleSheet,
   View,
-  SafeAreaView,
   Image,
   TextInput,
   TouchableOpacity,
@@ -15,8 +12,11 @@ import {
 } from 'react-native';
 
 import {
+  getFixitStatus,
   getLocation,
   saveLocation,
+  toggleOffStatus,
+  toggleOnStatus,
   updateLocation,
 } from '../apiServices/dashboardApi';
 import Map from '../components/googleMap/Map';
@@ -82,6 +82,19 @@ class DashboardView extends React.Component<
           },
           {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
         );
+        Geolocation.watchPosition(
+          position => {
+            const {latitude, longitude} = position.coords;
+            this.setState({latitude: latitude, longitude: longitude});
+          },
+          error => {
+            ToastAndroid.show(error.message, ToastAndroid.SHORT);
+          },
+          {
+            showLocationDialog: true,
+            enableHighAccuracy: true,
+          },
+        );
       }
     } catch (err) {
       console.log(err);
@@ -105,25 +118,58 @@ class DashboardView extends React.Component<
         if (response.status === 200) {
           this.setState({
             username: userName,
-            latitude: response.latitude,
-            longitude: response.longitude,
+            // latitude: response.latitude,
+            // longitude: response.longitude,
           });
         }
       })
       .catch(err => {
         console.log('Error is getLoc' + err.message);
       });
+
     // const UserName =
     console.log('fixitId in dash: ' + fixitID);
+    await getFixitStatus(fixitID)
+      .then((response: any) => {
+        const status = response.data;
+        this.setState({
+          isOn: status,
+        });
+      })
+      .catch(err => console.log(err));
     this.setState({loading: false});
     // this.props.navigation.navigate('LoginView');
   }
 
   handleToggle = async () => {
+    console.log('In HandleToggle');
+    const userObject = await AsyncStorage.getItem('userObject');
+    const fixitID = JSON.parse(userObject as string).fixitId;
     this.setState({
       isOn: !this.state.isOn,
-      dutyCall: this.state.isOn === false ? 'ON DUTY' : 'OFF DUTY',
     });
+    if (this.state.isOn === false) {
+      toggleOffStatus(fixitID).then((response: any) => {
+        console.log(response);
+        if (response.status === 200) {
+          this.setState({dutyCall: 'OFF DUTY'});
+        } else {
+          this.setState({isOn: true});
+        }
+      });
+    }
+    if (this.state.isOn === true) {
+      toggleOnStatus(this.state.latitude, this.state.longitude, fixitID).then(
+        (response: any) => {
+          if (response.status === 200) {
+            console.log(response);
+            this.setState({dutyCall: 'ON DUTY'});
+          } else {
+            this.setState({isOn: false});
+          }
+        },
+      );
+    }
   };
 
   render() {
@@ -167,7 +213,7 @@ class DashboardView extends React.Component<
             <View style={styles.mapContsiner}>
               <TextInput
                 style={styles.inputStyle}
-                placeholder={`${this.state.username} , ${this.state.latitude} , ${this.state.longitude}`}
+                // placeholder={`${this.state.username} , ${this.state.latitude} , ${this.state.longitude}`}
               />
               <View style={styles.mapStyle1}>
                 <Map
