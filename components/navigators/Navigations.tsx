@@ -5,7 +5,7 @@ import DashboardView from '../../views/DashboardView';
 import LoginView from '../../views/LoginView';
 import SplashView from '../../views/SplashView';
 import UserProfileView from '../../views/UserProfileView';
-
+import Notification from '../../views/Notifications';
 const Navigators = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -31,6 +31,11 @@ const Navigators = () => {
           name="UserProfileView"
           options={{headerShown: false, gestureEnabled: false}}
           component={UserProfileView}
+        />
+        <Stack.Screen
+          name="Notification"
+          options={{headerShown: false, gestureEnabled: false}}
+          component={Notification}
         />
       </Stack.Navigator>
     </NavigationContainer>

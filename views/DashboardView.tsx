@@ -23,6 +23,7 @@ import Map from '../components/googleMap/Map';
 import ToggleSwitch from 'toggle-switch-react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {errorMessage, requestLocationPermission} from '../global/utils';
+import Notification from './Notifications';
 
 interface DashboardViewState {
   isEnabled: boolean;
@@ -64,8 +65,9 @@ class DashboardView extends React.Component<
     }
     const newUserFlag = JSON.parse(userObject as string).newUser;
     console.log(userObject);
-    if (newUserFlag) {
-      this.props.navigation.navigate('UserProfileView');
+    if (!newUserFlag) {
+      // this.props.navigation.navigate('UserProfileView');
+      this.props.navigation.navigate('Notification');
       return;
       // this.props.navigation.navigate('DashboardView');
     }
