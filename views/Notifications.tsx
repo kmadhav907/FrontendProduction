@@ -2,6 +2,9 @@ import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
 class Notification extends React.Component {
+  handleSubmit() {
+    console.log('HandleSubmit clickedd');
+  }
   render() {
     return (
       <>
@@ -48,7 +51,7 @@ const styles = StyleSheet.create({
   mainBorder: {
     backgroundColor: '#f9d342',
     width: '100%',
-    height: '15%',
+    height: '20%',
     elevation: 7,
     borderRadius: 15,
     justifyContent: 'center',
@@ -84,18 +87,19 @@ const styles = StyleSheet.create({
   towText: {
     backgroundColor: '#f9d342',
     width: '50%',
-    height: '5%',
+    height: '7%',
     borderRadius: 15,
     borderBottomColor: 'black',
     borderWidth: 2,
     color: 'black',
+    marginTop: -60,
     elevation: 10,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 100,
   },
   towTextText: {
-    fontSize: 15,
+    fontSize: 20,
     fontFamily: 'Metropolis',
     fontWeight: 'bold',
     color: 'black',

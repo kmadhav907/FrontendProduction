@@ -65,9 +65,9 @@ class DashboardView extends React.Component<
     }
     const newUserFlag = JSON.parse(userObject as string).newUser;
     console.log(userObject);
-    if (!newUserFlag) {
-      // this.props.navigation.navigate('UserProfileView');
-      this.props.navigation.navigate('Notification');
+    if (newUserFlag) {
+      this.props.navigation.navigate('UserProfileView');
+      // this.props.navigation.navigate('Notification');
       return;
       // this.props.navigation.navigate('DashboardView');
     }
@@ -224,6 +224,7 @@ class DashboardView extends React.Component<
                 />
               </View>
             </View>
+            <Notification />
           </View>
 
           <View style={styles.bottomView}>
