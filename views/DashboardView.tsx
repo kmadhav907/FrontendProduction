@@ -12,6 +12,12 @@ import {
 } from 'react-native';
 
 import {
+  MyServices,
+  getNotification,
+  selectNotification,
+} from '../apiServices/notificationServices';
+
+import {
   getFixitStatus,
   getLocation,
   saveLocation,
@@ -139,6 +145,17 @@ class DashboardView extends React.Component<
         });
       })
       .catch(err => console.log(err));
+
+    await getNotification(fixitID, this.state.latitude, this.state.longitude)
+      .then(res => {
+        console.log(res);
+        const data = JSON.parse(res);
+        console.log('Data in Dataa' + data);
+      })
+      .catch(err => {
+        console.log('Erre is data' + err);
+      });
+
     this.setState({loading: false});
     // this.props.navigation.navigate('LoginView');
   }
@@ -152,7 +169,7 @@ class DashboardView extends React.Component<
     });
     if (this.state.isOn === false) {
       toggleOffStatus(fixitID).then((response: any) => {
-        console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           this.setState({dutyCall: 'OFF DUTY'});
         } else {
@@ -164,7 +181,7 @@ class DashboardView extends React.Component<
       toggleOnStatus(this.state.latitude, this.state.longitude, fixitID).then(
         (response: any) => {
           if (response.status === 200) {
-            console.log(response);
+            // console.log(response);s
             this.setState({dutyCall: 'ON DUTY'});
           } else {
             this.setState({isOn: false});

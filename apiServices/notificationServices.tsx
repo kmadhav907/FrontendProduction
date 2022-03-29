@@ -3,8 +3,8 @@ import {ENDPOINT} from '../global/endPoint';
 
 export const getNotification = async (
   fixitID: String,
-  latitude: number,
-  longitude: Number,
+  latitude: number | undefined,
+  longitude: number | undefined,
 ) => {
   const location = {
     latitude: latitude,
@@ -27,7 +27,7 @@ export const getNotification = async (
 };
 
 export const selectNotification = async (
-  notificationID: Number,
+  notificationID: number,
   fixitID: String,
   confirmation: Boolean,
 ) => {
@@ -41,5 +41,14 @@ export const selectNotification = async (
       },
     },
   );
+  return response;
+};
+
+export const MyServices = async (fixitID: String) => {
+  const response = axios.get(`${ENDPOINT}/Myservices/${fixitID}`, {
+    headers: {
+      accept: '*/*',
+    },
+  });
   return response;
 };
