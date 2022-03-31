@@ -40,6 +40,7 @@ interface DashboardViewState {
   isOn: boolean | false;
   dutyCall: string;
   loading: boolean;
+  notifData: Array<String>;
 }
 interface DashboardViewProps {
   navigation: any;
@@ -59,6 +60,7 @@ class DashboardView extends React.Component<
       isOn: false,
       dutyCall: 'OFF DUTY',
       loading: false,
+      notifData: [],
     };
     console.log('Created');
   }
@@ -111,50 +113,39 @@ class DashboardView extends React.Component<
     const userName = JSON.parse(userObject as string).userName;
     await saveLocation(fixitID, this.state.latitude, this.state.longitude).then(
       (response: any) => {
-        console.log('Response from saveLoc : ' + response);
+        // console.log('Response from saveLoc : ' + response);
         if (response.status === 200) {
-          console.log('data is dash', response);
+          // console.log('data is dash', response);
           console.log('no Error in save loc');
         } else {
           errorMessage('Please check your connection');
         }
       },
     );
+
     await getLocation(fixitID)
       .then((response: any) => {
-        console.log('location reponse', response);
-        if (response.status === 200) {
+        // console.log('location reponse', response);
+        if (response.status === 200)
           this.setState({
             username: userName,
-            // latitude: response.latitude,
-            // longitude: response.longitude,
           });
-        }
       })
       .catch(err => {
-        console.log('Error is getLoc' + err.message);
+        console.log('Error in getLoc' + err.message);
       });
 
     // const UserName =
     console.log('fixitId in dash: ' + fixitID);
-    await getFixitStatus(fixitID)
-      .then((response: any) => {
-        const status = response.data;
-        this.setState({
-          isOn: status,
-        });
-      })
-      .catch(err => console.log(err));
-
-    await getNotification(fixitID, this.state.latitude, this.state.longitude)
-      .then(res => {
-        console.log(res);
-        const data = JSON.parse(res);
-        console.log('Data in Dataa' + data);
-      })
-      .catch(err => {
-        console.log('Erre is data' + err);
-      });
+    //this route is removed
+    // await getFixitStatus(fixitID)
+    //   .then((response: any) => {
+    //     const status = response.data;
+    //     this.setState({
+    //       isOn: status,
+    //     });
+    //   })
+    //   .catch(err => console.log('in getLoc ' + err));
 
     this.setState({loading: false});
     // this.props.navigation.navigate('LoginView');
@@ -179,10 +170,25 @@ class DashboardView extends React.Component<
     }
     if (this.state.isOn === true) {
       toggleOnStatus(this.state.latitude, this.state.longitude, fixitID).then(
-        (response: any) => {
+        async (response: any) => {
           if (response.status === 200) {
             // console.log(response);s
             this.setState({dutyCall: 'ON DUTY'});
+            await getNotification(
+              fixitID,
+              this.state.latitude,
+              this.state.longitude,
+            )
+              .then((res: any) => {
+                console.log(res.data);
+                this.setState({
+                  notifData: res,
+                });
+                console.log('done');
+              })
+              .catch(err => {
+                console.log('Error in get notif = ' + err.message);
+              });
           } else {
             this.setState({isOn: false});
           }
@@ -241,7 +247,7 @@ class DashboardView extends React.Component<
                 />
               </View>
             </View>
-            <Notification />
+            <Notification notidFata={this.state.notifData} />
           </View>
 
           <View style={styles.bottomView}>

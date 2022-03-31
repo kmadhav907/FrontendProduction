@@ -6,45 +6,55 @@ import {
   selectNotification,
 } from '../apiServices/notificationServices';
 
-const Notification = () => {
-  return (
-    <>
-      <View style={styles.towText}>
-        <Text style={styles.towTextText}>TOWING REQUEST</Text>
-      </View>
-      <View style={styles.mainBorder}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{
-              uri: 'https://images.pexels.com/photos/1420440/pexels-photo-1420440.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-            }}
-            style={styles.imageStyle}
-          />
-        </View>
-        <View style={styles.desp}>
-          <View style={styles.custName}>
-            <Text style={styles.custNameName}>Name of Customer</Text>
-          </View>
-          <View style={styles.towRequest}>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                // onPress={this.handleSubmit}
-                style={styles.buttonStyle1}>
-                <Text style={styles.buttonTextStyle1}>Accept</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                // onPress={this.handleSubmit}
-                style={styles.buttonStyle2}>
-                <Text style={styles.buttonTextStyle2}>Reject</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
-    </>
-  );
+const Notification = (props: any) => {
+  const {data} = props.data;
+
+  // return(
+  //   {
+  //     data.map((item, key) => {
+  //       return (
+  //         <>
+  //           <View style={styles.towText}>
+  //             <Text style={styles.towTextText}>TOWING REQUEST</Text>
+  //           </View>
+  //           <View style={styles.mainBorder}>
+  //             <View style={styles.imageContainer}>
+  //               <Image
+  //                 source={{
+  //                   uri: 'https://images.pexels.com/photos/1420440/pexels-photo-1420440.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+  //                 }}
+  //                 style={styles.imageStyle}
+  //               />
+  //             </View>
+  //             <View style={styles.desp}>
+  //               <View style={styles.custName}>
+  //                 <Text style={styles.custNameName}>
+  //                   Name of Customer {item.problemDesciption}
+  //                 </Text>
+  //               </View>
+  //               <View style={styles.towRequest}>
+  //                 <View style={styles.buttonContainer}>
+  //                   <TouchableOpacity
+  //                     // onPress={this.handleSubmit}
+  //                     style={styles.buttonStyle1}>
+  //                     <Text style={styles.buttonTextStyle1}>Accept</Text>
+  //                   </TouchableOpacity>
+  //                 </View>
+  //                 <View style={styles.buttonContainer}>
+  //                   <TouchableOpacity
+  //                     // onPress={this.handleSubmit}
+  //                     style={styles.buttonStyle2}>
+  //                     <Text style={styles.buttonTextStyle2}>Reject</Text>
+  //                   </TouchableOpacity>
+  //                 </View>
+  //               </View>
+  //             </View>
+  //           </View>
+  //         </>
+  //       );
+  //     });
+  //   }
+  // )
 };
 
 const styles = StyleSheet.create({

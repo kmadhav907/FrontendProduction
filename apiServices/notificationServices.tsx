@@ -11,11 +11,11 @@ export const getNotification = async (
     longitude: longitude,
   };
   const params = JSON.stringify({
-    fixitID,
+    // fixitID,
     location,
   });
   const response = await axios.post(
-    `${ENDPOINT}/getRequest/${fixitID}/${location}`,
+    `${ENDPOINT}/getRequest/${fixitID}/{location}`,
     params,
     {
       headers: {
