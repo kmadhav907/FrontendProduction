@@ -29,7 +29,7 @@ import Map from '../components/googleMap/Map';
 import ToggleSwitch from 'toggle-switch-react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {errorMessage, requestLocationPermission} from '../global/utils';
-import Notification from './Notifications';
+import Notification from '../components/notification/Notifications';
 
 interface DashboardViewState {
   isEnabled: boolean;
@@ -116,24 +116,15 @@ class DashboardView extends React.Component<
         // console.log('Response from saveLoc : ' + response);
         if (response.status === 200) {
           // console.log('data is dash', response);
+          this.setState({
+            username: userName,
+          });
           console.log('no Error in save loc');
         } else {
           errorMessage('Please check your connection');
         }
       },
     );
-
-    await getLocation(fixitID)
-      .then((response: any) => {
-        // console.log('location reponse', response);
-        if (response.status === 200)
-          this.setState({
-            username: userName,
-          });
-      })
-      .catch(err => {
-        console.log('Error in getLoc' + err.message);
-      });
 
     // const UserName =
     console.log('fixitId in dash: ' + fixitID);
@@ -172,7 +163,7 @@ class DashboardView extends React.Component<
       toggleOnStatus(this.state.latitude, this.state.longitude, fixitID).then(
         async (response: any) => {
           if (response.status === 200) {
-            // console.log(response);s
+            console.log(response);
             this.setState({dutyCall: 'ON DUTY'});
             await getNotification(
               fixitID,
@@ -182,15 +173,13 @@ class DashboardView extends React.Component<
               .then((res: any) => {
                 console.log(res.data);
                 this.setState({
-                  notifData: res,
+                  notifData: res.data,
                 });
                 console.log('done');
               })
               .catch(err => {
                 console.log('Error in get notif = ' + err.message);
               });
-          } else {
-            this.setState({isOn: false});
           }
         },
       );
@@ -247,7 +236,9 @@ class DashboardView extends React.Component<
                 />
               </View>
             </View>
-            <Notification notidFata={this.state.notifData} />
+            <Notification
+              notifications={this.state.notifData && this.state.notifData}
+            />
           </View>
 
           <View style={styles.bottomView}>
@@ -450,7 +441,7 @@ const styles = StyleSheet.create({
   },
   dahsboardContainer1: {
     flex: 1,
-    padding: 10,
+
     paddingTop: 60,
     flexDirection: 'column',
     alignContent: 'center',
