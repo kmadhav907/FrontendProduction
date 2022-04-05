@@ -1,9 +1,19 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 
-function NotificationItem(this: any, _props) {
+export const SLIDER_WIDTH = Dimensions.get('window').width + 80;
+export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
+
+function NotificationItem(props: any) {
   return (
-    <View key={this.props.index}>
+    <View key={props.index}>
       <View style={styles.towText}>
         <Text style={styles.towTextText}>TOWING REQUEST</Text>
       </View>
@@ -18,7 +28,7 @@ function NotificationItem(this: any, _props) {
         </View>
         <View style={styles.desp}>
           <View style={styles.custName}>
-            <Text style={styles.custNameName}>Name of Customer</Text>
+            <Text style={styles.custNameName}>{props.index}</Text>
           </View>
           <View style={styles.towRequest}>
             <View style={styles.buttonContainer}>
@@ -45,15 +55,17 @@ function NotificationItem(this: any, _props) {
 const styles = StyleSheet.create({
   mainBorder: {
     backgroundColor: '#f9d342',
-    width: '100%',
-    height: '20%',
+    width: ITEM_WIDTH,
+    height: '50%',
     elevation: 7,
     borderRadius: 15,
     justifyContent: 'center',
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
-    marginTop: -10,
+    // marginTop: -10,
+    marginLeft: 20,
+    marginRight: 30,
   },
   imageContainer: {
     marginLeft: 80,
@@ -81,17 +93,17 @@ const styles = StyleSheet.create({
   },
   towText: {
     backgroundColor: '#f9d342',
-    width: '50%',
-    height: '7%',
+    width: '70%',
+    height: '20%',
     borderRadius: 15,
     borderBottomColor: 'black',
     borderWidth: 2,
     color: 'black',
-    marginTop: -60,
+    // marginTop: -60,
     elevation: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 100,
+    marginLeft: 50,
   },
   towTextText: {
     fontSize: 20,

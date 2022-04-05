@@ -171,7 +171,7 @@ class DashboardView extends React.Component<
               this.state.longitude,
             )
               .then((res: any) => {
-                console.log(res.data);
+                console.log('data in dashboard : ' + res.data);
                 this.setState({
                   notifData: res.data,
                 });
@@ -441,11 +441,10 @@ const styles = StyleSheet.create({
   },
   dahsboardContainer1: {
     flex: 1,
-
-    paddingTop: 60,
+    paddingTop: 50,
     flexDirection: 'column',
     alignContent: 'center',
-    minHeight: '70%',
+    minHeight: '50%',
     marginTop: '10%',
     backgroundColor: 'white',
     width: '100%',

@@ -1,18 +1,9 @@
 import React, {Component} from 'react';
-import {
-  Animated,
-  View,
-  StyleSheet,
-  Image,
-  Dimensions,
-  ScrollView,
-  Text,
-} from 'react-native';
+import {Animated, View, StyleSheet, ScrollView} from 'react-native';
 import NotificationItem from './notification_item';
 
-const deviceWidth = Dimensions.get('window').width;
-const FIXED_BAR_WIDTH = 280;
-const BAR_SPACE = 10;
+// const FIXED_BAR_WIDTH = 280;
+// const BAR_SPACE = 10;
 
 interface NotificationProps {
   notifications: any[] | null;
@@ -20,41 +11,22 @@ interface NotificationProps {
 class Notification extends Component<NotificationProps, {}> {
   constructor(props: NotificationProps) {
     super(props);
-    console.log('notif in construct : ' + this.props.notifications);
+    // console.log('notif in construct : ' + this.props.notifications);
   }
-  numItems =
-    this.props.notifications !== null ? this.props.notifications.length : 0;
-  itemWidth =
-    ((FIXED_BAR_WIDTH / this.numItems) as number) -
-    ((this.numItems as number) - 1) * BAR_SPACE;
+
   animVal = new Animated.Value(0);
 
   render() {
-    // let notifications: any[] = [];
-    // this.props.notifications &&
-    //   this.props.notifications.forEach((noti: any, i) => {
-    //     const notification = (
-    //       <View
-    //         style={{
-    //           width: deviceWidth,
-    //           height: 150,
-    //           flex: 1,
-    //           justifyContent: 'center',
-    //           alignItems: 'center',
-    //           backgroundColor: 'gold',
-    //         }}
-    //         key={i}>
-    //         <Text style={{width: '100%'}}>Hello :</Text>
-    //       </View>
-    //     );
-    //     notifications.push(notification);
-    //   });
+    let notifications: any[] = [];
+    this.props.notifications &&
+      this.props.notifications.forEach((noti: any, i) => {
+        notifications.push(<NotificationItem item={noti} index={i} />);
+      });
 
     return (
       <View style={styles.container}>
         <ScrollView
           horizontal
-          style={{height: 200}}
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={10}
           pagingEnabled
@@ -76,9 +48,11 @@ class Notification extends Component<NotificationProps, {}> {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: -30,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
   track: {
     backgroundColor: '#ccc',
@@ -92,3 +66,25 @@ const styles = StyleSheet.create({
 });
 
 export default Notification;
+
+// numItems =
+//   this.props.notifications !== null ? this.props.notifications.length : 0;
+// itemWidth =
+//   ((FIXED_BAR_WIDTH / this.numItems) as number) -
+//   ((this.numItems as number) - 1) * BAR_SPACE;
+
+//     //     const notification = (
+//     //       <View
+//     //         style={{
+//     //           width: deviceWidth,
+//     //           height: 150,
+//     //           flex: 1,
+//     //           justifyContent: 'center',
+//     //           alignItems: 'center',
+//     //           backgroundColor: 'gold',
+//     //         }}
+//     //         key={i}>
+//     //         <Text style={{width: '100%'}}>Hello :</Text>
+//     //       </View>
+//     //     );
+//     // const notification =
