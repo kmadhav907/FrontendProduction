@@ -19,6 +19,7 @@ function NotificationItem(props: any) {
       return description;
     }
   };
+
   return (
     <View key={props.index}>
       <View style={styles.towText}>
@@ -34,6 +35,7 @@ function NotificationItem(props: any) {
               style={styles.imageStyle}
             />
           </View>
+
           <View style={styles.desp}>
             <View style={styles.custName}>
               <Text style={styles.custNameName}>
@@ -41,7 +43,17 @@ function NotificationItem(props: any) {
                   props.item.problemDesciption &&
                   setProblemDescription(props.item.problemDesciption)}
               </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  // this.props.navigation.navigate('MapView');
+                }}>
+                <Image
+                  source={require('../../assets/information.png')}
+                  style={styles.iconStyle}
+                />
+              </TouchableOpacity>
             </View>
+
             <View style={styles.towRequest}>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
@@ -66,6 +78,12 @@ function NotificationItem(props: any) {
 }
 
 const styles = StyleSheet.create({
+  iconStyle: {
+    width: 20,
+    height: 20,
+    marginLeft: -85,
+    marginTop: -7,
+  },
   mainContainer: {
     backgroundColor: '#f9d342',
     height: '100%',
@@ -99,6 +117,8 @@ const styles = StyleSheet.create({
   },
   custName: {
     marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   custNameName: {
     fontSize: 20,
@@ -117,11 +137,10 @@ const styles = StyleSheet.create({
     borderBottomColor: 'black',
     borderWidth: 2,
     color: 'black',
-    // marginTop: -60,
     elevation: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 50,
+    marginLeft: 60,
   },
   towTextText: {
     fontSize: 20,

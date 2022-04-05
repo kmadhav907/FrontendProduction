@@ -35,11 +35,6 @@ class Notification extends Component<NotificationProps, {}> {
             {useNativeDriver: false},
           )}>
           {notifications}
-          {/* {this.props.notifications?.map((item, index) => {
-            return (
-              <NotificationItem index={index && index} Item={item && item} />
-            );
-          })} */}
         </ScrollView>
       </View>
     );
