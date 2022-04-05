@@ -208,7 +208,7 @@ class DashboardView extends React.Component<
                 // this.props.navigation.navigate('MapView');
               }}>
               <Image
-                source={require('../assets/white-menu.png')}
+                source={require('../assets/menu.png')}
                 style={styles.iconStyle}
               />
             </TouchableOpacity>
@@ -284,6 +284,7 @@ class DashboardView extends React.Component<
               />
             </TouchableOpacity>
           </View>
+
           <Text style={styles.titleStyle}>{this.state.dutyCall}</Text>
           <View style={styles.switchStyle}>
             <ToggleSwitch
@@ -357,6 +358,7 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'black',
   },
+
   iconStyle: {
     width: 40,
     height: 40,
