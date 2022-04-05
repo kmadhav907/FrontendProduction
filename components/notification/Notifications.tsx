@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Animated, View, StyleSheet, ScrollView} from 'react-native';
-import NotificationItem from './notification_item';
+import NotificationItem from './NotificationItem';
 
 // const FIXED_BAR_WIDTH = 280;
 // const BAR_SPACE = 10;
@@ -20,7 +20,7 @@ class Notification extends Component<NotificationProps, {}> {
     let notifications: any[] = [];
     this.props.notifications &&
       this.props.notifications.forEach((noti: any, i) => {
-        notifications.push(<NotificationItem item={noti} index={i} />);
+        notifications.push(<NotificationItem item={noti} index={i} key={i} />);
       });
 
     return (
@@ -34,12 +34,12 @@ class Notification extends Component<NotificationProps, {}> {
             [{nativeEvent: {contentOffset: {x: this.animVal}}}],
             {useNativeDriver: false},
           )}>
-          {/* {notifications} */}
-          {this.props.notifications?.map((item, index) => {
+          {notifications}
+          {/* {this.props.notifications?.map((item, index) => {
             return (
               <NotificationItem index={index && index} Item={item && item} />
             );
-          })}
+          })} */}
         </ScrollView>
       </View>
     );

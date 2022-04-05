@@ -8,42 +8,55 @@ import {
   Dimensions,
 } from 'react-native';
 
-export const SLIDER_WIDTH = Dimensions.get('window').width + 80;
-export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
+export const SLIDER_WIDTH = Dimensions.get('window').width;
+export const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
 
 function NotificationItem(props: any) {
+  const setProblemDescription = (description: string): string => {
+    if (description.length > 15) {
+      return description.substring(0, 15) + '...';
+    } else {
+      return description;
+    }
+  };
   return (
     <View key={props.index}>
       <View style={styles.towText}>
         <Text style={styles.towTextText}>TOWING REQUEST</Text>
       </View>
       <View style={styles.mainBorder}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{
-              uri: 'https://images.pexels.com/photos/1420440/pexels-photo-1420440.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-            }}
-            style={styles.imageStyle}
-          />
-        </View>
-        <View style={styles.desp}>
-          <View style={styles.custName}>
-            <Text style={styles.custNameName}>{props.index}</Text>
+        <View style={styles.mainContainer}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{
+                uri: 'https://images.pexels.com/photos/1420440/pexels-photo-1420440.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+              }}
+              style={styles.imageStyle}
+            />
           </View>
-          <View style={styles.towRequest}>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                // onPress={this.handleSubmit}
-                style={styles.buttonStyle1}>
-                <Text style={styles.buttonTextStyle1}>Accept</Text>
-              </TouchableOpacity>
+          <View style={styles.desp}>
+            <View style={styles.custName}>
+              <Text style={styles.custNameName}>
+                {props.item &&
+                  props.item.problemDesciption &&
+                  setProblemDescription(props.item.problemDesciption)}
+              </Text>
             </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                // onPress={this.handleSubmit}
-                style={styles.buttonStyle2}>
-                <Text style={styles.buttonTextStyle2}>Reject</Text>
-              </TouchableOpacity>
+            <View style={styles.towRequest}>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  // onPress={this.handleSubmit}
+                  style={styles.buttonStyle1}>
+                  <Text style={styles.buttonTextStyle1}>Accept</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  // onPress={this.handleSubmit}
+                  style={styles.buttonStyle2}>
+                  <Text style={styles.buttonTextStyle2}>Reject</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -53,19 +66,24 @@ function NotificationItem(props: any) {
 }
 
 const styles = StyleSheet.create({
-  mainBorder: {
+  mainContainer: {
     backgroundColor: '#f9d342',
-    width: ITEM_WIDTH,
-    height: '50%',
+    height: '100%',
+    width: '90%',
+    alignItems: 'center',
     elevation: 7,
     borderRadius: 15,
     justifyContent: 'center',
     flexDirection: 'row',
     alignContent: 'center',
-    alignItems: 'center',
+  },
+  mainBorder: {
+    width: ITEM_WIDTH,
+    height: '50%',
+    alignContent: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
     // marginTop: -10,
-    marginLeft: 20,
-    marginRight: 30,
   },
   imageContainer: {
     marginLeft: 80,
