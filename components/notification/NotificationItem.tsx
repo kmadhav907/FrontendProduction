@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   towText: {
     backgroundColor: '#f9d342',
     width: '70%',
-    height: '20%',
+    height: '17%',
     borderRadius: 15,
     borderBottomColor: 'black',
     borderWidth: 2,
