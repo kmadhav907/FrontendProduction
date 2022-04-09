@@ -7,11 +7,18 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import {
+  getNotification,
+  selectNotification,
+  MyServices,
+} from '../../apiServices/notificationServices';
+
+import Map from '../googleMap/Map';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
 
-function NotificationItem(props: any) {
+function NotificationItem(this: any, props: any) {
   const setProblemDescription = (description: string): string => {
     if (description.length > 15) {
       return description.substring(0, 15) + '...';
@@ -19,7 +26,15 @@ function NotificationItem(props: any) {
       return description;
     }
   };
-
+  // const updateLocation = async (
+  //   latitude: string,
+  //   longitude: string,
+  // ): string => {
+  //   // await selectNotification(latitude, longitude);
+  // };
+  const clicked = async () => {
+    console.log('licked');
+  };
   return (
     <View key={props.index}>
       <View style={styles.towText}>
@@ -57,14 +72,14 @@ function NotificationItem(props: any) {
             <View style={styles.towRequest}>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                  // onPress={this.handleSubmit}
+                  // onPress={clicked()}
                   style={styles.buttonStyle1}>
                   <Text style={styles.buttonTextStyle1}>Accept</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                  // onPress={this.handleSubmit}
+                  // onPressIn={clicked()}
                   style={styles.buttonStyle2}>
                   <Text style={styles.buttonTextStyle2}>Reject</Text>
                 </TouchableOpacity>

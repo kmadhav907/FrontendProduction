@@ -235,8 +235,8 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
             style={styles.drawerStyle}
             onPress={this.handleBack}>
             <Image
-              source={require('../assets/meat.png')}
-              style={styles.iconStyle}
+              source={require('../assets/menu-black.png')}
+              style={styles.drawerIconStyle}
             />
           </TouchableOpacity>
           <ScrollView
@@ -322,8 +322,8 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
             style={styles.drawerStyle}
             onPress={this.handleBack}>
             <Image
-              source={require('../assets/meat.png')}
-              style={styles.iconStyle}
+              source={require('../assets/menu-black.png')}
+              style={styles.drawerIconStyle}
             />
           </TouchableOpacity>
           <ScrollView
@@ -531,11 +531,15 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'flex-start',
     marginTop: 35,
-    paddingLeft: 20,
+    paddingLeft: 10,
   },
   iconStyle: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
+  },
+  drawerIconStyle: {
+    width: 60,
+    height: 60,
   },
   profilePicSection: {
     width: '100%',

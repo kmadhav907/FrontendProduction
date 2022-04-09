@@ -163,7 +163,7 @@ class DashboardView extends React.Component<
       toggleOnStatus(this.state.latitude, this.state.longitude, fixitID).then(
         async (response: any) => {
           if (response.status === 200) {
-            console.log(response);
+            // console.log(response);
             this.setState({dutyCall: 'ON DUTY'});
             await getNotification(
               fixitID,
@@ -171,7 +171,7 @@ class DashboardView extends React.Component<
               this.state.longitude,
             )
               .then((res: any) => {
-                console.log('data in dashboard : ' + res.data);
+                // console.log('data in dashboard : ' + res.data);
                 this.setState({
                   notifData: res.data,
                 });
@@ -208,8 +208,8 @@ class DashboardView extends React.Component<
                 // this.props.navigation.navigate('MapView');
               }}>
               <Image
-                source={require('../assets/menu.png')}
-                style={styles.iconStyle}
+                source={require('../assets/menu-white.png')}
+                style={styles.drawerIconStyle}
               />
             </TouchableOpacity>
           </View>
@@ -279,8 +279,8 @@ class DashboardView extends React.Component<
                 // this.props.navigation.navigate('MapView');
               }}>
               <Image
-                source={require('../assets/white-menu.png')}
-                style={styles.iconStyle}
+                source={require('../assets/menu-black.png')}
+                style={styles.drawerIconStyle}
               />
             </TouchableOpacity>
           </View>
@@ -359,6 +359,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
 
+  drawerIconStyle: {
+    width: 60,
+    height: 60,
+  },
   iconStyle: {
     width: 40,
     height: 40,
@@ -389,7 +393,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'flex-start',
     marginTop: 30,
-    paddingLeft: 20,
+    paddingLeft: 10,
   },
   bottomView: {
     backgroundColor: 'white',

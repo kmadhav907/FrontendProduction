@@ -11,7 +11,9 @@ interface NotificationProps {
 class Notification extends Component<NotificationProps, {}> {
   constructor(props: NotificationProps) {
     super(props);
-    // console.log('notif in construct : ' + this.props.notifications);
+    // console.log(
+    //   'notif in construct : ' + JSON.stringify(this.props.notifications),
+    // );
   }
 
   animVal = new Animated.Value(0);
