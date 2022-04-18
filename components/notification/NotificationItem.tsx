@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,18 +7,16 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {
-  getNotification,
-  selectNotification,
-  MyServices,
-} from '../../apiServices/notificationServices';
-
-import Map from '../googleMap/Map';
+import {MaterialDialog} from 'react-native-material-dialog';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
 
 function NotificationItem(this: any, props: any) {
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState<
+    any | undefined
+  >(undefined);
   const setProblemDescription = (description: string): string => {
     if (description.length > 15) {
       return description.substring(0, 15) + '...';
@@ -59,8 +57,9 @@ function NotificationItem(this: any, props: any) {
                   setProblemDescription(props.item.problemDesciption)}
               </Text>
               <TouchableOpacity
-                onPress={() => {
-                  // this.props.navigation.navigate('MapView');
+                onPressIn={() => {
+                  setSelectedNotification(props.item);
+                  setShowDialog(true);
                 }}>
                 <Image
                   source={require('../../assets/information.png')}
@@ -88,6 +87,26 @@ function NotificationItem(this: any, props: any) {
           </View>
         </View>
       </View>
+      {showDialog && (
+        <MaterialDialog
+          title={'Notification Information'}
+          visible={showDialog}
+          onOk={() => setShowDialog(false)}
+          onCancel={() => setShowDialog(false)}
+          colorAccent="#000">
+          <View>
+            <Text style={styles.textStyle}>
+              Problem Description: {selectedNotification.problemDesciption}
+            </Text>
+            <Text style={styles.textStyle}>
+              Problem Description: {selectedNotification.problemDesciption}
+            </Text>
+            <Text style={styles.textStyle}>
+              Problem Description: {selectedNotification.problemDesciption}
+            </Text>
+          </View>
+        </MaterialDialog>
+      )}
     </View>
   );
 }
@@ -199,6 +218,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Mertropolis',
     fontWeight: 'bold',
     fontSize: 15,
+  },
+  textStyle: {
+    fontSize: 15,
+    color: 'black',
   },
 });
 export default NotificationItem;

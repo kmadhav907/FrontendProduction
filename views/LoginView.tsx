@@ -104,7 +104,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
   };
   handleResendOTP = () => {
     resendOTP(this.state.phoneNumber).then((response: any) => {
-      // console.log(response);
+      console.log(response);
       if (response.status !== 200) {
         errorMessage('Something went wrong :(');
       }

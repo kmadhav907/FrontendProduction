@@ -128,15 +128,32 @@ class DashboardView extends React.Component<
 
     // const UserName =
     console.log('fixitId in dash: ' + fixitID);
-    //this route is removed
-    // await getFixitStatus(fixitID)
-    //   .then((response: any) => {
-    //     const status = response.data;
-    //     this.setState({
-    //       isOn: status,
-    //     });
-    //   })
-    //   .catch(err => console.log('in getLoc ' + err));
+
+    await getFixitStatus(fixitID)
+      .then(async (response: any) => {
+        const status = response.data;
+        this.setState({
+          isOn: status,
+        });
+        if (this.state.isOn === true) {
+          await getNotification(
+            fixitID,
+            this.state.latitude,
+            this.state.longitude,
+          )
+            .then((res: any) => {
+              // console.log('data in dashboard : ' + res.data);
+              this.setState({
+                notifData: res.data,
+              });
+              console.log('done');
+            })
+            .catch(err => {
+              console.log('Error in get notif = ' + err.message);
+            });
+        }
+      })
+      .catch(err => console.log('in getLoc ' + err));
 
     this.setState({loading: false});
     // this.props.navigation.navigate('LoginView');
