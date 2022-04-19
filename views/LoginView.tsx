@@ -24,6 +24,7 @@ import {
   verifyOTPForAuthorization,
 } from '../apiServices/loginApis';
 import AsyncStorage from '@react-native-community/async-storage';
+import {MaterialDialog} from 'react-native-material-dialog';
 
 interface LoginViewState {
   stepsForLogin: number;
@@ -34,6 +35,7 @@ interface LoginViewState {
   otpToVerify: string;
   latitude: number | undefined;
   longitude: number | undefined;
+  showDialogMessage: boolean;
 }
 interface LoginViewProps {
   navigation: any;
@@ -51,6 +53,7 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
       otpToVerify: '',
       latitude: undefined,
       longitude: undefined,
+      showDialogMessage: false,
     };
   }
   async componentDidMount() {
@@ -103,12 +106,17 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
     });
   };
   handleResendOTP = () => {
-    resendOTP(this.state.phoneNumber).then((response: any) => {
-      console.log(response);
-      if (response.status !== 200) {
-        errorMessage('Something went wrong :(');
-      }
-    });
+    resendOTP(this.state.phoneNumber)
+      .then((response: any) => {
+        console.log(response);
+        if (response.status !== 200) {
+          errorMessage('Something went wrong :(');
+        }
+        this.setState({showDialogMessage: true});
+      })
+      .catch(error => {
+        errorMessage('Something went bad :(');
+      });
   };
   handleVerifyOTP = async () => {
     this.setState({loading: true});
@@ -242,6 +250,16 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
               <Text style={styles.buttonTextStyle}>{'Verify'}</Text>
             </TouchableOpacity>
           </View>
+          {this.state.showDialogMessage && (
+            <MaterialDialog
+              title={'Notification Information'}
+              visible={this.state.showDialogMessage}
+              onOk={() => this.setState({showDialogMessage: false})}
+              onCancel={() => this.setState({showDialogMessage: false})}
+              colorAccent="#000">
+              <Text>OTP has been sent Successfully</Text>
+            </MaterialDialog>
+          )}
         </View>
       );
     } else {
