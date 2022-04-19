@@ -6,7 +6,7 @@ import NotificationItem from './NotificationItem';
 // const BAR_SPACE = 10;
 
 interface NotificationProps {
-  notifications: any[] | null;
+  notifications: any[];
 }
 class Notification extends Component<NotificationProps, {}> {
   constructor(props: NotificationProps) {
