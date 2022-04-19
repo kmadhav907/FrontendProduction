@@ -41,6 +41,7 @@ interface DashboardViewState {
   dutyCall: string;
   loading: boolean;
   notifData: Array<String>;
+  selectedRegion: {latitude: string; longitude: string} | undefined;
 }
 interface DashboardViewProps {
   navigation: any;
@@ -61,6 +62,7 @@ class DashboardView extends React.Component<
       dutyCall: 'OFF DUTY',
       loading: false,
       notifData: [],
+      selectedRegion: undefined,
     };
     console.log('Created');
   }
@@ -191,6 +193,7 @@ class DashboardView extends React.Component<
                 // console.log('data in dashboard : ' + res.data);
                 this.setState({
                   notifData: res.data,
+                  selectedRegion: undefined,
                 });
                 console.log('done');
               })
@@ -254,11 +257,24 @@ class DashboardView extends React.Component<
                 <Map
                   latitude={this.state.latitude as number}
                   longitude={this.state.longitude as number}
+                  selectedRegion={
+                    this.state.selectedRegion && this.state.selectedRegion
+                  }
                 />
               </View>
             </View>
             <Notification
               notifications={this.state.notifData && this.state.notifData}
+              setSelectedRegion={(notification: any) => {
+                const userLocation = notification.userLocation;
+                this.setState({
+                  selectedRegion: {
+                    latitude: userLocation.latitude,
+                    longitude: userLocation.longitude,
+                  },
+                });
+                console.log(this.state.selectedRegion);
+              }}
             />
           </View>
 

@@ -6,7 +6,8 @@ import NotificationItem from './NotificationItem';
 // const BAR_SPACE = 10;
 
 interface NotificationProps {
-  notifications: any[];
+  notifications: any[] | null;
+  setSelectedRegion: any;
 }
 class Notification extends Component<NotificationProps, {}> {
   constructor(props: NotificationProps) {
@@ -22,7 +23,14 @@ class Notification extends Component<NotificationProps, {}> {
     let notifications: any[] = [];
     this.props.notifications &&
       this.props.notifications.forEach((noti: any, i) => {
-        notifications.push(<NotificationItem item={noti} index={i} key={i} />);
+        notifications.push(
+          <NotificationItem
+            item={noti}
+            index={i}
+            key={i}
+            setSelectedRegion={this.props.setSelectedRegion}
+          />,
+        );
       });
 
     return (

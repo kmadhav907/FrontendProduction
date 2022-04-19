@@ -58,6 +58,7 @@ function NotificationItem(this: any, props: any) {
               </Text>
               <TouchableOpacity
                 onPressIn={() => {
+                  props.setSelectedRegion(props.item);
                   setSelectedNotification(props.item);
                   setShowDialog(true);
                 }}>

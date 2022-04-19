@@ -9,6 +9,7 @@ interface MapState {
 interface MapProps {
   latitude: number;
   longitude: number;
+  selectedRegion: any;
 }
 class Map extends React.Component<MapProps, MapState> {
   constructor(props: any) {
@@ -23,25 +24,36 @@ class Map extends React.Component<MapProps, MapState> {
   render() {
     return (
       <SafeAreaView style={{flex: 1, margin: 0, padding: 0}}>
-        <MapView
-          zoomEnabled={true}
-          onMapReady={this.onMapLayout}
-          zoomControlEnabled={true}
-          style={{minHeight: '100%'}}
-          customMapStyle={mapStyles}
-          initialRegion={{
-            latitude: this.props.latitude,
-            longitude: this.props.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}>
-          <Marker
-            coordinate={{
+        {this.props.latitude && this.props.longitude && (
+          <MapView
+            zoomEnabled={true}
+            onMapReady={this.onMapLayout}
+            zoomControlEnabled={true}
+            style={{minHeight: '100%'}}
+            customMapStyle={mapStyles}
+            initialRegion={{
               latitude: this.props.latitude,
               longitude: this.props.longitude,
-            }}
-          />
-        </MapView>
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}>
+            <Marker
+              coordinate={{
+                latitude: this.props.latitude,
+                longitude: this.props.longitude,
+              }}
+            />
+            {this.props.selectedRegion && (
+              <Marker
+                coordinate={{
+                  latitude: this.props.selectedRegion.latitude,
+                  longitude: this.props.selectedRegion.longitude,
+                }}
+                pinColor="yellow"
+              />
+            )}
+          </MapView>
+        )}
       </SafeAreaView>
     );
   }
