@@ -72,7 +72,13 @@ function NotificationItem(this: any, props: any) {
             <View style={styles.towRequest}>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                  // onPress={clicked()}
+                  onPress={() => {
+                    if (props.item.notificationid != null) {
+                      console.log('There');
+                    } else {
+                      console.log('Not there');
+                    }
+                  }}
                   style={styles.buttonStyle1}>
                   <Text style={styles.buttonTextStyle1}>Accept</Text>
                 </TouchableOpacity>
