@@ -44,11 +44,12 @@ export const selectNotification = async (
   return response;
 };
 
-export const MyServices = async (fixitID: String) => {
-  const response = axios.get(`${ENDPOINT}/Myservices/${fixitID}`, {
-    headers: {
-      accept: '*/*',
-    },
-  });
-  return response;
+export const MyServices = async (fixitID: String, notificationID: String) => {
+  console.log(notificationID);
+  // const response = axios.get(`${ENDPOINT}/Myservices/${fixitID}`, {
+  //   headers: {
+  //     accept: '*/*',
+  //   },
+  // });
+  // return response;
 };
