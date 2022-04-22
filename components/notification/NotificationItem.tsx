@@ -24,15 +24,7 @@ function NotificationItem(this: any, props: any) {
       return description;
     }
   };
-  // const updateLocation = async (
-  //   latitude: string,
-  //   longitude: string,
-  // ): string => {
-  //   // await selectNotification(latitude, longitude);
-  // };
-  const clicked = async () => {
-    console.log('licked');
-  };
+
   return (
     <View key={props.index}>
       <View style={styles.towText}>
