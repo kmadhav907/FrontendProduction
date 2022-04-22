@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {MaterialDialog} from 'react-native-material-dialog';
+import {MyServices} from '../../apiServices/notificationServices';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
@@ -65,11 +66,7 @@ function NotificationItem(this: any, props: any) {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   onPress={() => {
-                    if (props.item.notificationid != null) {
-                      console.log('There');
-                    } else {
-                      console.log('Not there');
-                    }
+                    MyServices('1234', props.item['notificationid:']);
                   }}
                   style={styles.buttonStyle1}>
                   <Text style={styles.buttonTextStyle1}>Accept</Text>
