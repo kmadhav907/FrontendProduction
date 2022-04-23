@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,14 +7,12 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-} from 'react-native';
-import {MaterialDialog} from 'react-native-material-dialog';
-import {
-  selectNotification,
-} from '../../apiServices/notificationServices';
-import AsyncStorage from '@react-native-community/async-storage';
+} from "react-native";
+import { MaterialDialog } from "react-native-material-dialog";
+import { selectNotification } from "../../apiServices/notificationServices";
+import AsyncStorage from "@react-native-community/async-storage";
 
-export const SLIDER_WIDTH = Dimensions.get('window').width;
+export const SLIDER_WIDTH = Dimensions.get("window").width;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
 
 function NotificationItem(this: any, props: any) {
@@ -24,7 +22,7 @@ function NotificationItem(this: any, props: any) {
   >(undefined);
   const setProblemDescription = (description: string): string => {
     if (description.length > 15) {
-      return description.substring(0, 15) + '...';
+      return description.substring(0, 15) + "...";
     } else {
       return description;
     }
@@ -40,7 +38,7 @@ function NotificationItem(this: any, props: any) {
           <View style={styles.imageContainer}>
             <Image
               source={{
-                uri: 'https://images.pexels.com/photos/1420440/pexels-photo-1420440.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                uri: "https://images.pexels.com/photos/1420440/pexels-photo-1420440.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
               }}
               style={styles.imageStyle}
             />
@@ -58,9 +56,10 @@ function NotificationItem(this: any, props: any) {
                   props.setSelectedRegion(props.item);
                   setSelectedNotification(props.item);
                   setShowDialog(true);
-                }}>
+                }}
+              >
                 <Image
-                  source={require('../../assets/information.png')}
+                  source={require("../../assets/information.png")}
                   style={styles.iconStyle}
                 />
               </TouchableOpacity>
@@ -70,38 +69,40 @@ function NotificationItem(this: any, props: any) {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   onPress={async () => {
-                    const userObject = await AsyncStorage.getItem('userObject');
+                    const userObject = await AsyncStorage.getItem("userObject");
                     const fixitID = JSON.parse(userObject as string).fixitId;
-                    const notificationId = props.item['notificationid:'];
-                    await selectNotification(notificationId, fixitID, 'Accept')
-                      .then(response => {
-                        console.log('Done');
-                        console.log(response.data);
+                    const notificationId = props.item["notificationid:"];
+                    await selectNotification(notificationId, fixitID, "Accept")
+                      .then((response) => {
+                        console.log("Fone");
+                        console.log(response);
                       })
-                      .catch(error => {
-                        console.log(`Not Done : ${notificationId}` + error.message);
+                      .catch((error) => {
+                        console.log(error.message);
                       });
                   }}
-                  style={styles.buttonStyle1}>
+                  style={styles.buttonStyle1}
+                >
                   <Text style={styles.buttonTextStyle1}>Accept</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   onPress={async () => {
-                    const userObject = await AsyncStorage.getItem('userObject');
+                    const userObject = await AsyncStorage.getItem("userObject");
                     const fixitID = JSON.parse(userObject as string).fixitId;
-                    const notificationId = props.item['notificationid:'];
-                    await selectNotification(notificationId, fixitID, 'Reject')
-                      .then(response => {
-                        console.log('Fone');
+                    const notificationId = props.item["notificationid:"];
+                    await selectNotification(notificationId, fixitID, "Decline")
+                      .then((response) => {
+                        console.log("Fone");
                         console.log(response);
                       })
-                      .catch(error => {
+                      .catch((error) => {
                         console.log(error.message);
                       });
                   }}
-                  style={styles.buttonStyle2}>
+                  style={styles.buttonStyle2}
+                >
                   <Text style={styles.buttonTextStyle2}>Reject</Text>
                 </TouchableOpacity>
               </View>
@@ -111,20 +112,18 @@ function NotificationItem(this: any, props: any) {
       </View>
       {showDialog && (
         <MaterialDialog
-          title={'Notification Information'}
+          title={"Notification Information"}
           visible={showDialog}
           onOk={() => setShowDialog(false)}
           onCancel={() => setShowDialog(false)}
-          colorAccent="#000">
+          colorAccent="#000"
+        >
           <View>
             <Text style={styles.textStyle}>
               Problem Description: {selectedNotification.problemDesciption}
             </Text>
             <Text style={styles.textStyle}>
-              Problem Description: {selectedNotification.problemDesciption}
-            </Text>
-            <Text style={styles.textStyle}>
-              Problem Description: {selectedNotification.problemDesciption}
+              Vehicle: {selectedNotification["userVehicleDetail:"]?.bikename}
             </Text>
           </View>
         </MaterialDialog>
@@ -141,22 +140,22 @@ const styles = StyleSheet.create({
     marginTop: -7,
   },
   mainContainer: {
-    backgroundColor: '#f9d342',
-    height: '100%',
-    width: '90%',
-    alignItems: 'center',
+    backgroundColor: "#f9d342",
+    height: "100%",
+    width: "90%",
+    alignItems: "center",
     elevation: 7,
     borderRadius: 15,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignContent: 'center',
+    justifyContent: "center",
+    flexDirection: "row",
+    alignContent: "center",
   },
   mainBorder: {
     width: ITEM_WIDTH,
-    height: '50%',
-    alignContent: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
+    height: "50%",
+    alignContent: "center",
+    justifyContent: "center",
+    flexDirection: "row",
     // marginTop: -10,
   },
   imageContainer: {
@@ -173,77 +172,77 @@ const styles = StyleSheet.create({
   },
   custName: {
     marginBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   custNameName: {
     fontSize: 20,
-    fontFamily: 'Metropolis',
-    fontWeight: 'bold',
-    color: 'black',
+    fontFamily: "Metropolis",
+    fontWeight: "bold",
+    color: "black",
   },
   desp: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   towText: {
-    backgroundColor: '#f9d342',
-    width: '70%',
-    height: '17%',
+    backgroundColor: "#f9d342",
+    width: "70%",
+    height: "17%",
     borderRadius: 15,
-    borderBottomColor: 'black',
+    borderBottomColor: "black",
     borderWidth: 2,
-    color: 'black',
+    color: "black",
     elevation: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginLeft: 60,
   },
   towTextText: {
     fontSize: 20,
-    fontFamily: 'Metropolis',
-    fontWeight: 'bold',
-    color: 'black',
+    fontFamily: "Metropolis",
+    fontWeight: "bold",
+    color: "black",
   },
   towRequest: {
-    width: '60%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    width: "60%",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   buttonContainer: {
-    width: '40%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: 'black',
+    width: "40%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "black",
     borderWidth: 2,
     borderRadius: 5,
   },
   buttonStyle1: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "black",
     fontSize: 10,
   },
   buttonStyle2: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   buttonTextStyle1: {
-    color: 'white',
-    fontFamily: 'Mertropolis',
-    fontWeight: 'bold',
+    color: "white",
+    fontFamily: "Mertropolis",
+    fontWeight: "bold",
     fontSize: 15,
   },
   buttonTextStyle2: {
-    color: 'black',
-    fontFamily: 'Mertropolis',
-    fontWeight: 'bold',
+    color: "black",
+    fontFamily: "Mertropolis",
+    fontWeight: "bold",
     fontSize: 15,
   },
   textStyle: {
     fontSize: 15,
-    color: 'black',
+    color: "black",
   },
 });
 export default NotificationItem;

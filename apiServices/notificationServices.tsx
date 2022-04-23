@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
-import axios from 'axios';
-import {ENDPOINT} from '../global/endPoint';
+import axios from "axios";
+import { ENDPOINT } from "../global/endPoint";
 
 export const getNotification = async (
   fixitID: String,
   latitude: number | undefined,
-  longitude: number | undefined,
+  longitude: number | undefined
 ) => {
   const location = {
     latitude: latitude,
@@ -20,9 +20,9 @@ export const getNotification = async (
     params,
     {
       headers: {
-        'content-type': 'application/json',
+        "content-type": "application/json",
       },
-    },
+    }
   );
   return response;
 };
@@ -30,26 +30,35 @@ export const getNotification = async (
 export const selectNotification = async (
   notificationID: String,
   fixitID: String,
-  confirmation: String  ,
-)  => {
- const url = `${ENDPOINT}/selectRequest/${notificationID}/${fixitID}?confirmation=${confirmation}`;
- console.log(url);
-  const response = await axios.get(url,
+  confirmation: String
+) => {
+  const response = await axios.get(
+    `${ENDPOINT}/selectRequest/${notificationID}/${fixitID}?confirmation=${confirmation}`,
     {
       headers: {
-        accept: '*/*',
+        accept: "*/*",
+        "Content-Type": "application/json",
       },
-    },
+    }
   );
   return response;
 };
 
 export const MyServices = async (fixitID: String, notificationID: String) => {
   console.log(notificationID);
-  // const response = axios.get(`${ENDPOINT}/Myservices/${fixitID}`, {
-  //   headers: {
-  //     accept: '*/*',
-  //   },
-  // });
-  // return response;
+  const response = axios.get(`${ENDPOINT}/Myservices/${fixitID}`, {
+    headers: {
+      accept: "*/*",
+    },
+  });
+  return response;
+};
+export const getCurrentService = async (fixitId: String) => {
+  const response = axios.get(`${ENDPOINT}/currentServices/${fixitId}`, {
+    headers: {
+      accept: "*/*",
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
 };
