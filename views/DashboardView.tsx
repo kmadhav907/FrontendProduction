@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
 import {
@@ -5,25 +6,20 @@ import {
   StyleSheet,
   View,
   Image,
-  TextInput,
   TouchableOpacity,
   ToastAndroid,
   ActivityIndicator,
 } from 'react-native';
 
 import {
-  MyServices,
   getNotification,
-  selectNotification,
 } from '../apiServices/notificationServices';
 
 import {
   getFixitStatus,
-  getLocation,
   saveLocation,
   toggleOffStatus,
   toggleOnStatus,
-  updateLocation,
 } from '../apiServices/dashboardApi';
 import Map from '../components/googleMap/Map';
 import ToggleSwitch from 'toggle-switch-react-native';

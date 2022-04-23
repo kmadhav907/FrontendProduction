@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import axios from 'axios';
 import {ENDPOINT} from '../global/endPoint';
 
@@ -29,11 +30,10 @@ export const getNotification = async (
 export const selectNotification = async (
   notificationID: number,
   fixitID: String,
-  confirmation: Boolean,
+  confirmation: String,
 ) => {
   const response = await axios.post(
-    `${ENDPOINT}/selectRequest/${notificationID}/${fixitID}`,
-    JSON.stringify({confirmation}),
+    `${ENDPOINT}/selectRequest/${notificationID}/${fixitID}?confirmation=${confirmation}`,
     {
       headers: {
         accept: '*/*',

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, {useState} from 'react';
 import {
   View,
@@ -8,7 +9,10 @@ import {
   Dimensions,
 } from 'react-native';
 import {MaterialDialog} from 'react-native-material-dialog';
-import {MyServices} from '../../apiServices/notificationServices';
+import {
+  selectNotification,
+} from '../../apiServices/notificationServices';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
@@ -65,8 +69,18 @@ function NotificationItem(this: any, props: any) {
             <View style={styles.towRequest}>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                  onPress={() => {
-                    MyServices('1234', props.item['notificationid:']);
+                  onPress={async () => {
+                    const userObject = await AsyncStorage.getItem('userObject');
+                    const fixitID = JSON.parse(userObject as string).fixitId;
+                    const notificationId = props.item['notificationid:'];
+                    await selectNotification(notificationId, fixitID, 'Accept')
+                      .then(response => {
+                        console.log('Fone');
+                        console.log(response);
+                      })
+                      .catch(error => {
+                        console.log(error.message);
+                      });
                   }}
                   style={styles.buttonStyle1}>
                   <Text style={styles.buttonTextStyle1}>Accept</Text>
@@ -74,7 +88,19 @@ function NotificationItem(this: any, props: any) {
               </View>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                  // onPressIn={clicked()}
+                  onPress={async () => {
+                    const userObject = await AsyncStorage.getItem('userObject');
+                    const fixitID = JSON.parse(userObject as string).fixitId;
+                    const notificationId = props.item['notificationid:'];
+                    await selectNotification(notificationId, fixitID, 'Reject')
+                      .then(response => {
+                        console.log('Fone');
+                        console.log(response);
+                      })
+                      .catch(error => {
+                        console.log(error.message);
+                      });
+                  }}
                   style={styles.buttonStyle2}>
                   <Text style={styles.buttonTextStyle2}>Reject</Text>
                 </TouchableOpacity>

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
 import {Animated, View, StyleSheet, ScrollView} from 'react-native';
 import NotificationItem from './NotificationItem';
@@ -7,6 +8,7 @@ import NotificationItem from './NotificationItem';
 
 interface NotificationProps {
   notifications: any[] | null;
+  // eslint-disable-next-line prettier/prettier
   setSelectedRegion: any;
 }
 class Notification extends Component<NotificationProps, {}> {
