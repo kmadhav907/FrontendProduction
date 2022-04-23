@@ -420,10 +420,7 @@ class DashboardView extends React.Component<
               colorAccent="#000"
             >
               <View>
-                <Text>
-                  {"You have undertook these many actions" +
-                    this.state.currentServices?.length}
-                </Text>
+                <Text>SOme notification are there!</Text>
               </View>
             </MaterialDialog>
           )}
