@@ -75,11 +75,11 @@ function NotificationItem(this: any, props: any) {
                     const notificationId = props.item['notificationid:'];
                     await selectNotification(notificationId, fixitID, 'Accept')
                       .then(response => {
-                        console.log('Fone');
-                        console.log(response);
+                        console.log('Done');
+                        console.log(response.data);
                       })
                       .catch(error => {
-                        console.log(error.message);
+                        console.log(`Not Done : ${notificationId}` + error.message);
                       });
                   }}
                   style={styles.buttonStyle1}>

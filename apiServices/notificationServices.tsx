@@ -28,16 +28,16 @@ export const getNotification = async (
 };
 
 export const selectNotification = async (
-  notificationID: number,
+  notificationID: String,
   fixitID: String,
-  confirmation: String,
-) => {
-  const response = await axios.post(
-    `${ENDPOINT}/selectRequest/${notificationID}/${fixitID}?confirmation=${confirmation}`,
+  confirmation: String  ,
+)  => {
+ const url = `${ENDPOINT}/selectRequest/${notificationID}/${fixitID}?confirmation=${confirmation}`;
+ console.log(url);
+  const response = await axios.get(url,
     {
       headers: {
         accept: '*/*',
-        'Content-Type': 'application/json',
       },
     },
   );
