@@ -62,3 +62,13 @@ export const getCurrentService = async (fixitId: String) => {
   });
   return response;
 };
+export const getHistroy = async (fixitId: string) => {
+  const response = axios.get(`${ENDPOINT}/historyServices/${fixitId}`, {
+    headers: {
+      accept: "*/*",
+      "Content-Type": "application/json",
+    },
+  });
+  console.log(response);
+  return response;
+};
