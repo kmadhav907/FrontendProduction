@@ -41,8 +41,6 @@ interface DashboardViewState {
   loading: boolean;
   notifData: Array<String>;
   selectedRegion: { latitude: string; longitude: string } | undefined;
-  currentServices: any;
-  showDialogBox: boolean;
 }
 interface DashboardViewProps {
   navigation: any;
@@ -64,8 +62,6 @@ class DashboardView extends React.Component<
       loading: false,
       notifData: [],
       selectedRegion: undefined,
-      currentServices: [],
-      showDialogBox: false,
     };
     console.log("Created");
   }
@@ -159,14 +155,7 @@ class DashboardView extends React.Component<
         }
       })
       .catch((err) => console.log("in getLoc " + err));
-    await getCurrentService(fixitID)
-      .then((response: any) => {
-        console.log("In Current service");
-        console.log(response.data);
-        const data = response.data;
-        this.setState({ currentServices: data });
-      })
-      .catch((error) => console.log(error));
+
     this.setState({ loading: false });
     // this.props.navigation.navigate('LoginView');
   }
@@ -297,20 +286,8 @@ class DashboardView extends React.Component<
               />
             </View>
             <TouchableOpacity
-              onPressIn={async () => {
-                const userObject = await AsyncStorage.getItem("userObject");
-                const fixitID = JSON.parse(userObject as string).fixitId;
-                await getCurrentService(fixitID)
-                  .then((response: any) => {
-                    console.log("In Current service");
-                    console.log(response.data);
-                    const data = response.data;
-                    this.setState({
-                      currentServices: data,
-                      showDialogBox: true,
-                    });
-                  })
-                  .catch((error) => console.log(error));
+              onPressIn={() => {
+                this.props.navigation.replace("CurrentAndHistory");
               }}
             >
               <Image
@@ -378,23 +355,7 @@ class DashboardView extends React.Component<
                 style={styles.iconStyle}
               />
             </View>
-            <TouchableOpacity
-              onPressIn={async () => {
-                const userObject = await AsyncStorage.getItem("userObject");
-                const fixitID = JSON.parse(userObject as string).fixitId;
-                await getCurrentService(fixitID)
-                  .then((response: any) => {
-                    console.log("In Current service");
-                    console.log(response.data);
-                    const data = response.data;
-                    this.setState({
-                      currentServices: data,
-                      showDialogBox: true,
-                    });
-                  })
-                  .catch((error) => console.log(error));
-              }}
-            >
+            <TouchableOpacity onPressIn={async () => {}}>
               <Image
                 source={require("../assets/3-01.png")}
                 style={styles.iconStyle}
@@ -411,19 +372,6 @@ class DashboardView extends React.Component<
               />
             </TouchableOpacity>
           </View>
-          {this.state.showDialogBox && (
-            <MaterialDialog
-              title={"Notification Information"}
-              visible={this.state.showDialogBox}
-              onOk={() => this.setState({ showDialogBox: false })}
-              onCancel={() => this.setState({ showDialogBox: false })}
-              colorAccent="#000"
-            >
-              <View>
-                <Text>SOme notification are there!</Text>
-              </View>
-            </MaterialDialog>
-          )}
         </View>
       );
     }
