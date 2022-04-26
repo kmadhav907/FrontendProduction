@@ -10,9 +10,7 @@ import {
   ToastAndroid,
   ActivityIndicator,
   Modal,
-  Alert,
-  TouchableWithoutFeedback,
-  Pressable
+  Alert
 } from "react-native";
 
 import {
@@ -297,23 +295,16 @@ class DashboardView extends React.Component<
               />
             </View>
             <Modal
-            animationType = "slide"
+            animationType = {"slide"}
             transparent={true}
+            style={styles.modalView}
             visible={this.state.isVisible}
             onRequestClose={() => {
+              // Alert.alert('Modal has now been closed.');
                 this.displayModal(!this.state.isVisible);
               }
             }>
-              <Pressable style={{
-              flex:1,
-              backgroundColor:'transparent',
-            
-          }}
-          onPress={()=>{this.displayModal(!this.state.isVisible);}}
-          />
-          <View style={{position: 'absolute'}}>
               <HistoryModal navigation={this.props.navigation} />
-          </View>
           </Modal>
             <TouchableOpacity onPress={() => {
                 this.displayModal(true);
@@ -396,8 +387,8 @@ class DashboardView extends React.Component<
             <Modal
             animationType = {"slide"}
             transparent={true}
+            style={styles.modalView}
             visible={this.state.isVisible}
-
             onRequestClose={() => {
               // Alert.alert('Modal has now been closed.');
                 this.displayModal(!this.state.isVisible);
@@ -431,7 +422,10 @@ class DashboardView extends React.Component<
 }
 
 const styles = StyleSheet.create({
-
+  modalView: {
+    margin: 0,
+    justifyContent: 'flex-end'
+},
   innerText: {
     marginRight: 50,
   },
