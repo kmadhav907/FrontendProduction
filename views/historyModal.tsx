@@ -44,7 +44,7 @@
 
 // export default HostoryModal;
 
-import React from "react";
+import React from 'react';
 import {
   Dimensions,
   FlatList,
@@ -53,14 +53,14 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   getCurrentService,
   getHistroy,
-} from "../apiServices/notificationServices";
-import AsyncStorage from "@react-native-community/async-storage";
-import { errorMessage } from "../global/utils";
+} from '../apiServices/notificationServices';
+import AsyncStorage from '@react-native-community/async-storage';
+import { errorMessage } from '../global/utils';
 
 interface HistoryModalState {
   currentNotifications: any[];
@@ -89,25 +89,25 @@ class HistoryModal extends React.Component<
     this.setState({ loading: false });
   }
   getNotifications = async () => {
-    const userObject = await AsyncStorage.getItem("userObject");
+    const userObject = await AsyncStorage.getItem('userObject');
     if (userObject === null) {
-      this.props.navigation.replace("LoginView");
+      this.props.navigation.replace('LoginView');
     } else {
       const fixitId = JSON.parse(userObject as string).fixitId;
       getCurrentService(fixitId)
         .then((response: any) => {
-          console.log("In Current Service");
+          console.log('In Current Service');
           console.log(response.data);
           this.setState({ currentNotifications: response.data });
           getHistroy(fixitId)
             .then((response: any) => {
-              console.log("In History");
+              console.log('In History');
               console.log(response.data);
               this.setState({ histroyNotifications: response.data });
             })
-            .catch((error) => errorMessage("Something went wrong"));
+            .catch((error) => errorMessage('Something went wrong'));
         })
-        .catch((error) => errorMessage("Something went wrong"));
+        .catch((error) => errorMessage('Something went wrong'));
     }
   };
   renderItem = (itemData: any) => (
@@ -158,42 +158,43 @@ class HistoryModal extends React.Component<
     );
   }
 }
-const HEIGHT = Dimensions.get("window").height;
+const HEIGHT = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     
   container: {
-    backgroundColor: "black",
+    
+    backgroundColor: 'black',
     flex: 1,
     height: HEIGHT,
-    width: "100%",
+    width: '100%',
   },
   innerContainer: {
-    marginTop: "40%",
-    height: "100%",
-    width: "80%",
-    marginLeft: "10%",
+    marginTop: '40%',
+    height: '100%',
+    width: '80%',
+    marginLeft: '10%',
     borderRadius: 12,
-    backgroundColor: "grey",
+    backgroundColor: 'grey',
     padding: 5,
     paddingLeft: 8,
   },
 
   activityIndicator: {
-    alignItems: "center",
+    alignItems: 'center',
     height: 80,
     margin: 15,
   },
   headerTitle: {
     fontSize: 24,
-    color: "black",
+    color: 'black',
   },
   cardContainer: {
     height: 50,
     margin: 10,
-    backgroundColor: "wheat",
+    backgroundColor: 'wheat',
     borderRadius: 6,
-    justifyContent: "center",
+    justifyContent: 'center',
     padding: 5,
     borderWidth: 2,
   },
