@@ -477,7 +477,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 onPress={this.handleSubmitProfile}
-                style={styles.buttonStyle}>
+                style={styles.buttonStyle1}>
                 <Text style={styles.buttonTextStyle}>Confirm</Text>
               </TouchableOpacity>
             </View>
@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
     height: 80,
   },
   fieldTextStyle: {
-    flex: 0.9, 
+    flex: 1.0, 
     textAlign: 'left',
     marginLeft: 5,
     fontSize: 16,
@@ -595,6 +595,16 @@ const styles = StyleSheet.create({
     width: 100,
     alignItems: 'center',
     borderRadius: 10,
+    marginRight: 10,
+  },
+  buttonStyle1: {
+    backgroundColor: '#f9d342',
+    padding: 10,
+    width: 100,
+    alignItems: 'center',
+    borderRadius: 10,
+    marginRight: 10,
+    marginBottom: 30,
   },
   buttonTextStyle: {
     fontWeight: '900',
