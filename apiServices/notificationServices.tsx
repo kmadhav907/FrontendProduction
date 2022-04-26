@@ -57,7 +57,6 @@ export const getCurrentService = async (fixitId: String) => {
   const response = axios.get(`${ENDPOINT}/currentServices/${fixitId}`, {
     headers: {
       accept: "*/*",
-      "Content-Type": "application/json",
     },
   });
   return response;

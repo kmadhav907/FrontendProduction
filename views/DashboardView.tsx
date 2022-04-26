@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   ToastAndroid,
   ActivityIndicator,
+  Modal,
+  Alert
 } from "react-native";
 
 import {
@@ -28,10 +30,12 @@ import ToggleSwitch from "toggle-switch-react-native";
 import Geolocation from "react-native-geolocation-service";
 import { errorMessage, requestLocationPermission } from "../global/utils";
 import Notification from "../components/notification/Notifications";
-import { MaterialDialog } from "react-native-material-dialog";
+import HistoryModal from './historyModal';
+
 
 interface DashboardViewState {
   isEnabled: boolean;
+  isVisible: boolean;
   showingString: string;
   username: string;
   latitude: number | undefined;
@@ -55,6 +59,7 @@ class DashboardView extends React.Component<
       isEnabled: false,
       showingString: "",
       username: "",
+      isVisible: false,
       latitude: undefined,
       longitude: undefined,
       isOn: false,
@@ -205,6 +210,10 @@ class DashboardView extends React.Component<
     }
   };
 
+  displayModal(show){
+    this.setState({isVisible: show})
+  }
+
   render() {
     if (this.state.loading) {
       return (
@@ -285,7 +294,28 @@ class DashboardView extends React.Component<
                 style={styles.iconStyle}
               />
             </View>
-            <TouchableOpacity
+            <Modal
+            animationType = {"slide"}
+            transparent={true}
+            style={styles.modalView}
+            visible={this.state.isVisible}
+            
+            onRequestClose={() => {
+              // Alert.alert('Modal has now been closed.');
+                this.displayModal(!this.state.isVisible);
+              }
+            }>
+              <HistoryModal navigation={this.props.navigation} />
+          </Modal>
+            <TouchableOpacity onPress={() => {
+                this.displayModal(true);
+              }}>
+              <Image
+                source={require("../assets/3-01.png")}
+                style={styles.iconStyle}
+              />
+            </TouchableOpacity>
+            {/* <TouchableOpacity
               onPressIn={() => {
                 this.props.navigation.replace("CurrentAndHistory");
               }}
@@ -294,7 +324,7 @@ class DashboardView extends React.Component<
                 source={require("../assets/3-01.png")}
                 style={styles.iconStyle}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               onPress={() => {
                 this.props.navigation.navigate("UserProfileView");
@@ -355,7 +385,22 @@ class DashboardView extends React.Component<
                 style={styles.iconStyle}
               />
             </View>
-            <TouchableOpacity onPressIn={async () => {}}>
+            <Modal
+            animationType = {"slide"}
+            transparent={true}
+            style={styles.modalView}
+            visible={this.state.isVisible}
+            
+            onRequestClose={() => {
+              // Alert.alert('Modal has now been closed.');
+                this.displayModal(!this.state.isVisible);
+              }
+            }>
+              <HistoryModal navigation={this.props.navigation} />
+          </Modal>
+            <TouchableOpacity onPress={() => {
+                this.displayModal(true);
+              }}>
               <Image
                 source={require("../assets/3-01.png")}
                 style={styles.iconStyle}
@@ -379,6 +424,10 @@ class DashboardView extends React.Component<
 }
 
 const styles = StyleSheet.create({
+  modalView: {
+    margin: 0,
+    justifyContent: 'flex-end'
+},
   innerText: {
     marginRight: 50,
   },

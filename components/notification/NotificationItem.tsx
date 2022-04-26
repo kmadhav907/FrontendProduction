@@ -75,7 +75,7 @@ function NotificationItem(this: any, props: any) {
                     await selectNotification(notificationId, fixitID, "Accept")
                       .then((response) => {
                         console.log("Fone");
-                        console.log(response);
+                        console.log(response.data);
                       })
                       .catch((error) => {
                         console.log(error.message);
