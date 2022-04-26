@@ -501,11 +501,13 @@ const styles = StyleSheet.create({
     height: 80,
   },
   fieldTextStyle: {
+    flex: 0.9, 
     textAlign: 'left',
     marginLeft: 5,
     fontSize: 16,
     fontWeight: 'bold',
     color: 'black',
+    flexWrap: 'wrap'
   },
   sectionStyle: {
     flex: 1,
