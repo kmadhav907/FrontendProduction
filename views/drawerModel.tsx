@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { Text, StyleSheet, View, Modal, Button } from "react-native";
+import { Text, StyleSheet, View, Button } from "react-native";
+import Modal from "react-native-modal";
 
 const SignUpModal = (props: any) => {
   return (
     <Modal
-      visible={props.display}
-      animationType={"slide"}
-      onRequestClose={props.toggle}
+      isVisible={props.display}
+      animationIn="slideInLeft"
+      animationOut="slideOutRight"
+      onBackButtonPress={props.toggle}
+      style={styles.modalStyle}
     >
       <View>
         <Button title="Sign Up" onPress={props.toggle} />
@@ -15,5 +18,12 @@ const SignUpModal = (props: any) => {
     </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  modalStyle: {
+    backgroundColor: "white",
+    color: "white",
+  },
+});
 
 export default SignUpModal;
