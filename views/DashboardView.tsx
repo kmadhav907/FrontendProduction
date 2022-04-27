@@ -10,13 +10,14 @@ import {
   ToastAndroid,
   ActivityIndicator,
   Modal,
-  Alert
+  Alert,
 } from "react-native";
 
 import {
   getNotification,
   getCurrentService,
   selectNotification,
+  getHistroy,
 } from "../apiServices/notificationServices";
 
 import {
@@ -30,8 +31,7 @@ import ToggleSwitch from "toggle-switch-react-native";
 import Geolocation from "react-native-geolocation-service";
 import { errorMessage, requestLocationPermission } from "../global/utils";
 import Notification from "../components/notification/Notifications";
-import HistoryModal from './historyModal';
-
+import HistoryModal from "./historyModal";
 
 interface DashboardViewState {
   isEnabled: boolean;
@@ -45,6 +45,9 @@ interface DashboardViewState {
   loading: boolean;
   notifData: Array<String>;
   selectedRegion: { latitude: string; longitude: string } | undefined;
+  cuurentNotifications: any[];
+  currentLocations: any[];
+  histroyNotifications: any[];
 }
 interface DashboardViewProps {
   navigation: any;
@@ -67,6 +70,9 @@ class DashboardView extends React.Component<
       loading: false,
       notifData: [],
       selectedRegion: undefined,
+      cuurentNotifications: [],
+      histroyNotifications: [],
+      currentLocations: [],
     };
     console.log("Created");
   }
@@ -160,7 +166,7 @@ class DashboardView extends React.Component<
         }
       })
       .catch((err) => console.log("in getLoc " + err));
-
+    await this.getCurrNotificationsAndHistroy();
     this.setState({ loading: false });
     // this.props.navigation.navigate('LoginView');
   }
@@ -209,9 +215,37 @@ class DashboardView extends React.Component<
       );
     }
   };
+  getCurrNotificationsAndHistroy = async () => {
+    const userObject = await AsyncStorage.getItem("userObject");
+    if (userObject === null) {
+      this.props.navigation.replace("LoginView");
+    } else {
+      const fixitId = JSON.parse(userObject as string).fixitId;
+      getCurrentService(fixitId)
+        .then((response: any) => {
+          console.log("In Current Service");
+          console.log(response.data);
+          const currNotification = response.data;
+          this.setState({ cuurentNotifications: response.data });
+          // let locations:any =[];
+          // currNotification.forEach((item:any, index:number)=> {
+          //   let location = {latitude: item?.}
+          //   locations.push()
+          // })
+          getHistroy(fixitId)
+            .then((response: any) => {
+              console.log("In History");
+              console.log(response.data);
+              this.setState({ histroyNotifications: response.data });
+            })
+            .catch((error) => errorMessage("Something went wrong"));
+        })
+        .catch((error) => errorMessage("Something went wrong"));
+    }
+  };
 
-  displayModal(show){
-    this.setState({isVisible: show})
+  displayModal(show: boolean) {
+    this.setState({ isVisible: show });
   }
 
   render() {
@@ -295,20 +329,26 @@ class DashboardView extends React.Component<
               />
             </View>
             <Modal
-            animationType = {"slide"}
-            transparent={true}
-            style={styles.modalView}
-            visible={this.state.isVisible}
-            onRequestClose={() => {
-              // Alert.alert('Modal has now been closed.');
+              animationType={"slide"}
+              transparent={true}
+              style={styles.modalView}
+              visible={this.state.isVisible}
+              onRequestClose={() => {
+                // Alert.alert('Modal has now been closed.');
                 this.displayModal(!this.state.isVisible);
-              }
-            }>
-              <HistoryModal navigation={this.props.navigation} />
-          </Modal>
-            <TouchableOpacity onPress={() => {
+              }}
+            >
+              <HistoryModal
+                navigation={this.props.navigation}
+                currentNotifications={this.state.cuurentNotifications}
+                histroyNotifications={this.state.histroyNotifications}
+              />
+            </Modal>
+            <TouchableOpacity
+              onPress={() => {
                 this.displayModal(true);
-              }}>
+              }}
+            >
               <Image
                 source={require("../assets/3-01.png")}
                 style={styles.iconStyle}
@@ -385,20 +425,26 @@ class DashboardView extends React.Component<
               />
             </View>
             <Modal
-            animationType = {"slide"}
-            transparent={true}
-            style={styles.modalView}
-            visible={this.state.isVisible}
-            onRequestClose={() => {
-              // Alert.alert('Modal has now been closed.');
+              animationType={"slide"}
+              transparent={true}
+              style={styles.modalView}
+              visible={this.state.isVisible}
+              onRequestClose={() => {
+                // Alert.alert('Modal has now been closed.');
                 this.displayModal(!this.state.isVisible);
-              }
-            }>
-              <HistoryModal navigation={this.props.navigation} />
-          </Modal>
-            <TouchableOpacity onPress={() => {
+              }}
+            >
+              <HistoryModal
+                navigation={this.props.navigation}
+                currentNotifications={this.state.cuurentNotifications}
+                histroyNotifications={this.state.histroyNotifications}
+              />
+            </Modal>
+            <TouchableOpacity
+              onPress={() => {
                 this.displayModal(true);
-              }}>
+              }}
+            >
               <Image
                 source={require("../assets/3-01.png")}
                 style={styles.iconStyle}
@@ -424,8 +470,10 @@ class DashboardView extends React.Component<
 const styles = StyleSheet.create({
   modalView: {
     margin: 0,
-    justifyContent: 'flex-end'
-},
+    flex: 1,
+    // justifyContent: "flex-end",
+    alignItems: "center",
+  },
   innerText: {
     marginRight: 50,
   },
