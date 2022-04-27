@@ -94,7 +94,7 @@ class CurrentAndHistory extends React.Component<
             </View>
           )}
 
-          <Text style={styles.headerTitle}>History:</Text>
+          <Text style={styles.headerTitle}>History:anfljdjadl</Text>
           {this.state.histroyNotifications.length !== 0 ? (
             <>
               <FlatList
@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     backgroundColor: "yellow",
     padding: 5,
     paddingLeft: 8,
+    paddingRight: 8,
   },
 
   activityIndicator: {

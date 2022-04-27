@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import AsyncStorage from "@react-native-community/async-storage";
-import React from "react";
+import AsyncStorage from '@react-native-community/async-storage';
+import React from 'react';
 import {
   Text,
   StyleSheet,
@@ -11,29 +11,29 @@ import {
   ActivityIndicator,
   Modal,
   Alert,
-} from "react-native";
+} from 'react-native';
 
 import {
   getNotification,
   getCurrentService,
   selectNotification,
   getHistroy,
-} from "../apiServices/notificationServices";
+} from '../apiServices/notificationServices';
 
 import {
   getFixitStatus,
   saveLocation,
   toggleOffStatus,
   toggleOnStatus,
-} from "../apiServices/dashboardApi";
-import Map from "../components/googleMap/Map";
-import ToggleSwitch from "toggle-switch-react-native";
-import Geolocation from "react-native-geolocation-service";
-import { errorMessage, requestLocationPermission } from "../global/utils";
-import Notification from "../components/notification/Notifications";
-import HistoryModal from "../components/modals/historyModal";
-import "./drawerModel";
-import SignUpModal from "./drawerModel";
+} from '../apiServices/dashboardApi';
+import Map from '../components/googleMap/Map';
+import ToggleSwitch from 'toggle-switch-react-native';
+import Geolocation from 'react-native-geolocation-service';
+import { errorMessage, requestLocationPermission } from '../global/utils';
+import Notification from '../components/notification/Notifications';
+import HistoryModal from '../components/modals/historyModal';
+import './drawerModel';
+import SignUpModal from './drawerModel';
 
 interface DashboardViewState {
   isEnabled: boolean;
@@ -64,15 +64,15 @@ class DashboardView extends React.Component<
     super(props);
     this.state = {
       isEnabled: false,
-      showingString: "",
-      username: "",
-      currentModal: "model1",
+      showingString: '',
+      username: '',
+      currentModal: 'model1',
       isVisibleTop: false,
       isVisible: false,
       latitude: undefined,
       longitude: undefined,
       isOn: false,
-      dutyCall: "OFF DUTY",
+      dutyCall: 'OFF DUTY',
       loading: false,
       notifData: [],
       selectedRegion: undefined,
@@ -80,19 +80,19 @@ class DashboardView extends React.Component<
       histroyNotifications: [],
       currentLocations: [],
     };
-    console.log("Created");
+    console.log('Created');
   }
   async componentDidMount() {
     this.setState({ loading: true });
-    const userObject = await AsyncStorage.getItem("userObject");
-    console.log("userobject" + userObject);
+    const userObject = await AsyncStorage.getItem('userObject');
+    console.log('userobject' + userObject);
     if (userObject === null) {
-      this.props.navigation.navigate("LoginView");
+      this.props.navigation.navigate('LoginView');
     }
     const newUserFlag = JSON.parse(userObject as string).newUser;
     console.log(userObject);
     if (newUserFlag) {
-      this.props.navigation.navigate("UserProfileView");
+      this.props.navigation.navigate('UserProfileView');
       // this.props.navigation.navigate('Notification');
       return;
       // this.props.navigation.navigate('DashboardView');
@@ -137,15 +137,15 @@ class DashboardView extends React.Component<
           this.setState({
             username: userName,
           });
-          console.log("no Error in save loc");
+          console.log('no Error in save loc');
         } else {
-          errorMessage("Please check your connection");
+          errorMessage('Please check your connection');
         }
       }
     );
 
     // const UserName =
-    console.log("fixitId in dash: " + fixitID);
+    console.log('fixitId in dash: ' + fixitID);
 
     await getFixitStatus(fixitID)
       .then(async (response: any) => {
@@ -164,22 +164,22 @@ class DashboardView extends React.Component<
               this.setState({
                 notifData: res.data,
               });
-              console.log("done");
+              console.log('done');
             })
             .catch((err) => {
-              console.log("Error in get notif = " + err.message);
+              console.log('Error in get notif = ' + err.message);
             });
         }
       })
-      .catch((err) => console.log("in getLoc " + err));
+      .catch((err) => console.log('in getLoc ' + err));
     await this.getCurrNotificationsAndHistroy();
     this.setState({ loading: false });
     // this.props.navigation.navigate('LoginView');
   }
 
   handleToggle = async () => {
-    console.log("In HandleToggle");
-    const userObject = await AsyncStorage.getItem("userObject");
+    console.log('In HandleToggle');
+    const userObject = await AsyncStorage.getItem('userObject');
     const fixitID = JSON.parse(userObject as string).fixitId;
     this.setState({
       isOn: !this.state.isOn,
@@ -188,7 +188,7 @@ class DashboardView extends React.Component<
       toggleOffStatus(fixitID).then((response: any) => {
         // console.log(response);
         if (response.status === 200) {
-          this.setState({ dutyCall: "OFF DUTY" });
+          this.setState({ dutyCall: 'OFF DUTY' });
         } else {
           this.setState({ isOn: true });
         }
@@ -199,7 +199,7 @@ class DashboardView extends React.Component<
         async (response: any) => {
           if (response.status === 200) {
             // console.log(response);
-            this.setState({ dutyCall: "ON DUTY" });
+            this.setState({ dutyCall: 'ON DUTY' });
             await getNotification(
               fixitID,
               this.state.latitude,
@@ -211,10 +211,10 @@ class DashboardView extends React.Component<
                   notifData: res.data,
                   selectedRegion: undefined,
                 });
-                console.log("done");
+                console.log('done');
               })
               .catch((err) => {
-                console.log("Error in get notif = " + err.message);
+                console.log('Error in get notif = ' + err.message);
               });
           }
         }
@@ -222,16 +222,15 @@ class DashboardView extends React.Component<
     }
   };
   getCurrNotificationsAndHistroy = async () => {
-    const userObject = await AsyncStorage.getItem("userObject");
+    const userObject = await AsyncStorage.getItem('userObject');
     if (userObject === null) {
-      this.props.navigation.replace("LoginView");
+      this.props.navigation.replace('LoginView');
     } else {
       const fixitId = JSON.parse(userObject as string).fixitId;
       getCurrentService(fixitId)
         .then((response: any) => {
-          console.log("In Current Service");
+          console.log('In Current Service : ');
           console.log(response.data);
-          const currNotification = response.data;
           this.setState({ cuurentNotifications: response.data });
           // let locations:any =[];
           // currNotification.forEach((item:any, index:number)=> {
@@ -240,13 +239,15 @@ class DashboardView extends React.Component<
           // })
           getHistroy(fixitId)
             .then((response1: any) => {
-              console.log("In History");
               console.log(response1.data);
               this.setState({ histroyNotifications: response1.data });
             })
-            .catch((error) => errorMessage("Something went wrong"));
+            .catch((error) => {
+              console.log(error.message);
+              errorMessage('Something went wrong');
+            });
         })
-        .catch((error) => errorMessage("Something went wrong"));
+        .catch((error) => errorMessage(error.message));
     }
   };
 
@@ -261,6 +262,11 @@ class DashboardView extends React.Component<
   toggleModal = () => {
     this.setState({ isVisibleTop: !this.state.isVisibleTop });
   };
+
+  toggleShortModal = () => {
+    console.log('okkkkkkkkkkkkkkk');
+    this.setState({isVisible: !this.state.isVisible });
+  }
 
   render() {
     if (this.state.loading) {
@@ -285,13 +291,11 @@ class DashboardView extends React.Component<
             />
             <TouchableOpacity
               onPress={() => {
-                // this.props.navigation.navigate('MapView');
-                console.log("Clicked");
                 this.displayTopModal(true);
               }}
             >
               <Image
-                source={require("../assets/menu-white.png")}
+                source={require('../assets/menu-white.png')}
                 style={styles.drawerIconStyle}
               />
             </TouchableOpacity>
@@ -310,7 +314,7 @@ class DashboardView extends React.Component<
             <View style={styles.mapContsiner}>
               <View style={styles.inputStyle}>
                 <Text style={styles.innerText}>
-                  {"   "}
+                  {'   '}
                   {this.state.username} , {this.state.latitude} ,
                   {this.state.longitude}
                 </Text>
@@ -344,12 +348,12 @@ class DashboardView extends React.Component<
           <View style={styles.bottomView}>
             <View>
               <Image
-                source={require("../assets/2-01.png")}
+                source={require('../assets/2-01.png')}
                 style={styles.iconStyle}
               />
             </View>
             <Modal
-              animationType={"slide"}
+              animationType={'slide'}
               transparent={true}
               style={styles.modalView}
               visible={this.state.isVisible}
@@ -357,11 +361,27 @@ class DashboardView extends React.Component<
                 this.displayModal(!this.state.isVisible);
               }}
             >
-              <HistoryModal
+              {/* <HistoryModal
                 navigation={this.props.navigation}
                 currentNotifications={this.state.cuurentNotifications}
                 histroyNotifications={this.state.histroyNotifications}
-              />
+              /> */}
+              <View>
+                  <View>
+                  <TouchableOpacity onPress={() => {this.displayModal(!this.state.isVisible);}}>
+                    <Image
+                      source={require('../assets/error-white.png')}
+                      style={styles.drawerIconStyleTop}
+                    />
+                </TouchableOpacity>
+                  </View>
+                <HistoryModal
+                  toggle={this.toggleShortModal}
+                  navigation={this.props.navigation}
+                  currentNotifications={this.state.cuurentNotifications}
+                  histroyNotifications={this.state.histroyNotifications}
+                />
+              </View>
             </Modal>
             <TouchableOpacity
               onPress={() => {
@@ -369,17 +389,17 @@ class DashboardView extends React.Component<
               }}
             >
               <Image
-                source={require("../assets/3-01.png")}
+                source={require('../assets/3-01.png')}
                 style={styles.iconStyle}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                this.props.navigation.navigate("UserProfileView");
+                this.props.navigation.navigate('UserProfileView');
               }}
             >
               <Image
-                source={require("../assets/4-01.png")}
+                source={require('../assets/4-01.png')}
                 style={styles.iconStyle}
               />
             </TouchableOpacity>
@@ -397,12 +417,12 @@ class DashboardView extends React.Component<
             <TouchableOpacity
               onPress={() => {
                 // this.props.navigation.navigate('MapView');
-                console.log("Clicked");
+                console.log('Clicked');
                 this.displayTopModal(true);
               }}
             >
               <Image
-                source={require("../assets/menu-black.png")}
+                source={require('../assets/menu-black.png')}
                 style={styles.drawerIconStyle}
               />
             </TouchableOpacity>
@@ -422,7 +442,7 @@ class DashboardView extends React.Component<
             <View>
               <Image
                 style={styles.offlineContainer}
-                source={require("../assets/man-15.png")}
+                source={require('../assets/man-15.png')}
               />
             </View>
             <View style={styles.oflfineText}>
@@ -435,12 +455,12 @@ class DashboardView extends React.Component<
           <View style={styles.bottomView}>
             <View>
               <Image
-                source={require("../assets/2-01.png")}
+                source={require('../assets/2-01.png')}
                 style={styles.iconStyle}
               />
             </View>
             <Modal
-              animationType={"slide"}
+              animationType={'slide'}
               transparent={true}
               style={styles.modalView}
               visible={this.state.isVisible}
@@ -449,11 +469,19 @@ class DashboardView extends React.Component<
                 this.displayModal(!this.state.isVisible);
               }}
             >
-              <HistoryModal
-                navigation={this.props.navigation}
-                currentNotifications={this.state.cuurentNotifications}
-                histroyNotifications={this.state.histroyNotifications}
-              />
+              <View>
+                  <TouchableOpacity onPress={() => {this.displayModal(!this.state.isVisible);}}>
+                    <Image
+                      source={require('../assets/error.png')}
+                      style={styles.drawerIconStyleTop}
+                    />
+                </TouchableOpacity>
+                <HistoryModal
+                  navigation={this.props.navigation}
+                  currentNotifications={this.state.cuurentNotifications}
+                  histroyNotifications={this.state.histroyNotifications}
+                />
+              </View>
             </Modal>
             <TouchableOpacity
               onPress={() => {
@@ -461,17 +489,17 @@ class DashboardView extends React.Component<
               }}
             >
               <Image
-                source={require("../assets/3-01.png")}
+                source={require('../assets/3-01.png')}
                 style={styles.iconStyle}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                this.props.navigation.navigate("UserProfileView");
+                this.props.navigation.navigate('UserProfileView');
               }}
             >
               <Image
-                source={require("../assets/4-01.png")}
+                source={require('../assets/4-01.png')}
                 style={styles.iconStyle}
               />
             </TouchableOpacity>
@@ -483,30 +511,34 @@ class DashboardView extends React.Component<
 }
 
 const styles = StyleSheet.create({
+  drawerIconStyleTop: {
+    width: 30 ,
+    height: 30,
+  },
   modalView: {
     margin: 0,
     flex: 1,
     // justifyContent: "flex-end",
-    alignItems: "center",
+    alignItems: 'center',
   },
   innerText: {
     marginRight: 50,
   },
   loginContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#f9d342",
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#f9d342',
   },
   loginContainer1: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: "100%",
-    backgroundColor: "black",
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'black',
   },
 
   drawerIconStyle: {
@@ -522,13 +554,13 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingTop: 60,
     paddingLeft: 30,
-    flexDirection: "column",
-    alignContent: "center",
-    minHeight: "70%",
-    marginTop: "10%",
-    backgroundColor: "white",
-    width: "100%",
-    shadowColor: "#000",
+    flexDirection: 'column',
+    alignContent: 'center',
+    minHeight: '70%',
+    marginTop: '10%',
+    backgroundColor: 'white',
+    width: '100%',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 3,
@@ -540,32 +572,32 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   drawerStyle: {
-    width: "100%",
-    justifyContent: "flex-start",
+    width: '100%',
+    justifyContent: 'flex-start',
     marginTop: 30,
   },
   bottomView: {
-    backgroundColor: "white",
-    width: "100%",
+    backgroundColor: 'white',
+    width: '100%',
     height: 50,
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     paddingTop: 7,
     elevation: 10,
   },
 
   titleStyle: {
     fontSize: 25,
-    fontFamily: "Metropolis",
-    fontWeight: "bold",
+    fontFamily: 'Metropolis',
+    fontWeight: 'bold',
   },
   titleStyle1: {
     fontSize: 25,
-    color: "white",
-    fontFamily: "Metropolis",
-    fontWeight: "bold",
+    color: 'white',
+    fontFamily: 'Metropolis',
+    fontWeight: 'bold',
   },
   switchStyle: {
     paddingLeft: 250,
@@ -578,39 +610,39 @@ const styles = StyleSheet.create({
     marginTop: -15,
   },
   oflfineText: {
-    width: "70%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '70%',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginLeft: 40,
   },
   midText1: {
     fontSize: 20,
-    fontFamily: "Metropolis",
-    fontWeight: "bold",
-    color: "black",
+    fontFamily: 'Metropolis',
+    fontWeight: 'bold',
+    color: 'black',
     marginBottom: 10,
   },
 
   midText2: {
-    fontFamily: "Metropolis",
-    fontWeight: "300",
-    color: "black",
+    fontFamily: 'Metropolis',
+    fontWeight: '300',
+    color: 'black',
   },
   midText3: {
-    fontFamily: "Metropolis",
-    fontWeight: "300",
-    color: "black",
+    fontFamily: 'Metropolis',
+    fontWeight: '300',
+    color: 'black',
   },
   dahsboardContainer1: {
     flex: 1,
     paddingTop: 50,
-    flexDirection: "column",
-    alignContent: "center",
-    minHeight: "50%",
-    marginTop: "10%",
-    backgroundColor: "white",
-    width: "100%",
-    shadowColor: "#000",
+    flexDirection: 'column',
+    alignContent: 'center',
+    minHeight: '50%',
+    marginTop: '10%',
+    backgroundColor: 'white',
+    width: '100%',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 3,
@@ -622,30 +654,30 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   inputStyle: {
-    backgroundColor: "#feffff",
+    backgroundColor: '#feffff',
     borderRadius: 12,
-    width: "100%",
+    width: '100%',
     padding: 5,
     elevation: 4,
   },
   mapStyle1: {
-    flexDirection: "column",
-    alignContent: "center",
-    minHeight: "50%",
-    backgroundColor: "white",
-    width: "100%",
+    flexDirection: 'column',
+    alignContent: 'center',
+    minHeight: '50%',
+    backgroundColor: 'white',
+    width: '100%',
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
     borderTopLeftRadius: 18,
     borderTopRightRadius: 18,
   },
   mapContsiner: {
-    minHeight: "50%",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    minHeight: '50%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   activityIndicator: {
-    alignItems: "center",
+    alignItems: 'center',
     height: 80,
     margin: 15,
   },

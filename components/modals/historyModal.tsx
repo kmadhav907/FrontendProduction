@@ -1,5 +1,13 @@
 import React from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 
 interface HistoryModalState {}
 
@@ -7,6 +15,7 @@ interface HistoryModalProps {
   currentNotifications: any[];
   histroyNotifications: any[];
   navigation: any;
+  toggle: any;
 }
 class HistoryModal extends React.Component<
   HistoryModalProps,
@@ -41,6 +50,20 @@ class HistoryModal extends React.Component<
         style={styles.innerContainer}
         contentContainerStyle={{ paddingBottom: `${Math.round(HEIGHT / 50)}%` }}
       >
+        <View
+          style={{
+            position: "absolute",
+            right: 10,
+            top: 10,
+          }}
+        >
+          <TouchableOpacity onPress={this.props.toggle}>
+            <Image
+              source={require("../../assets/error-white.png")}
+              style={styles.drawerIconStyle}
+            />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.headerTitle}>Current:</Text>
         {this.props.currentNotifications.length !== 0 ? (
           <>
@@ -74,6 +97,10 @@ class HistoryModal extends React.Component<
 const HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+  drawerIconStyle: {
+    width: 30,
+    height: 30,
+  },
   container: {
     backgroundColor: "black",
     flex: 1,
@@ -101,6 +128,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "white",
     paddingLeft: 4,
+    alignContent: "center"
   },
   cardContainer: {
     height: 60,
