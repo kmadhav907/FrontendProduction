@@ -32,7 +32,7 @@ import Geolocation from "react-native-geolocation-service";
 import { errorMessage, requestLocationPermission } from "../global/utils";
 import Notification from "../components/notification/Notifications";
 import HistoryModal from "../components/modals/historyModal";
-import './drawerModel';
+import "./drawerModel";
 import SignUpModal from "./drawerModel";
 
 interface DashboardViewState {
@@ -66,7 +66,7 @@ class DashboardView extends React.Component<
       isEnabled: false,
       showingString: "",
       username: "",
-      currentModal: 'model1',
+      currentModal: "model1",
       isVisibleTop: false,
       isVisible: false,
       latitude: undefined,
@@ -254,12 +254,12 @@ class DashboardView extends React.Component<
     this.setState({ isVisible: show });
   }
 
-  displayTopModal(show: boolean){
-    this.setState({isVisibleTop: show});
+  displayTopModal(show: boolean) {
+    this.setState({ isVisibleTop: show });
   }
 
   toggleModal = () => {
-    this.setState({isVisibleTop: !this.state.isVisibleTop});
+    this.setState({ isVisibleTop: !this.state.isVisibleTop });
   };
 
   render() {
@@ -279,7 +279,10 @@ class DashboardView extends React.Component<
       return (
         <View style={styles.loginContainer1}>
           <View style={styles.drawerStyle}>
-            <SignUpModal display={this.state.isVisibleTop} toggle={this.toggleModal} />
+            <SignUpModal
+              display={this.state.isVisibleTop}
+              toggle={this.toggleModal}
+            />
             <TouchableOpacity
               onPress={() => {
                 // this.props.navigation.navigate('MapView');
@@ -387,7 +390,10 @@ class DashboardView extends React.Component<
       return (
         <View style={styles.loginContainer}>
           <View style={styles.drawerStyle}>
-          <SignUpModal display={this.state.isVisibleTop} toggle={this.toggleModal} />
+            <SignUpModal
+              display={this.state.isVisibleTop}
+              toggle={this.toggleModal}
+            />
             <TouchableOpacity
               onPress={() => {
                 // this.props.navigation.navigate('MapView');
@@ -537,7 +543,6 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "flex-start",
     marginTop: 30,
-    paddingLeft: 10,
   },
   bottomView: {
     backgroundColor: "white",
