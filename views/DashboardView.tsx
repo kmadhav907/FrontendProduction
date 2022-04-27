@@ -31,7 +31,7 @@ import ToggleSwitch from "toggle-switch-react-native";
 import Geolocation from "react-native-geolocation-service";
 import { errorMessage, requestLocationPermission } from "../global/utils";
 import Notification from "../components/notification/Notifications";
-import HistoryModal from "./historyModal";
+import HistoryModal from "../components/modals/historyModal";
 
 interface DashboardViewState {
   isEnabled: boolean;

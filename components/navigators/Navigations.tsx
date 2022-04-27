@@ -6,7 +6,6 @@ import DashboardView from "../../views/DashboardView";
 import LoginView from "../../views/LoginView";
 import SplashView from "../../views/SplashView";
 import UserProfileView from "../../views/UserProfileView";
-import HistoryModal from '../../views/historyModal';
 
 const Navigators = () => {
   const Stack = createNativeStackNavigator();
@@ -39,7 +38,7 @@ const Navigators = () => {
           options={{ headerShown: false, gestureEnabled: false }}
           component={CurrentAndHistory}
         />
-        
+
         {/* <Stack.Screen
           name="Notification"
           options={{headerShown: false, gestureEnabled: false}}
