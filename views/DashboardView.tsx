@@ -32,10 +32,13 @@ import Geolocation from "react-native-geolocation-service";
 import { errorMessage, requestLocationPermission } from "../global/utils";
 import Notification from "../components/notification/Notifications";
 import HistoryModal from "../components/modals/historyModal";
+import './drawerModel';
+import SignUpModal from "./drawerModel";
 
 interface DashboardViewState {
   isEnabled: boolean;
   isVisible: boolean;
+  isVisibleTop: boolean | false;
   showingString: string;
   username: string;
   latitude: number | undefined;
@@ -48,6 +51,7 @@ interface DashboardViewState {
   cuurentNotifications: any[];
   currentLocations: any[];
   histroyNotifications: any[];
+  currentModal: String | undefined;
 }
 interface DashboardViewProps {
   navigation: any;
@@ -62,6 +66,8 @@ class DashboardView extends React.Component<
       isEnabled: false,
       showingString: "",
       username: "",
+      currentModal: 'model1',
+      isVisibleTop: false,
       isVisible: false,
       latitude: undefined,
       longitude: undefined,
@@ -233,10 +239,10 @@ class DashboardView extends React.Component<
           //   locations.push()
           // })
           getHistroy(fixitId)
-            .then((response: any) => {
+            .then((response1: any) => {
               console.log("In History");
-              console.log(response.data);
-              this.setState({ histroyNotifications: response.data });
+              console.log(response1.data);
+              this.setState({ histroyNotifications: response1.data });
             })
             .catch((error) => errorMessage("Something went wrong"));
         })
@@ -247,6 +253,14 @@ class DashboardView extends React.Component<
   displayModal(show: boolean) {
     this.setState({ isVisible: show });
   }
+
+  displayTopModal(show: boolean){
+    this.setState({isVisibleTop: show});
+  }
+
+  toggleModal = () => {
+    this.setState({isVisibleTop: !this.state.isVisibleTop});
+  };
 
   render() {
     if (this.state.loading) {
@@ -265,9 +279,12 @@ class DashboardView extends React.Component<
       return (
         <View style={styles.loginContainer1}>
           <View style={styles.drawerStyle}>
+            <SignUpModal display={this.state.isVisibleTop} toggle={this.toggleModal} />
             <TouchableOpacity
               onPress={() => {
                 // this.props.navigation.navigate('MapView');
+                console.log("Clicked");
+                this.displayTopModal(true);
               }}
             >
               <Image
@@ -334,7 +351,6 @@ class DashboardView extends React.Component<
               style={styles.modalView}
               visible={this.state.isVisible}
               onRequestClose={() => {
-                // Alert.alert('Modal has now been closed.');
                 this.displayModal(!this.state.isVisible);
               }}
             >
@@ -354,16 +370,6 @@ class DashboardView extends React.Component<
                 style={styles.iconStyle}
               />
             </TouchableOpacity>
-            {/* <TouchableOpacity
-              onPressIn={() => {
-                this.props.navigation.replace("CurrentAndHistory");
-              }}
-            >
-              <Image
-                source={require("../assets/3-01.png")}
-                style={styles.iconStyle}
-              />
-            </TouchableOpacity> */}
             <TouchableOpacity
               onPress={() => {
                 this.props.navigation.navigate("UserProfileView");
@@ -381,9 +387,12 @@ class DashboardView extends React.Component<
       return (
         <View style={styles.loginContainer}>
           <View style={styles.drawerStyle}>
+          <SignUpModal display={this.state.isVisibleTop} toggle={this.toggleModal} />
             <TouchableOpacity
               onPress={() => {
                 // this.props.navigation.navigate('MapView');
+                console.log("Clicked");
+                this.displayTopModal(true);
               }}
             >
               <Image
