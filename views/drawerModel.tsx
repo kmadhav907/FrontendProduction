@@ -43,34 +43,40 @@ const DrawerModal = (props: any) => {
           </View> */}
           <View style={styles.drawerTabContainer}>
             <View style={styles.tabOutBoxStyle}>
-              <Text style={styles.drawerTabStyle}>
-                <Image
-                  source={require("../assets/5-01.png")}
-                  style={styles.tabTileStyle}
-                />
-                <Text>{"   "}</Text>
-                Notices
-              </Text>
+              <TouchableWithoutFeedback onPress={() => console.log("touched")}>
+                <Text style={styles.drawerTabStyle}>
+                  <Image
+                    source={require("../assets/5-01.png")}
+                    style={styles.tabTileStyle}
+                  />
+                  <Text>{"   "}</Text>
+                  Notices
+                </Text>
+              </TouchableWithoutFeedback>
             </View>
             <View style={styles.tabOutBoxStyle}>
-              <Text style={styles.drawerTabStyle}>
-                <Image
-                  source={require("../assets/6-01.png")}
-                  style={styles.tabTileStyle}
-                />
-                <Text>{"   "}</Text>
-                Feedback
-              </Text>
+              <TouchableWithoutFeedback onPress={() => console.log("touched")}>
+                <Text style={styles.drawerTabStyle}>
+                  <Image
+                    source={require("../assets/6-01.png")}
+                    style={styles.tabTileStyle}
+                  />
+                  <Text>{"   "}</Text>
+                  Feedback
+                </Text>
+              </TouchableWithoutFeedback>
             </View>
             <View style={styles.tabOutBoxStyle}>
-              <Text style={styles.drawerTabStyle}>
-                <Image
-                  source={require("../assets/7-01.png")}
-                  style={styles.tabTileStyle}
-                />
-                <Text>{"   "}</Text>
-                About Us
-              </Text>
+              <TouchableWithoutFeedback onPress={() => console.log("touched")}>
+                <Text style={styles.drawerTabStyle}>
+                  <Image
+                    source={require("../assets/7-01.png")}
+                    style={styles.tabTileStyle}
+                  />
+                  <Text>{"   "}</Text>
+                  About Us
+                </Text>
+              </TouchableWithoutFeedback>
             </View>
           </View>
         </View>
@@ -127,8 +133,8 @@ const styles = StyleSheet.create({
     marginLeft: "10%",
   },
   drawerIconStyle: {
-    width: 30,
-    height: 30,
+    width: 20,
+    height: 20,
   },
   tabOutBoxStyle: {
     width: "100%",
