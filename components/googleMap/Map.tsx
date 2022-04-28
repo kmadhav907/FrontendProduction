@@ -39,6 +39,8 @@ class Map extends React.Component<MapProps, MapState> {
               backgroundColor: "white",
               borderTopLeftRadius: 18,
               borderTopRightRadius: 18,
+              borderRadius: 18,
+              overflow: 'hidden' 
             }}
           >
             <MapView
@@ -49,6 +51,8 @@ class Map extends React.Component<MapProps, MapState> {
                 minHeight: "100%",
                 borderTopLeftRadius: 18,
                 borderTopRightRadius: 18,
+                borderRadius: 18,
+                overflow: 'hidden' 
               }}
               customMapStyle={mapStyles}
               initialRegion={{

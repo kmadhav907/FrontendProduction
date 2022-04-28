@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     marginTop: "40%",
-    height: HEIGHT / 2,
+    height: HEIGHT / 1.35,
 
     width: "80%",
     marginLeft: "10%",
