@@ -317,7 +317,7 @@ class DashboardView extends React.Component<
                   {this.state.longitude}
                 </Text>
               </View>
-
+              
               <View style={styles.mapStyle1}>
                 <Map
                   latitude={this.state.latitude as number}
@@ -534,10 +534,11 @@ const styles = StyleSheet.create({
   dahsboardContainer: {
     flex: 1,
     padding: 10,
-    paddingTop: 60,
+    paddingTop: 10,
     paddingLeft: 30,
     flexDirection: "column",
     alignContent: "center",
+    justifyContent: 'center',
     minHeight: "70%",
     marginTop: "10%",
     backgroundColor: "white",
@@ -598,6 +599,7 @@ const styles = StyleSheet.create({
     marginLeft: 40,
   },
   midText1: {
+    paddingTop: 10,
     fontSize: 20,
     fontFamily: "Metropolis",
     fontWeight: "bold",
@@ -643,13 +645,13 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   mapStyle1: {
-    flexDirection: "column",
-    alignContent: "center",
+    // flexDirection: "column",
+    // alignContent: "",
     minHeight: "50%",
-    backgroundColor: "white",
+    height: '100%',
+    marginTop: -80,
+    marginBottom:50,
     width: "100%",
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
     borderTopLeftRadius: 18,
     borderTopRightRadius: 18,
   },

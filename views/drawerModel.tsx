@@ -29,10 +29,15 @@ const DrawerModal = (props: any) => {
             <Image
               source={profileImage}
               style={{
-                width: 80,
-                height: 80,
+                width: 50,
+                height: 50,
               }}
             />
+          </View>
+          <View>
+            <Text>Notice</Text>
+            <Text>Notice</Text>
+            <Text>Notice</Text>
           </View>
         </View>
         <View
@@ -71,7 +76,6 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     width: "100%",
-    alignItems: "center",
   },
   profilePicSection: {
     width: "100%",

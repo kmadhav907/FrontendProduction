@@ -55,7 +55,7 @@ class Notification extends Component<NotificationProps, {}> {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: -30,
+    marginTop: -180,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
