@@ -29,7 +29,11 @@ import {
 import Map from "../components/googleMap/Map";
 import ToggleSwitch from "toggle-switch-react-native";
 import Geolocation from "react-native-geolocation-service";
-import { errorMessage, requestLocationPermission } from "../global/utils";
+import {
+  errorMessage,
+  preventBack,
+  requestLocationPermission,
+} from "../global/utils";
 import Notification from "../components/notification/Notifications";
 import HistoryModal from "../components/modals/historyModal";
 import "./drawerModel";
@@ -88,6 +92,7 @@ class DashboardView extends React.Component<
     if (userObject === null) {
       this.props.navigation.navigate("LoginView");
     }
+    preventBack(this.props.navigation);
     const newUserFlag = JSON.parse(userObject as string).newUser;
     console.log(userObject);
     if (newUserFlag) {
@@ -126,6 +131,7 @@ class DashboardView extends React.Component<
     } catch (err) {
       console.log(err);
     }
+
     const fixitID = JSON.parse(userObject as string).fixitId;
     const userName = JSON.parse(userObject as string).userName;
     await saveLocation(fixitID, this.state.latitude, this.state.longitude).then(
@@ -238,9 +244,9 @@ class DashboardView extends React.Component<
           //   locations.push()
           // })
           getHistroy(fixitId)
-            .then((response1: any) => {
-              console.log(response1.data);
-              this.setState({ histroyNotifications: response1.data });
+            .then((response: any) => {
+              console.log(response.data);
+              this.setState({ histroyNotifications: response.data });
             })
             .catch((error) => {
               console.log(error.message);

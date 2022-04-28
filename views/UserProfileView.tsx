@@ -212,13 +212,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
         errorMessage("Something went wrong :(");
       });
   };
-  handleBack = async () => {
-    let userObject = await AsyncStorage.getItem("userObject");
-    console.log(userObject);
-    const newUserFlag = JSON.parse(userObject as string).newUser;
-    console.log(newUserFlag);
-    this.props.navigation.navigate("DashBoardView");
-  };
+
   render() {
     if (this.state.loading) {
       return (
@@ -318,6 +312,14 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
               </Text>
             </View>
             <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => {
+                  this.props.navigation.navigate("DashBoardView");
+                }}
+              >
+                <Text style={styles.buttonTextStyle}>Go Back</Text>
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonStyle}
                 onPress={() => {
@@ -627,7 +629,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-end",
+    justifyContent: "space-around",
   },
   buttonStyle: {
     backgroundColor: "#f9d342",
