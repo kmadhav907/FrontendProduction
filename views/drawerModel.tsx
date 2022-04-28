@@ -7,6 +7,7 @@ import {
   Dimensions,
   Touchable,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 import Modal from "react-native-modal";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -24,8 +25,14 @@ const DrawerModal = (props: any) => {
       swipeDirection="left"
     >
       <SafeAreaView style={styles.container}>
+        <View style={styles.upBox}>
+          <View style={styles.upTopInnerText}>
+            <Text style={styles.upTopText}>Mr Fixit</Text>
+            <Text style={styles.upTopText1}>Version 0.1</Text>
+          </View>
+        </View>
         <View style={styles.profilePicSection}>
-          <View style={styles.profileImage}>
+          {/* <View style={styles.profileImage}>
             <Image
               source={profileImage}
               style={{
@@ -33,26 +40,58 @@ const DrawerModal = (props: any) => {
                 height: 50,
               }}
             />
-          </View>
-          <View>
-            <Text>Notice</Text>
-            <Text>Notice</Text>
-            <Text>Notice</Text>
+          </View> */}
+          <View style={styles.drawerTabContainer}>
+            <View style={styles.tabOutBoxStyle}>
+              <Text style={styles.drawerTabStyle}>
+                <Image
+                  source={require("../assets/5-01.png")}
+                  style={styles.tabTileStyle}
+                />
+                <Text>{"   "}</Text>
+                Notices
+              </Text>
+            </View>
+            <View style={styles.tabOutBoxStyle}>
+              <Text style={styles.drawerTabStyle}>
+                <Image
+                  source={require("../assets/6-01.png")}
+                  style={styles.tabTileStyle}
+                />
+                <Text>{"   "}</Text>
+                Feedback
+              </Text>
+            </View>
+            <View style={styles.tabOutBoxStyle}>
+              <Text style={styles.drawerTabStyle}>
+                <Image
+                  source={require("../assets/7-01.png")}
+                  style={styles.tabTileStyle}
+                />
+                <Text>{"   "}</Text>
+                About Us
+              </Text>
+            </View>
           </View>
         </View>
-        <View
-          style={{
-            position: "absolute",
-            right: 10,
-            top: 10,
-          }}
-        >
-          <TouchableOpacity onPress={props.toggle}>
+
+        <View style={styles.cancelStyle}>
+          <TouchableWithoutFeedback onPress={props.toggle}>
             <Image
               source={require("../assets/error.png")}
               style={styles.drawerIconStyle}
             />
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
+        </View>
+        <View
+          style={{
+            paddingTop: "110%",
+            paddingLeft: "30%",
+          }}
+        >
+          <Text style={{ color: "white", textDecorationLine: "underline" }}>
+            Privacy policy
+          </Text>
         </View>
       </SafeAreaView>
     </Modal>
@@ -60,27 +99,79 @@ const DrawerModal = (props: any) => {
 };
 const WIDTH = Dimensions.get("window").width;
 const styles = StyleSheet.create({
+  upBox: {
+    width: "100%",
+    // backgroundColor: "#f9d342",
+    backgroundColor: "white",
+    height: "25%",
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  upTopText: {
+    fontSize: 30,
+    fontWeight: "normal",
+    color: "black",
+  },
+  upTopText1: {
+    fontSize: 15,
+    fontWeight: "normal",
+    color: "black",
+  },
+
+  tabTileStyle: {
+    width: 50,
+    height: 50,
+  },
+  upTopInnerText: {
+    paddingTop: "30%",
+    marginLeft: "10%",
+  },
   drawerIconStyle: {
     width: 30,
     height: 30,
   },
+  tabOutBoxStyle: {
+    width: "100%",
+    paddingLeft: "10%",
+  },
   modalStyle: {
     width: WIDTH * 0.75,
-    backgroundColor: "#f9d342",
+    // backgroundColor: "#f9d342",
+    backgroundColor: "black",
     color: "white",
     margin: 0,
     flex: 1,
     borderTopRightRadius: 15,
-    borderBottomRightRadius: 15,
+    // borderBottomRightRadius: 15,
   },
+  cancelStyle: {
+    position: "absolute",
+    right: 10,
+    top: 10,
+  },
+
   container: {
     height: "100%",
     width: "100%",
   },
+  drawerTabStyle: {
+    fontSize: 20,
+    color: "white",
+    paddingBottom: 20,
+    width: "100%",
+    position: "relative",
+    alignContent: "flex-start",
+    justifyContent: "flex-start",
+  },
+  drawerTabContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   profilePicSection: {
     width: "100%",
     height: "15%",
-    marginTop: "10%",
+    marginTop: "20%",
     justifyContent: "center",
     alignItems: "center",
   },

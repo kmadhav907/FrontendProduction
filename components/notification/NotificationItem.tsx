@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     marginLeft: 80,
-    height: 85,
+    height: 80,
     width: 85,
     borderRadius: 40,
     marginRight: 25,
