@@ -42,10 +42,6 @@ class HistoryModal extends React.Component<
   );
   render() {
     return (
-      //   <ScrollView
-      //     style={styles.container}
-
-      //   >
       <ScrollView
         style={styles.innerContainer}
         contentContainerStyle={{ paddingBottom: `${Math.round(HEIGHT / 50)}%` }}
@@ -90,7 +86,6 @@ class HistoryModal extends React.Component<
           </View>
         )}
       </ScrollView>
-      //   </ScrollView>
     );
   }
 }
