@@ -53,7 +53,7 @@ class HistoryModal extends React.Component<
             top: 10,
           }}
         >
-          <TouchableOpacity onPress={this.props.toggle}>
+          <TouchableOpacity onPressIn={this.props.toggle}>
             <Image
               source={require("../../assets/error-white.png")}
               style={styles.drawerIconStyle}
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "white",
     paddingLeft: 4,
-    alignContent: "center"
+    alignContent: "center",
   },
   cardContainer: {
     height: 60,
