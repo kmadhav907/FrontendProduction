@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-community/async-storage';
-import React from 'react';
+import AsyncStorage from "@react-native-community/async-storage";
+import React from "react";
 import {
   Alert,
   BackHandler,
@@ -13,18 +13,20 @@ import {
   View,
   Linking,
   ActivityIndicator,
-} from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
-import CheckBox from '@react-native-community/checkbox';
+} from "react-native";
+import { launchImageLibrary } from "react-native-image-picker";
+import CheckBox from "@react-native-community/checkbox";
 import {
   editProfile,
   getUserDetails,
   uploadProfilePic,
-} from '../apiServices/userProfileApi';
-import {errorMessage} from '../global/utils';
+} from "../apiServices/userProfileApi";
+import { errorMessage } from "../global/utils";
 
-import {serviceProviders} from '../global/constant';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { serviceProviders } from "../global/constant";
+import DropDownPicker from "react-native-dropdown-picker";
+import "./drawerModel";
+import SignUpModal from "./drawerModel";
 
 interface UserProfileProps {
   navigation: any;
@@ -39,11 +41,12 @@ interface UserProfileState {
   userServiceProviderType: any;
   dropDownOpen: boolean;
   userPhoneNumber: string;
+  showSignUpModal: boolean;
   termsAndCondition: boolean;
   showEditableContent: boolean;
   loading: boolean;
 }
-const userProfileImage = require('../assets/userProfileImage.png');
+const userProfileImage = require("../assets/userProfileImage.png");
 class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
   constructor(props: UserProfileProps) {
     super(props);
@@ -51,13 +54,14 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     this.state = {
       userProfileImage: null,
       privacyPolicy: true,
-      userExperience: '',
-      userEmail: '',
-      userAddress: '',
-      userName: '',
+      userExperience: "",
+      userEmail: "",
+      showSignUpModal: false,
+      userAddress: "",
+      userName: "",
       userServiceProviderType: undefined,
       dropDownOpen: false,
-      userPhoneNumber: '',
+      userPhoneNumber: "",
       termsAndCondition: true,
       showEditableContent: true,
       loading: false,
@@ -65,17 +69,17 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     this.setServiceProviderType = this.setServiceProviderType.bind(this);
   }
   async componentDidMount() {
-    this.setState({loading: true});
-    const userObject = await AsyncStorage.getItem('userObject');
+    this.setState({ loading: true });
+    const userObject = await AsyncStorage.getItem("userObject");
     const phoneNumber = JSON.parse(userObject as string).userPhoneNumber;
     const fixitID = JSON.parse(userObject as string).fixitId;
     const newUserFlag = JSON.parse(userObject as string).newUser;
-    this.setState({userPhoneNumber: phoneNumber});
+    this.setState({ userPhoneNumber: phoneNumber });
     if (newUserFlag) {
-      this.setState({showEditableContent: false});
+      this.setState({ showEditableContent: false });
     }
     if (!newUserFlag) this.getUserDetailsForReadableContent(fixitID);
-    this.setState({loading: false});
+    this.setState({ loading: false });
     // this.props.navigation.addListener('beforeRemove', (event: any) => {
     //   event.preventDefault();
     //   Alert.alert('Exit AskMechanics', 'Do you want to exit?', [
@@ -92,66 +96,66 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     getUserDetails(fixitId).then((response: any) => {
       const userDetails = response.data;
       this.setState({
-        userEmail: userDetails['Mr.Fixit Email'],
-        userAddress: userDetails['Mr.Fixit Worskshop Adress'],
-        userExperience: userDetails['Mr.Fixit Experience'],
-        userName: userDetails['Mr.FixitName'],
+        userEmail: userDetails["Mr.Fixit Email"],
+        userAddress: userDetails["Mr.Fixit Worskshop Adress"],
+        userExperience: userDetails["Mr.Fixit Experience"],
+        userName: userDetails["Mr.FixitName"],
         userServiceProviderType:
-          userDetails['Mr.Fixit Specialization'] &&
-          userDetails['Mr.Fixit Specialization'][0],
+          userDetails["Mr.Fixit Specialization"] &&
+          userDetails["Mr.Fixit Specialization"][0],
       });
     });
   };
   choosePhotoFromTheStorage() {
     var options: any = {
-      title: 'Select Image',
+      title: "Select Image",
       customButtons: [
         {
-          name: 'customOptionKey',
-          title: 'Choose Photo from Custom Option',
+          name: "customOptionKey",
+          title: "Choose Photo from Custom Option",
         },
       ],
       storageOptions: {
         skipBackup: true,
-        path: 'images',
+        path: "images",
       },
     };
     launchImageLibrary(options, async (response: any) => {
-      console.log('Response = ', response);
+      console.log("Response = ", response);
       if (response.didCancel) {
-        errorMessage('Pick an image');
+        errorMessage("Pick an image");
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-        errorMessage('Something went wrong :(');
+        console.log("ImagePicker Error: ", response.error);
+        errorMessage("Something went wrong :(");
       }
       //   (response.customButton);
       else {
         if (response.assets.length != 1) {
-          errorMessage('Please select an image');
+          errorMessage("Please select an image");
           return;
         }
         const asset = response.assets[0];
         const formData = new FormData();
         if (asset.fileSize > 3000000) {
-          errorMessage('Please select an image below 3MB');
+          errorMessage("Please select an image below 3MB");
           return;
         }
-        formData.append('imageFile', asset);
-        const userObject = await AsyncStorage.getItem('userObject');
+        formData.append("imageFile", asset);
+        const userObject = await AsyncStorage.getItem("userObject");
         const fixitID = JSON.parse(userObject as string).fixitId;
         console.log(formData);
         uploadProfilePic(formData, fixitID)
           .then((response: any) => {
             console.log(response);
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
       }
     });
   }
   setServiceProviderType = (callback: any) => {
-    this.setState(state => ({
+    this.setState((state) => ({
       userServiceProviderType: callback(state.userServiceProviderType),
     }));
     console.log(this.state.userServiceProviderType);
@@ -166,14 +170,14 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
         this.state.userServiceProviderType
       )
     ) {
-      errorMessage('Please fill everything');
+      errorMessage("Please fill everything");
       return;
     }
     if (!(this.state.privacyPolicy && this.state.termsAndCondition)) {
-      errorMessage('Please accept the terms');
+      errorMessage("Please accept the terms");
       return;
     }
-    let userObject = await AsyncStorage.getItem('userObject');
+    let userObject = await AsyncStorage.getItem("userObject");
     const fixitId = JSON.parse(userObject as string).fixitId;
     const userType = JSON.parse(userObject as string).userType;
     editProfile(
@@ -182,12 +186,12 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
       this.state.userName,
       fixitId,
       this.state.userAddress,
-      this.state.userServiceProviderType,
+      this.state.userServiceProviderType
     )
       .then(async (response: any) => {
         console.log(response);
         if (response.status === 200) {
-          await AsyncStorage.removeItem('userObject');
+          await AsyncStorage.removeItem("userObject");
           const newUserObject = JSON.stringify({
             newUser: false,
             userName: this.state.userName,
@@ -195,25 +199,25 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
             fixitId: fixitId,
             userType: userType,
           });
-          console.log('Storage in profiel : ' + userObject);
-          AsyncStorage.setItem('userObject', newUserObject).then(() =>
-            this.props.navigation.navigate('DashBoardView'),
+          console.log("Storage in profiel : " + userObject);
+          AsyncStorage.setItem("userObject", newUserObject).then(() =>
+            this.props.navigation.navigate("DashBoardView")
           );
         } else {
-          errorMessage('Something went wrong :(');
+          errorMessage("Something went wrong :(");
         }
       })
       .catch((error: any) => {
         console.log(error);
-        errorMessage('Something went wrong :(');
+        errorMessage("Something went wrong :(");
       });
   };
   handleBack = async () => {
-    let userObject = await AsyncStorage.getItem('userObject');
+    let userObject = await AsyncStorage.getItem("userObject");
     console.log(userObject);
     const newUserFlag = JSON.parse(userObject as string).newUser;
     console.log(newUserFlag);
-    this.props.navigation.navigate('DashBoardView');
+    this.props.navigation.navigate("DashBoardView");
   };
   render() {
     if (this.state.loading) {
@@ -231,18 +235,29 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     if (!this.state.loading && this.state.showEditableContent) {
       return (
         <View style={styles.userProfileContainer}>
-          <TouchableOpacity
-            style={styles.drawerStyle}
-            onPress={this.handleBack}>
-            <Image
-              source={require('../assets/menu-black.png')}
-              style={styles.drawerIconStyle}
+          <View style={styles.drawerStyle}>
+            <SignUpModal
+              display={this.state.showSignUpModal}
+              toggle={() => {
+                this.setState({ showSignUpModal: false });
+              }}
             />
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({ showSignUpModal: true });
+              }}
+            >
+              <Image
+                source={require("../assets/menu-black.png")}
+                style={styles.drawerIconStyle}
+              />
+            </TouchableOpacity>
+          </View>
           <ScrollView
             style={styles.sectionStyle}
             nestedScrollEnabled={true}
-            contentContainerStyle={{justifyContent: 'center'}}>
+            contentContainerStyle={{ justifyContent: "center" }}
+          >
             <View style={styles.profilePicSection}>
               {/* <Image
               source={require(this.state.userProfileImage)}
@@ -254,27 +269,28 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                   marginTop: 5,
                   height: 100,
                   width: 100,
-                  justifyContent: 'center',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
+                  justifyContent: "center",
+                  marginLeft: "auto",
+                  marginRight: "auto",
                 }}
-                onPress={this.choosePhotoFromTheStorage}>
+                onPress={this.choosePhotoFromTheStorage}
+              >
                 <Image
                   source={userProfileImage}
-                  style={{width: '100%', height: '100%'}}
+                  style={{ width: "100%", height: "100%" }}
                 />
               </TouchableOpacity>
             </View>
-            <View style={[styles.inputContainer, {marginTop: '10%'}]}>
+            <View style={[styles.inputContainer, { marginTop: "10%" }]}>
               <Text style={styles.readAbleTitle}>Name:</Text>
               <Text style={styles.fieldTextStyle}>
-                {this.state.userName || 'Not Set'}
+                {this.state.userName || "Not Set"}
               </Text>
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.readAbleTitle}>User Type:</Text>
               <Text style={styles.fieldTextStyle}>
-                {this.state.userServiceProviderType || 'Not Set'}
+                {this.state.userServiceProviderType || "Not Set"}
               </Text>
             </View>
             <View style={styles.inputContainer}>
@@ -286,19 +302,19 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
             <View style={styles.inputContainer}>
               <Text style={[styles.readAbleTitle]}>Work-shop Address:</Text>
               <Text style={styles.fieldTextStyle}>
-                {this.state.userAddress || 'Not set'}
+                {this.state.userAddress || "Not set"}
               </Text>
             </View>
             <View style={styles.inputContainer}>
               <Text style={[styles.readAbleTitle]}>Work Experience:</Text>
               <Text style={styles.fieldTextStyle}>
-                {this.state.userExperience || 'Not set'}
+                {this.state.userExperience || "Not set"}
               </Text>
             </View>
             <View style={styles.inputContainer}>
               <Text style={[styles.readAbleTitle]}>Email:</Text>
               <Text style={styles.fieldTextStyle}>
-                {this.state.userEmail || 'Not Set'}
+                {this.state.userEmail || "Not Set"}
               </Text>
             </View>
             <View style={styles.buttonContainer}>
@@ -308,7 +324,8 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                   this.setState({
                     showEditableContent: !this.state.showEditableContent,
                   });
-                }}>
+                }}
+              >
                 <Text style={styles.buttonTextStyle}>Edit</Text>
               </TouchableOpacity>
             </View>
@@ -318,18 +335,29 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     } else if (!this.state.loading && !this.state.showEditableContent) {
       return (
         <View style={styles.userProfileContainer}>
-          <TouchableOpacity
-            style={styles.drawerStyle}
-            onPress={this.handleBack}>
-            <Image
-              source={require('../assets/menu-black.png')}
-              style={styles.drawerIconStyle}
+          <View style={styles.drawerStyle}>
+            <SignUpModal
+              display={this.state.showSignUpModal}
+              toggle={() => {
+                this.setState({ showSignUpModal: false });
+              }}
             />
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({ showSignUpModal: true });
+              }}
+            >
+              <Image
+                source={require("../assets/menu-black.png")}
+                style={styles.drawerIconStyle}
+              />
+            </TouchableOpacity>
+          </View>
           <ScrollView
             style={styles.sectionStyle}
             nestedScrollEnabled={true}
-            contentContainerStyle={{justifyContent: 'center'}}>
+            contentContainerStyle={{ justifyContent: "center" }}
+          >
             <View style={styles.profilePicSection}>
               {/* <Image
               source={require(this.state.userProfileImage)}
@@ -341,14 +369,15 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                   marginTop: 5,
                   height: 100,
                   width: 100,
-                  justifyContent: 'center',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
+                  justifyContent: "center",
+                  marginLeft: "auto",
+                  marginRight: "auto",
                 }}
-                onPress={this.choosePhotoFromTheStorage}>
+                onPress={this.choosePhotoFromTheStorage}
+              >
                 <Image
                   source={userProfileImage}
-                  style={{width: '100%', height: '100%'}}
+                  style={{ width: "100%", height: "100%" }}
                 />
               </TouchableOpacity>
             </View>
@@ -358,7 +387,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                 style={styles.inputStyle}
                 placeholder="Enter your workshop name"
                 onChangeText={(name: string) => {
-                  this.setState({userName: name});
+                  this.setState({ userName: name });
                 }}
                 value={this.state.userName}
               />
@@ -369,7 +398,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                 style={styles.inputStyle}
                 placeholder="Enter your Email"
                 onChangeText={(email: string) => {
-                  this.setState({userEmail: email});
+                  this.setState({ userEmail: email });
                 }}
                 value={this.state.userEmail}
               />
@@ -380,7 +409,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                 style={styles.inputStyle}
                 placeholder="Enter your Experience"
                 onChangeText={(experience: string) => {
-                  this.setState({userExperience: experience});
+                  this.setState({ userExperience: experience });
                 }}
                 value={this.state.userExperience}
               />
@@ -394,7 +423,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                 zIndex={1000}
                 zIndexInverse={3000}
                 setOpen={() => {
-                  this.setState({dropDownOpen: !this.state.dropDownOpen});
+                  this.setState({ dropDownOpen: !this.state.dropDownOpen });
                 }}
                 setValue={this.setServiceProviderType}
                 style={styles.inputStyle}
@@ -409,7 +438,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                 placeholder="Enter your address"
                 multiline={true}
                 onChangeText={(address: string) => {
-                  this.setState({userAddress: address});
+                  this.setState({ userAddress: address });
                 }}
                 value={this.state.userAddress}
               />
@@ -419,27 +448,29 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                 style={[
                   styles.inputTitle,
                   {
-                    width: '100%',
+                    width: "100%",
                     marginTop: 20,
                     fontSize: 16,
                     height: 20,
-                    color: 'black',
+                    color: "black",
                   },
-                ]}>
-                {'Your Phone Number is ' + this.state.userPhoneNumber}
+                ]}
+              >
+                {"Your Phone Number is " + this.state.userPhoneNumber}
               </Text>
             </View>
             <View style={styles.checkboxContainer}>
               <Text
                 style={{
-                  color: 'blue',
+                  color: "blue",
                   fontSize: 14,
-                  fontWeight: '600',
+                  fontWeight: "600",
                   marginRight: 5,
                 }}
                 onPress={() => {
-                  Linking.openURL('https://askmechanics.in/privacy-policy');
-                }}>
+                  Linking.openURL("https://askmechanics.in/privacy-policy");
+                }}
+              >
                 Privacy Policy
               </Text>
               <CheckBox
@@ -448,21 +479,23 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                   this.setState({
                     privacyPolicy: !this.state.privacyPolicy,
                   });
-                }}></CheckBox>
+                }}
+              ></CheckBox>
             </View>
             <View style={styles.checkboxContainer}>
               <Text
                 style={{
-                  color: 'blue',
+                  color: "blue",
                   fontSize: 14,
-                  fontWeight: '600',
+                  fontWeight: "600",
                   marginRight: 5,
                 }}
                 onPress={() => {
                   Linking.openURL(
-                    'https://askmechanics.in/terms-and-conditions',
+                    "https://askmechanics.in/terms-and-conditions"
                   );
-                }}>
+                }}
+              >
                 Terms & Conditions
               </Text>
               <CheckBox
@@ -471,13 +504,15 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                   this.setState({
                     termsAndCondition: !this.state.termsAndCondition,
                   });
-                }}></CheckBox>
+                }}
+              ></CheckBox>
             </View>
 
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 onPress={this.handleSubmitProfile}
-                style={styles.buttonStyle1}>
+                style={styles.buttonStyle1}
+              >
                 <Text style={styles.buttonTextStyle}>Confirm</Text>
               </TouchableOpacity>
             </View>
@@ -490,35 +525,35 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
 const styles = StyleSheet.create({
   userProfileContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f9d342',
-    width: '100%',
-    height: '100%',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f9d342",
+    width: "100%",
+    height: "100%",
   },
   activityIndicator: {
-    alignItems: 'center',
+    alignItems: "center",
     height: 80,
   },
   fieldTextStyle: {
-    flex: 1.0, 
-    textAlign: 'left',
+    flex: 1.0,
+    textAlign: "left",
     marginLeft: 5,
     fontSize: 16,
-    fontWeight: 'bold',
-    color: 'black',
-    flexWrap: 'wrap'
+    fontWeight: "bold",
+    color: "black",
+    flexWrap: "wrap",
   },
   sectionStyle: {
     flex: 1,
     padding: 8,
-    flexDirection: 'column',
-    alignContent: 'center',
-    minHeight: '70%',
-    marginTop: '20%',
-    backgroundColor: 'white',
-    width: '100%',
-    shadowColor: '#000',
+    flexDirection: "column",
+    alignContent: "center",
+    minHeight: "70%",
+    marginTop: "20%",
+    backgroundColor: "white",
+    width: "100%",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 3,
@@ -530,8 +565,8 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   drawerStyle: {
-    width: '100%',
-    justifyContent: 'flex-start',
+    width: "100%",
+    justifyContent: "flex-start",
     marginTop: 35,
     paddingLeft: 10,
   },
@@ -544,71 +579,76 @@ const styles = StyleSheet.create({
     height: 60,
   },
   profilePicSection: {
-    width: '100%',
-    height: '15%',
-    alignContent: 'center',
+    width: "100%",
+    height: "15%",
+    alignContent: "center",
     marginBottom: 20,
   },
   inputContainer: {
-    width: '100%',
+    width: "100%",
     height: 45,
     marginTop: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
     padding: 3,
   },
   inputStyle: {
     marginLeft: 10,
-    width: '60%',
-    height: '100%',
-    backgroundColor: 'white',
+    width: "60%",
+    height: "100%",
+    backgroundColor: "white",
     borderWidth: 1,
-    borderColor: 'grey',
+    borderColor: "grey",
     fontSize: 14,
     borderRadius: 4,
     paddingLeft: 5,
   },
-  inputTitle: {width: '35%', fontSize: 14, color: 'black', fontWeight: 'bold'},
+  inputTitle: {
+    width: "35%",
+    fontSize: 14,
+    color: "black",
+    fontWeight: "bold",
+  },
   readAbleTitle: {
-    width: '45%',
+    width: "45%",
     fontSize: 16,
-    color: 'black',
-    fontWeight: 'bold',
+    color: "black",
+    fontWeight: "bold",
   },
   checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 10,
   },
   buttonContainer: {
-    width: '100%',
+    width: "100%",
     marginTop: 25,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
   },
   buttonStyle: {
-    backgroundColor: '#f9d342',
+    backgroundColor: "#f9d342",
     padding: 10,
     width: 100,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 10,
     marginRight: 10,
   },
   buttonStyle1: {
-    backgroundColor: '#f9d342',
+    backgroundColor: "#f9d342",
     padding: 10,
     width: 100,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 10,
     marginRight: 10,
     marginBottom: 30,
   },
   buttonTextStyle: {
-    fontWeight: '900',
-    color: 'black',
+    fontWeight: "900",
+    color: "black",
     fontSize: 16,
   },
 });
