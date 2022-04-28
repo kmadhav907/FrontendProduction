@@ -23,6 +23,7 @@ const DrawerModal = (props: any) => {
       hideModalContentWhileAnimating
       useNativeDriver
       swipeDirection="left"
+      onBackdropPress={props.toggle}
     >
       <SafeAreaView style={styles.container}>
         <View style={styles.upBox}>
@@ -32,15 +33,6 @@ const DrawerModal = (props: any) => {
           </View>
         </View>
         <View style={styles.profilePicSection}>
-          {/* <View style={styles.profileImage}>
-            <Image
-              source={profileImage}
-              style={{
-                width: 50,
-                height: 50,
-              }}
-            />
-          </View> */}
           <View style={styles.drawerTabContainer}>
             <View style={styles.tabOutBoxStyle}>
               <TouchableWithoutFeedback onPress={() => console.log("touched")}>
@@ -79,15 +71,6 @@ const DrawerModal = (props: any) => {
               </TouchableWithoutFeedback>
             </View>
           </View>
-        </View>
-
-        <View style={styles.cancelStyle}>
-          <TouchableWithoutFeedback onPress={props.toggle}>
-            <Image
-              source={require("../assets/error.png")}
-              style={styles.drawerIconStyle}
-            />
-          </TouchableWithoutFeedback>
         </View>
         <View
           style={{

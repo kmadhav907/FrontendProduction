@@ -34,6 +34,7 @@ import Notification from "../components/notification/Notifications";
 import HistoryModal from "../components/modals/historyModal";
 import "./drawerModel";
 import SignUpModal from "./drawerModel";
+import ContactModal from "../components/modals/ContactModal";
 
 interface DashboardViewState {
   showSignUpModal: boolean;
@@ -50,6 +51,7 @@ interface DashboardViewState {
   currentLocations: any[];
   histroyNotifications: any[];
   showHistroyModal: boolean;
+  showContactModal: boolean;
 }
 interface DashboardViewProps {
   navigation: any;
@@ -75,6 +77,7 @@ class DashboardView extends React.Component<
       cuurentNotifications: [],
       histroyNotifications: [],
       currentLocations: [],
+      showContactModal: false,
     };
     console.log("Created");
   }
@@ -159,6 +162,7 @@ class DashboardView extends React.Component<
               // console.log('data in dashboard : ' + res.data);
               this.setState({
                 notifData: res.data,
+                dutyCall: "ON DUTY",
               });
               console.log("done");
             })
@@ -247,23 +251,6 @@ class DashboardView extends React.Component<
     }
   };
 
-  // displayModal(show: boolean) {
-  //   this.setState({ isVisible: show });
-  // }
-
-  // displayTopModal(show: boolean) {
-  //   this.setState({ isVisibleTop: show });
-  // }
-
-  // toggleModal = () => {
-  //   this.setState({ isVisibleTop: !this.state.isVisibleTop });
-  // };
-
-  // toggleShortModal = () => {
-  //   console.log("okkkkkkkkkkkkkkk");
-  //   this.setState({ isVisible: false });
-  // };
-
   render() {
     if (this.state.loading) {
       return (
@@ -317,7 +304,7 @@ class DashboardView extends React.Component<
                   {this.state.longitude}
                 </Text>
               </View>
-              
+
               <View style={styles.mapStyle1}>
                 <Map
                   latitude={this.state.latitude as number}
@@ -344,12 +331,26 @@ class DashboardView extends React.Component<
           </View>
 
           <View style={styles.bottomView}>
-            <View>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({
+                  showContactModal: !this.state.showContactModal,
+                });
+              }}
+            >
               <Image
                 source={require("../assets/2-01.png")}
                 style={styles.iconStyle}
               />
-            </View>
+            </TouchableOpacity>
+            {this.state.showContactModal && (
+              <ContactModal
+                isVisible={this.state.showContactModal}
+                closeModal={() => {
+                  this.setState({ showContactModal: false });
+                }}
+              />
+            )}
             {this.state.showHistroyModal && (
               <Modal
                 animationType={"slide"}
@@ -438,12 +439,26 @@ class DashboardView extends React.Component<
           </View>
 
           <View style={styles.bottomView}>
-            <View>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({
+                  showContactModal: !this.state.showContactModal,
+                });
+              }}
+            >
               <Image
                 source={require("../assets/2-01.png")}
                 style={styles.iconStyle}
               />
-            </View>
+            </TouchableOpacity>
+            {this.state.showContactModal && (
+              <ContactModal
+                isVisible={this.state.showContactModal}
+                closeModal={() => {
+                  this.setState({ showContactModal: false });
+                }}
+              />
+            )}
             {this.state.showHistroyModal && (
               <Modal
                 animationType={"slide"}
@@ -538,7 +553,7 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
     flexDirection: "column",
     alignContent: "center",
-    justifyContent: 'center',
+    justifyContent: "center",
     minHeight: "70%",
     marginTop: "10%",
     backgroundColor: "white",
@@ -633,14 +648,14 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
-    borderTopLeftRadius: 18,
-    borderTopRightRadius: 18,
+    borderTopLeftRadius: 100,
+    borderTopRightRadius: 100,
     elevation: 6,
   },
   inputStyle: {
     backgroundColor: "#feffff",
     borderRadius: 12,
-    width: "100%",
+    width: "90%",
     padding: 5,
     elevation: 4,
   },
@@ -648,9 +663,9 @@ const styles = StyleSheet.create({
     // flexDirection: "column",
     // alignContent: "",
     minHeight: "50%",
-    height: '100%',
+    height: "100%",
     marginTop: -80,
-    marginBottom:50,
+    marginBottom: 50,
     width: "100%",
     borderTopLeftRadius: 18,
     borderTopRightRadius: 18,
