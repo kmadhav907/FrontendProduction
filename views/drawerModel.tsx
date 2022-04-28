@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+const profileImage = require("../assets/user.png");
 const DrawerModal = (props: any) => {
   return (
     <Modal
@@ -25,7 +25,15 @@ const DrawerModal = (props: any) => {
     >
       <SafeAreaView style={styles.container}>
         <View style={styles.profilePicSection}>
-          <Text>Hello</Text>
+          <View style={styles.profileImage}>
+            <Image
+              source={profileImage}
+              style={{
+                width: 80,
+                height: 80,
+              }}
+            />
+          </View>
         </View>
         <View
           style={{
@@ -69,6 +77,16 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "15%",
     marginTop: "10%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  profileImage: {
+    height: 100,
+    width: 100,
+    borderRadius: 100,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonContainerStyle: {
     alignItems: "flex-end",

@@ -455,15 +455,16 @@ class DashboardView extends React.Component<
                 onRequestClose={() => {
                   this.setState({ showHistroyModal: false });
                 }}
+                onDismiss={() => {
+                  this.setState({ showHistroyModal: false });
+                }}
               >
-                <View>
-                  <HistoryModal
-                    toggle={() => this.setState({ showHistroyModal: false })}
-                    navigation={this.props.navigation}
-                    currentNotifications={this.state.cuurentNotifications}
-                    histroyNotifications={this.state.histroyNotifications}
-                  />
-                </View>
+                <HistoryModal
+                  toggle={() => this.setState({ showHistroyModal: false })}
+                  navigation={this.props.navigation}
+                  currentNotifications={this.state.cuurentNotifications}
+                  histroyNotifications={this.state.histroyNotifications}
+                />
               </Modal>
             )}
             <TouchableOpacity

@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   Image,
+  Pressable,
 } from "react-native";
 
 interface HistoryModalState {}
@@ -44,7 +45,9 @@ class HistoryModal extends React.Component<
     return (
       <ScrollView
         style={styles.innerContainer}
-        contentContainerStyle={{ paddingBottom: `${Math.round(HEIGHT / 50)}%` }}
+        contentContainerStyle={{
+          paddingBottom: "8%",
+        }}
       >
         <View
           style={{
@@ -53,12 +56,15 @@ class HistoryModal extends React.Component<
             top: 10,
           }}
         >
-          <TouchableOpacity onPressIn={this.props.toggle}>
+          <Pressable
+            onPressIn={this.props.toggle}
+            style={styles.drawerIconStyle}
+          >
             <Image
               source={require("../../assets/error-white.png")}
-              style={styles.drawerIconStyle}
+              style={{ width: "100%", height: "100%" }}
             />
-          </TouchableOpacity>
+          </Pressable>
         </View>
         <Text style={styles.headerTitle}>Current:</Text>
         {this.props.currentNotifications.length !== 0 ? (
@@ -99,12 +105,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "black",
     flex: 1,
-    height: HEIGHT,
     width: "100%",
   },
   innerContainer: {
     marginTop: "40%",
-    height: "100%",
+    height: HEIGHT / 1.75,
+
     width: "80%",
     marginLeft: "10%",
     borderRadius: 12,
@@ -112,6 +118,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderWidth: 2,
     padding: 6,
+    marginBottom: "10%",
   },
 
   activityIndicator: {
