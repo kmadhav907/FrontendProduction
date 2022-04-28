@@ -43,55 +43,65 @@ class HistoryModal extends React.Component<
   );
   render() {
     return (
-      <ScrollView
-        style={styles.innerContainer}
-        contentContainerStyle={{
-          paddingBottom: "8%",
-        }}
-      >
-        <View
-          style={{
-            position: "absolute",
-            right: 10,
-            top: 10,
+      <TouchableOpacity onPress={this.props.toggle}>
+        <ScrollView
+          style={styles.innerContainer}
+          contentContainerStyle={{
+            paddingBottom: "8%",
           }}
         >
-          <Pressable
-            onPressIn={this.props.toggle}
-            style={styles.drawerIconStyle}
+          {/* <View
+            style={{
+              position: "absolute",
+              right: 10,
+              top: 10,
+            }}
           >
-            <Image
-              source={require("../../assets/error-white.png")}
-              style={{ width: "100%", height: "100%" }}
-            />
-          </Pressable>
-        </View>
-        <Text style={styles.headerTitle}>Current:</Text>
-        {this.props.currentNotifications.length !== 0 ? (
-          <>
-            {this.props.currentNotifications.map((item: any, index: number) =>
-              this.renderItemCurrent(item, index)
+            <Pressable
+              onPressIn={this.props.toggle}
+              style={styles.drawerIconStyle}
+            >
+              <Image
+                source={require("../../assets/error-white.png")}
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Pressable>
+          </View> */}
+          <TouchableOpacity
+            style={{ height: "100%", width: "100%" }}
+            onPress={() => {}}
+            activeOpacity={1}
+          >
+            <Text style={styles.headerTitle}>Current:</Text>
+            {this.props.currentNotifications.length !== 0 ? (
+              <>
+                {this.props.currentNotifications.map(
+                  (item: any, index: number) =>
+                    this.renderItemCurrent(item, index)
+                )}
+              </>
+            ) : (
+              <View>
+                <Text>No Data!!!</Text>
+              </View>
             )}
-          </>
-        ) : (
-          <View>
-            <Text>No Data!!!</Text>
-          </View>
-        )}
 
-        <Text style={styles.headerTitle}>History:</Text>
-        {this.props.histroyNotifications.length !== 0 ? (
-          <>
-            {this.props.histroyNotifications.map((item: any, index: number) =>
-              this.renderItemHistroy(item, index)
+            <Text style={styles.headerTitle}>History:</Text>
+            {this.props.histroyNotifications.length !== 0 ? (
+              <>
+                {this.props.histroyNotifications.map(
+                  (item: any, index: number) =>
+                    this.renderItemHistroy(item, index)
+                )}
+              </>
+            ) : (
+              <View>
+                <Text style={{ color: "white" }}>No Data!!!</Text>
+              </View>
             )}
-          </>
-        ) : (
-          <View>
-            <Text style={{ color: "white" }}>No Data!!!</Text>
-          </View>
-        )}
-      </ScrollView>
+          </TouchableOpacity>
+        </ScrollView>
+      </TouchableOpacity>
     );
   }
 }
@@ -109,7 +119,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     marginTop: "40%",
-    height: HEIGHT / 1.75,
+    height: HEIGHT / 2,
 
     width: "80%",
     marginLeft: "10%",
