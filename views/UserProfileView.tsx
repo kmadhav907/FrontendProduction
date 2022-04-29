@@ -470,7 +470,9 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                   marginRight: 5,
                 }}
                 onPress={() => {
-                  Linking.openURL("https://askmechanics.in/privacy-policy");
+                  Linking.openURL(
+                    "https://askmechanic.herokuapp.com/PrivacyPolicy"
+                  );
                 }}
               >
                 Privacy Policy
@@ -494,7 +496,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                 }}
                 onPress={() => {
                   Linking.openURL(
-                    "https://askmechanics.in/terms-and-conditions"
+                    "https://askmechanic.herokuapp.com/TermsAndConditions"
                   );
                 }}
               >
