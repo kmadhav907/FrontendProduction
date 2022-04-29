@@ -5,13 +5,12 @@ import {
   View,
   Image,
   Dimensions,
-  Touchable,
-  TouchableOpacity,
   TouchableWithoutFeedback,
+  Linking,
 } from "react-native";
 import Modal from "react-native-modal";
 import { SafeAreaView } from "react-native-safe-area-context";
-const profileImage = require("../assets/user.png");
+
 const DrawerModal = (props: any) => {
   return (
     <Modal
@@ -59,7 +58,11 @@ const DrawerModal = (props: any) => {
               </TouchableWithoutFeedback>
             </View>
             <View style={styles.tabOutBoxStyle}>
-              <TouchableWithoutFeedback onPress={() => console.log("touched")}>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  Linking.openURL("https://askmechanic.herokuapp.com/about");
+                }}
+              >
                 <Text style={styles.drawerTabStyle}>
                   <Image
                     source={require("../assets/7-01.png")}
@@ -75,11 +78,38 @@ const DrawerModal = (props: any) => {
         <View
           style={{
             paddingTop: "110%",
-            paddingLeft: "30%",
+
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <Text style={{ color: "white", textDecorationLine: "underline" }}>
+          <Text
+            style={{
+              color: "white",
+              textDecorationLine: "underline",
+              paddingTop: 5,
+            }}
+            onPress={() => {
+              Linking.openURL(
+                "https://askmechanic.herokuapp.com/PrivacyPolicy"
+              );
+            }}
+          >
             Privacy policy
+          </Text>
+          <Text
+            style={{
+              color: "white",
+              textDecorationLine: "underline",
+              paddingTop: 5,
+            }}
+            onPress={() => {
+              Linking.openURL(
+                "https://askmechanic.herokuapp.com/TermsAndConditions"
+              );
+            }}
+          >
+            Terms & Conditions
           </Text>
         </View>
       </SafeAreaView>

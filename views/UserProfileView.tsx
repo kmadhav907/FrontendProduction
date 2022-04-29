@@ -267,7 +267,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                   marginLeft: "auto",
                   marginRight: "auto",
                 }}
-                onPress={this.choosePhotoFromTheStorage}
+                // onPress={this.choosePhotoFromTheStorage}
               >
                 <Image
                   source={userProfileImage}
@@ -375,7 +375,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                   marginLeft: "auto",
                   marginRight: "auto",
                 }}
-                onPress={this.choosePhotoFromTheStorage}
+                // onPress={this.choosePhotoFromTheStorage}
               >
                 <Image
                   source={userProfileImage}
