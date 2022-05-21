@@ -74,7 +74,7 @@ function NotificationItem(this: any, props: any) {
                     const notificationId = props.item["notificationid:"];
                     await selectNotification(notificationId, fixitID, "Accept")
                       .then((response) => {
-                        console.log("Fone");
+                        console.log("Accepted");
                         console.log(response.data);
                       })
                       .catch((error) => {
@@ -94,7 +94,7 @@ function NotificationItem(this: any, props: any) {
                     const notificationId = props.item["notificationid:"];
                     await selectNotification(notificationId, fixitID, "Decline")
                       .then((response) => {
-                        console.log("Fone");
+                        console.log("Declined");
                         console.log(response);
                       })
                       .catch((error) => {
@@ -166,8 +166,8 @@ const styles = StyleSheet.create({
     marginRight: 25,
   },
   imageStyle: {
-    height: 85,
-    width: 85,
+    height: 80,
+    width: 80,
     borderRadius: 40,
   },
   custName: {
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderColor: "black",
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 5,
   },
   buttonStyle1: {
@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "black",
     fontSize: 10,
+    padding: 3,
   },
   buttonStyle2: {
     justifyContent: "center",

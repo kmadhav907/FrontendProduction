@@ -50,23 +50,6 @@ class HistoryModal extends React.Component<
             paddingBottom: "8%",
           }}
         >
-          {/* <View
-            style={{
-              position: "absolute",
-              right: 10,
-              top: 10,
-            }}
-          >
-            <Pressable
-              onPressIn={this.props.toggle}
-              style={styles.drawerIconStyle}
-            >
-              <Image
-                source={require("../../assets/error-white.png")}
-                style={{ width: "100%", height: "100%" }}
-              />
-            </Pressable>
-          </View> */}
           <TouchableOpacity
             style={{ height: "100%", width: "100%" }}
             onPress={() => {}}
@@ -82,7 +65,7 @@ class HistoryModal extends React.Component<
               </>
             ) : (
               <View>
-                <Text>No Data!!!</Text>
+                <Text style={styles.fontStyle}>No Data!!!</Text>
               </View>
             )}
 
@@ -96,7 +79,7 @@ class HistoryModal extends React.Component<
               </>
             ) : (
               <View>
-                <Text style={{ color: "white" }}>No Data!!!</Text>
+                <Text style={styles.fontStyle}>No Data!!!</Text>
               </View>
             )}
           </TouchableOpacity>
@@ -141,17 +124,32 @@ const styles = StyleSheet.create({
     color: "white",
     paddingLeft: 4,
     alignContent: "center",
+    marginBottom: 10,
   },
   cardContainer: {
-    height: 60,
-    margin: 10,
+    width: '100%',
+    height: 70,
+    marginBottom: 4,
     backgroundColor: "white",
-    borderRadius: 6,
+    borderRadius: 10,
     justifyContent: "center",
-    padding: 5,
-    borderWidth: 2,
+    padding: 7,
+    borderWidth: 1,
+    overflow: "hidden",
   },
-  cardText: {},
+  fontStyle: {
+    fontSize: 30,
+    fontWeight: "300",
+    color: 'white',
+    textAlign: 'center',
+    alignContent: "center",
+    justifyContent: 'center',
+  },
+  cardText: {
+    fontSize: 14,
+    fontWeight: '500',
+    fontStyle: "normal",
+  },
 });
 
 export default HistoryModal;
