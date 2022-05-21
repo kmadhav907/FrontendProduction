@@ -1,23 +1,47 @@
 import React from "react";
 import { SafeAreaView, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { getDirections } from "../../global/utils";
 import { mapStyles } from "./constant";
 
 interface MapState {
   isMapLoaded: boolean;
+  cordinates: any;
 }
 interface MapProps {
   latitude: number;
   longitude: number;
   selectedRegion: any;
+  navigation: any;
 }
 class Map extends React.Component<MapProps, MapState> {
   constructor(props: any) {
     super(props);
     this.state = {
       isMapLoaded: false,
+      cordinates: [],
     };
   }
+  componentDidMount = async () => {
+    console.log("In Map Component");
+    console.log(this.props.navigation);
+    if (
+      // this.props.navigation.contains("RouteMap") &&
+      this.props.selectedRegion
+    ) {
+      console.log("Inside the condition");
+      let sourceCordinates: String =
+        this.props.latitude + ", " + this.props.longitude;
+      let destinationCordinates: String =
+        this.props.selectedRegion.latitude + ", " + this.props.selectedRegion;
+      let cordinates: any = await getDirections(
+        sourceCordinates,
+        destinationCordinates
+      );
+      this.setState({ cordinates: cordinates });
+      console.log(cordinates);
+    }
+  };
   onMapLayout = () => {
     this.setState({ isMapLoaded: true });
   };
@@ -40,7 +64,7 @@ class Map extends React.Component<MapProps, MapState> {
               borderTopLeftRadius: 18,
               borderTopRightRadius: 18,
               borderRadius: 18,
-              overflow: 'hidden' 
+              overflow: "hidden",
             }}
           >
             <MapView
@@ -52,7 +76,7 @@ class Map extends React.Component<MapProps, MapState> {
                 borderTopLeftRadius: 18,
                 borderTopRightRadius: 18,
                 borderRadius: 18,
-                overflow: 'hidden' 
+                overflow: "hidden",
               }}
               customMapStyle={mapStyles}
               initialRegion={{
@@ -74,7 +98,7 @@ class Map extends React.Component<MapProps, MapState> {
                     latitude: this.props.selectedRegion.latitude,
                     longitude: this.props.selectedRegion.longitude,
                   }}
-                  pinColor="yellow"
+                  pinColor={"green"}
                 />
               )}
             </MapView>

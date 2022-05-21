@@ -6,6 +6,7 @@ import {
   ToastAndroid,
 } from "react-native";
 import Geolocation from "react-native-geolocation-service";
+import Polyline from "@mapbox/polyline";
 export const requestLocationPermission = async () => {
   const granted = PermissionsAndroid.request(
     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -63,4 +64,26 @@ export const preventBack = (navigation: any) => {
       },
     ]);
   });
+};
+export const getDirections = async (
+  startLocation: String,
+  destinationLocation: String
+) => {
+  try {
+    let resp = await fetch(
+      `https://maps.googleapis.com/maps/api/directions/json?origin=${startLocation}&destination=${destinationLocation}&key=AIzaSyBg3XiSveScZgdezEGQBPvyQ_m2EWrBTUQ`
+    );
+    let respJson = await resp.json();
+    console.log(respJson);
+    let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+    let coords = points.map((point: any, index: number) => {
+      return {
+        latitude: point[0],
+        longitude: point[1],
+      };
+    });
+    return coords;
+  } catch (error) {
+    return error;
+  }
 };

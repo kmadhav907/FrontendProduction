@@ -1,6 +1,7 @@
-import React from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
-import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
+import React from "react";
+import AsyncStorage from "@react-native-community/async-storage";
+import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import { getCurrentService } from "../apiServices/notificationServices";
 
 interface SplashViewState {
   animating: boolean;
@@ -8,7 +9,7 @@ interface SplashViewState {
 interface SplashViewProps {
   navigation: any;
 }
-const splashViewImage = require('../assets/SplashScreen.png');
+const splashViewImage = require("../assets/SplashScreen.png");
 class SplashView extends React.Component<SplashViewProps, SplashViewState> {
   constructor(props: SplashViewProps) {
     super(props);
@@ -19,13 +20,19 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
   async componentDidMount() {
     setTimeout(async () => {
       try {
-        this.setState({animating: false});
-        const userObject = await AsyncStorage.getItem('userObject');
+        this.setState({ animating: false });
+        const userObject = await AsyncStorage.getItem("userObject");
         console.log(userObject);
         if (userObject !== null) {
-          this.props.navigation.navigate('DashBoardView');
+          const fixitID = JSON.parse(userObject as string).fixitId;
+          await getCurrentService(fixitID).then((response: any) => {
+            console.log("In current service");
+            console.log(response.data);
+            this.props.navigation.navigate("DashBoardView");
+          });
+          // this.props.navigation.navigate("DashBoardView");
         } else {
-          this.props.navigation.navigate('LoginView');
+          this.props.navigation.navigate("LoginView");
         }
       } catch (error) {
         console.log(error);
@@ -37,16 +44,17 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
       <View style={styles.container}>
         <Image
           source={splashViewImage}
-          style={{width: '100%', resizeMode: 'contain', height: 170}}
+          style={{ width: "100%", resizeMode: "contain", height: 170 }}
         />
         <View
           style={{
-            width: '100%',
+            width: "100%",
             height: 20,
             margin: 20,
-          }}>
-          <Text style={{textAlign: 'center', fontSize: 16}}>By</Text>
-          <Text style={{textAlign: 'center', color: '#f9d342', fontSize: 18}}>
+          }}
+        >
+          <Text style={{ textAlign: "center", fontSize: 16 }}>By</Text>
+          <Text style={{ textAlign: "center", color: "#f9d342", fontSize: 18 }}>
             SIMPLE MECHANIAL SOLUTIONS
           </Text>
         </View>
@@ -63,12 +71,12 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "black",
   },
   activityIndicator: {
-    alignItems: 'center',
+    alignItems: "center",
     height: 80,
     margin: 15,
   },

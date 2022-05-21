@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import React, {Component} from 'react';
-import {Animated, View, StyleSheet, ScrollView} from 'react-native';
-import NotificationItem from './NotificationItem';
+import React, { Component } from "react";
+import { Animated, View, StyleSheet, ScrollView } from "react-native";
+import NotificationItem from "./NotificationItem";
 
 // const FIXED_BAR_WIDTH = 280;
 // const BAR_SPACE = 10;
@@ -9,6 +9,7 @@ import NotificationItem from './NotificationItem';
 interface NotificationProps {
   notifications: any[] | null;
   // eslint-disable-next-line prettier/prettier
+  navigation: any;
   setSelectedRegion: any;
 }
 class Notification extends Component<NotificationProps, {}> {
@@ -31,7 +32,8 @@ class Notification extends Component<NotificationProps, {}> {
             index={i}
             key={i}
             setSelectedRegion={this.props.setSelectedRegion}
-          />,
+            navigation={this.props.navigation}
+          />
         );
       });
 
@@ -43,9 +45,10 @@ class Notification extends Component<NotificationProps, {}> {
           scrollEventThrottle={10}
           pagingEnabled
           onScroll={Animated.event(
-            [{nativeEvent: {contentOffset: {x: this.animVal}}}],
-            {useNativeDriver: false},
-          )}>
+            [{ nativeEvent: { contentOffset: { x: this.animVal } } }],
+            { useNativeDriver: false }
+          )}
+        >
           {notifications}
         </ScrollView>
       </View>
@@ -57,17 +60,17 @@ const styles = StyleSheet.create({
   container: {
     marginTop: -180,
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
   track: {
-    backgroundColor: '#ccc',
-    overflow: 'hidden',
+    backgroundColor: "#ccc",
+    overflow: "hidden",
     height: 2,
   },
   bar: {
-    backgroundColor: '#5294d6',
+    backgroundColor: "#5294d6",
     height: 2,
   },
 });

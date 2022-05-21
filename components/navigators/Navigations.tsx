@@ -3,7 +3,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import CurrentAndHistory from "../../views/CurrentAndHistory";
 import DashboardView from "../../views/DashboardView";
+import ETAScreen from "../../views/ETAScreen";
 import LoginView from "../../views/LoginView";
+import MapRoutingScreen from "../../views/MapRoutingScreen";
 import SplashView from "../../views/SplashView";
 import UserProfileView from "../../views/UserProfileView";
 
@@ -39,11 +41,16 @@ const Navigators = () => {
           component={CurrentAndHistory}
         />
 
-        {/* <Stack.Screen
-          name="Notification"
-          options={{headerShown: false, gestureEnabled: false}}
-          component={Notification}
-        /> */}
+        <Stack.Screen
+          name="RouteMap"
+          options={{ headerShown: false, gestureEnabled: false }}
+          component={MapRoutingScreen}
+        />
+        <Stack.Screen
+          name="ETAScreen"
+          options={{ headerShown: false, gestureEnabled: false }}
+          component={ETAScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

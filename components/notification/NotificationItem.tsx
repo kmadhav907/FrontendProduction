@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 export const SLIDER_WIDTH = Dimensions.get("window").width;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
 
-function NotificationItem(this: any, props: any) {
+function NotificationItem(props: any) {
   const [showDialog, setShowDialog] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<
     any | undefined
@@ -72,14 +72,16 @@ function NotificationItem(this: any, props: any) {
                     const userObject = await AsyncStorage.getItem("userObject");
                     const fixitID = JSON.parse(userObject as string).fixitId;
                     const notificationId = props.item["notificationid:"];
-                    await selectNotification(notificationId, fixitID, "Accept")
-                      .then((response) => {
-                        console.log("Accepted");
-                        console.log(response.data);
-                      })
-                      .catch((error) => {
-                        console.log(error.message);
-                      });
+                    props.navigation.navigate("RouteMap");
+                    // await selectNotification(notificationId, fixitID, "Accept")
+                    //   .then((response) => {
+                    //     console.log("Accepted");
+                    //     console.log(response.data);
+                    //     props.navigation.navigate("RouteMap");
+                    //   })
+                    //   .catch((error) => {
+                    //     console.log(error.message);
+                    //   });
                   }}
                   style={styles.buttonStyle1}
                 >
