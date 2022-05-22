@@ -19,6 +19,7 @@
     "@react-navigation/native-stack": "^6.2.5",
     "@react-navigation/stack": "^6.1.1",
     "axios": "^0.25.0",
+    "meow": "^10.1.2",
     "react": "17.0.2",
     "react-native": "0.66.4",
     "react-native-confirmation-code-field": "6",

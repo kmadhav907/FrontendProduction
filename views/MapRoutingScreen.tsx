@@ -89,9 +89,7 @@ class MapRoutingScreen extends React.Component<
             this.props.navigation.navigate("ETAScreen");
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: "bold", color: "black" }}>
-            Reached
-          </Text>
+          <Text style={styles.fontText}>Reached</Text>
         </TouchableOpacity>
       </View>
     );
@@ -112,9 +110,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderColor: "#d9d50f",
-    borderWidth: 5,
+    borderWidth: 1,
     borderRadius: 10,
     elevation: 5,
+  },
+  fontText: {
+    color: "black",
+    fontSize: 20,
   },
 });
 export default MapRoutingScreen;

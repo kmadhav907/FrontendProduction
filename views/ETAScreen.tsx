@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Button, Text, TouchableOpacity, View } from "react-native";
 import { preventBack } from "../global/utils";
 
 interface ETAScreenState {}
@@ -21,7 +21,15 @@ export default class ETAScreen extends React.Component<
   render() {
     return (
       <View>
-        <Text>ETA SCreen</Text>
+        <TouchableOpacity
+          onPress={() => {
+            this.props.navigation.navigate("FeedbackScreen");
+          }}
+          activeOpacity={1}
+        >
+          <Text>OK</Text>
+        </TouchableOpacity>
+        <Text>Click Up</Text>
       </View>
     );
   }

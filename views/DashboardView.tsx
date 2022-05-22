@@ -142,6 +142,7 @@ class DashboardView extends React.Component<
           this.setState({
             username: userName,
           });
+          console.log("User name is : " + this.state.username);
           console.log("no Error in save loc");
         } else {
           errorMessage("Please check your connection");
