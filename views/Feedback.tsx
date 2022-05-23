@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import AsyncStorage from "@react-native-community/async-storage";
+import { CommonActions } from "@react-navigation/native";
+import React from "react";
 
 import {
   SafeAreaView,
@@ -7,29 +9,66 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
+import { Appbar } from "react-native-paper";
 
-const FeedbackScreen = () => {
-  const [defaultRating, setDefaultRating] = useState(2);
-  const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
-  const starImageFilled =
-    "https://raw.githubusercontent.com/AboutReact/sampleresource/master/star_filled.png";
-  const starImageCorner =
-    "https://raw.githubusercontent.com/AboutReact/sampleresource/master/star_corner.png";
-  const CustomRatingBar = () => {
+const starImageFilled =
+  "https://raw.githubusercontent.com/AboutReact/sampleresource/master/star_filled.png";
+const starImageCorner =
+  "https://raw.githubusercontent.com/AboutReact/sampleresource/master/star_corner.png";
+
+// const [defaultRating, setDefaultRating] = useState(2);
+// const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
+interface Props {
+  navigation: any;
+}
+interface State {
+  defaultRating: number;
+  maxRating: number[];
+  loading: boolean;
+}
+
+class FeedbackScreen extends React.Component<Props, State> {
+  proceedToSplashScreen = () => {
+    AsyncStorage.removeItem("dosId", () => {
+      console.log("Item removed");
+    });
+    this.props.navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [{ name: "SplashView" }],
+      })
+    );
+  };
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      defaultRating: 2,
+      maxRating: [1, 2, 3, 4, 5],
+      loading: true,
+    };
+    (() => {
+      setTimeout(() => {
+        this.setState({ loading: false });
+      }, 500);
+    })();
+  }
+
+  CustomRatingBar = () => {
     return (
       <View style={styles.customRatingBarStyle}>
-        {maxRating.map((item, key) => {
+        {this.state.maxRating.map((item, key) => {
           return (
             <TouchableOpacity
               activeOpacity={0.7}
               key={item}
-              onPress={() => setDefaultRating(item)}
+              onPress={() => this.setState({ defaultRating: item })}
             >
               <Image
                 style={styles.starImageStyle}
                 source={
-                  item <= defaultRating
+                  item <= this.state.defaultRating
                     ? { uri: starImageFilled }
                     : { uri: starImageCorner }
                 }
@@ -40,43 +79,76 @@ const FeedbackScreen = () => {
       </View>
     );
   };
+  render() {
+    if (this.state.loading === true) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator
+            animating={this.state.loading}
+            color="blue"
+            size="large"
+          />
+        </View>
+      );
+    }
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.titleText}>How was your experience with us</Text>
+          <Text style={styles.textStyle}>Please Rate Us</Text>
+          <this.CustomRatingBar />
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <Text style={styles.textStyle}>How was your experience with us</Text>
-        <Text style={styles.textStyleSmall}>Please Rate Us</Text>
-        <CustomRatingBar />
-
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles.buttonStyle}
-          onPress={() => alert(defaultRating)}
-        >
-          <Text style={styles.buttonTextStyle}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
-};
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.buttonStyle}
+            onPress={this.proceedToSplashScreen}
+          >
+            <Text style={styles.buttonTextStyle}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-    padding: 10,
+    backgroundColor: "#f9d342",
     justifyContent: "center",
     textAlign: "center",
+    height: "100%",
+    width: "100%",
+  },
+  sectionContainer: {
+    flex: 1,
+    flexDirection: "column",
+    alignContent: "center",
+    paddingTop: "30%",
+    marginTop: "30%",
+    backgroundColor: "white",
+    width: "100%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    elevation: 6,
   },
   titleText: {
-    padding: 8,
-    fontSize: 16,
+    padding: 4,
+    fontSize: 22,
     textAlign: "center",
     fontWeight: "bold",
+    color: "black",
   },
   textStyle: {
     textAlign: "center",
-    fontSize: 23,
+    fontSize: 18,
     color: "#000",
     marginTop: 15,
   },
@@ -88,13 +160,17 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     justifyContent: "center",
+    alignItems: "center",
     flexDirection: "row",
     marginTop: 30,
-    padding: 15,
-    backgroundColor: "#8ad24e",
+    backgroundColor: "#f9d342",
+    margin: 16,
+    height: 50,
   },
   buttonTextStyle: {
-    color: "#fff",
+    color: "black",
+    fontSize: 18,
+    fontWeight: "bold",
     textAlign: "center",
   },
   customRatingBarStyle: {

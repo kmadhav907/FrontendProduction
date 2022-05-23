@@ -17,6 +17,7 @@ import { getCurrentService } from "../apiServices/notificationServices";
 interface MapRoutingState {
   latitude: number | undefined;
   longitude: number | undefined;
+  currentService: any;
 }
 interface MapRoutingProps {
   navigation: any;
@@ -32,6 +33,7 @@ class MapRoutingScreen extends React.Component<
     this.state = {
       latitude: undefined,
       longitude: undefined,
+      currentService: {},
     };
   }
   async componentDidMount() {
@@ -64,14 +66,22 @@ class MapRoutingScreen extends React.Component<
         const userObject = await AsyncStorage.getItem("userObject");
         const fixitID = JSON.parse(userObject as string).fixitId;
         await getCurrentService(fixitID).then((response: any) => {
-          console.log("In Current Serive");
-          console.log(response.data);
+          console.log("In Current Serive in Map Routing Screen");
+          if (response.data[0]) {
+            console.log(response.data[0]);
+            this.setState({ currentService: response.data[0] });
+            let dosId = response.data[0].DosId;
+            console.log(dosId);
+            AsyncStorage.setItem("dosId", dosId).then(() => {
+              console.log("data is stored");
+            });
+          }
         });
       }
     } catch (err) {
       console.log(err);
     }
-    preventBack(this.props.navigation);
+    // preventBack(this.props.navigation);
   }
   render() {
     return (

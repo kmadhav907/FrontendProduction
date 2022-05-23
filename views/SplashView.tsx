@@ -25,12 +25,15 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
         console.log(userObject);
         if (userObject !== null) {
           const fixitID = JSON.parse(userObject as string).fixitId;
-          await getCurrentService(fixitID).then((response: any) => {
-            console.log("In current service");
-            console.log(response.data);
-            this.props.navigation.navigate("DashBoardView");
-          });
-          // this.props.navigation.navigate("DashBoardView");
+          //@TODO
+          // await getCurrentService(fixitID).then((response: any) => {
+          //   console.log("In current service");
+          //   if (response.data && response.data.length === 0) {
+          //     this.props.navigation.navigate("DashBoardView");
+          //   }
+          //   this.props.navigation.navigate("RouteMap");
+          // });
+          this.props.navigation.navigate("DashBoardView");
         } else {
           this.props.navigation.navigate("LoginView");
         }

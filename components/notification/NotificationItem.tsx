@@ -73,15 +73,15 @@ function NotificationItem(props: any) {
                     const fixitID = JSON.parse(userObject as string).fixitId;
                     const notificationId = props.item["notificationid:"];
                     props.navigation.navigate("RouteMap");
-                    // await selectNotification(notificationId, fixitID, "Accept")
-                    //   .then((response) => {
-                    //     console.log("Accepted");
-                    //     console.log(response.data);
-                    //     props.navigation.navigate("RouteMap");
-                    //   })
-                    //   .catch((error) => {
-                    //     console.log(error.message);
-                    //   });
+                    await selectNotification(notificationId, fixitID, "Accept")
+                      .then((response) => {
+                        console.log("Accepted");
+                        console.log(response.data);
+                        props.navigation.navigate("RouteMap");
+                      })
+                      .catch((error) => {
+                        console.log(error.message);
+                      });
                   }}
                   style={styles.buttonStyle1}
                 >

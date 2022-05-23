@@ -92,7 +92,16 @@ class DashboardView extends React.Component<
     if (userObject === null) {
       this.props.navigation.navigate("LoginView");
     }
-    preventBack(this.props.navigation);
+    const fixitID = JSON.parse(userObject as string).fixitId;
+    const userName = JSON.parse(userObject as string).userName;
+    //@TODO
+    // await getCurrentService(fixitID).then((response: any) => {
+    //   console.log("In current service via DashBoard");
+    //   if (response.data && response.data.length !== 0) {
+    //     this.props.navigation.navigate("RouteMap");
+    //   }
+    // });
+    //preventBack(this.props.navigation);
     const newUserFlag = JSON.parse(userObject as string).newUser;
     console.log(userObject);
     if (newUserFlag) {
@@ -132,8 +141,6 @@ class DashboardView extends React.Component<
       console.log(err);
     }
 
-    const fixitID = JSON.parse(userObject as string).fixitId;
-    const userName = JSON.parse(userObject as string).userName;
     await saveLocation(fixitID, this.state.latitude, this.state.longitude).then(
       (response: any) => {
         // console.log('Response from saveLoc : ' + response);
