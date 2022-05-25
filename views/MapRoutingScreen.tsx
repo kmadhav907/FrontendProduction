@@ -1,6 +1,8 @@
 import React from "react";
 import {
   Dimensions,
+  Image,
+  Modal,
   StyleSheet,
   Text,
   ToastAndroid,
@@ -13,11 +15,15 @@ import { preventBack, requestLocationPermission } from "../global/utils";
 import Geolocation from "react-native-geolocation-service";
 import AsyncStorage from "@react-native-community/async-storage";
 import { getCurrentService } from "../apiServices/notificationServices";
+import HistoryModal from "../components/modals/historyModal";
+import ContactModal from "../components/modals/ContactModal";
 
 interface MapRoutingState {
   latitude: number | undefined;
   longitude: number | undefined;
   currentService: any;
+  showHistroyModal: boolean;
+  showContactModal: boolean;
 }
 interface MapRoutingProps {
   navigation: any;
@@ -31,6 +37,8 @@ class MapRoutingScreen extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = {
+      showHistroyModal: false,
+      showContactModal: false,
       latitude: undefined,
       longitude: undefined,
       currentService: {},
@@ -101,6 +109,66 @@ class MapRoutingScreen extends React.Component<
         >
           <Text style={styles.fontText}>Reached</Text>
         </TouchableOpacity>
+        <View style={styles.bottomView}>
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({
+                showContactModal: !this.state.showContactModal,
+              });
+            }}
+          >
+            <Image
+              source={require("../assets/2-01.png")}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
+          {this.state.showContactModal && (
+            <ContactModal
+              isVisible={this.state.showContactModal}
+              closeModal={() => {
+                this.setState({ showContactModal: false });
+              }}
+            />
+          )}
+          {this.state.showHistroyModal && (
+            <Modal
+              animationType={"slide"}
+              transparent={true}
+              style={styles.modalView}
+              visible={this.state.showHistroyModal}
+              onRequestClose={() => {
+                this.setState({ showHistroyModal: false });
+              }}
+            >
+              <HistoryModal
+                toggle={() => this.setState({ showHistroyModal: false })}
+                navigation={this.props.navigation}
+                currentNotifications={this.state.cuurentNotifications}
+                histroyNotifications={this.state.histroyNotifications}
+              />
+            </Modal>
+          )}
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({ showHistroyModal: true });
+            }}
+          >
+            <Image
+              source={require("../assets/3-01.png")}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate("UserProfileView");
+            }}
+          >
+            <Image
+              source={require("../assets/4-01.png")}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -110,9 +178,30 @@ const styles = StyleSheet.create({
     height: HEIGHT,
     width: WIDTH,
   },
+  bottomView: {
+    backgroundColor: "white",
+    width: "50%",
+    height: 50,
+    position: "absolute",
+    bottom: 0,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingTop: 7,
+    elevation: 10,
+  },
+  iconStyle: {
+    width: 40,
+    height: 40,
+  },
+  modalView: {
+    margin: 0,
+    flex: 1,
+    // justifyContent: "flex-end",
+    alignItems: "center",
+  },
   reachedButton: {
     position: "absolute",
-    bottom: HEIGHT / 100,
+    bottom: HEIGHT / 14,
     left: WIDTH / 6,
     height: HEIGHT / 10,
     width: WIDTH / 3,

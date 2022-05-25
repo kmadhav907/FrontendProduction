@@ -1,6 +1,8 @@
 import React from "react";
 import {
   Button,
+  Image,
+  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -8,10 +10,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import ContactModal from "../components/modals/ContactModal";
+import HistoryModal from "../components/modals/historyModal";
 
 import { preventBack } from "../global/utils";
 
-interface ETAScreenState {}
+interface ETAScreenState {
+  showHistroyModal: boolean;
+  showContactModal: boolean;
+}
 interface ETAScreenProps {
   navigation: any;
 }
@@ -21,62 +28,127 @@ export default class ETAScreen extends React.Component<
 > {
   constructor(props: any) {
     super(props);
-    this.state = {};
+    this.state = {
+      showHistroyModal: false,
+      showContactModal: false,
+    };
   }
   async componentDidMount() {}
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.sectionContainer}>
-          <View style={styles.etaContent}>
-            <Text style={styles.etaText}>02 Hours</Text>
-            <View style={styles.etaActions}>
-              <Pressable onPress={() => {}} style={styles.etaButton}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: "black",
-                    textAlign: "center",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Change
-                </Text>
-              </Pressable>
-              <Pressable onPress={() => {}} style={styles.etaButton}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: "black",
-                    textAlign: "center",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Update
-                </Text>
-              </Pressable>
+      <>
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.sectionContainer}>
+            <View style={styles.etaContent}>
+              <Text style={styles.etaText}>02 Hours</Text>
+              <View style={styles.etaActions}>
+                <Pressable onPress={() => {}} style={styles.etaButton}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: "black",
+                      textAlign: "center",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Change
+                  </Text>
+                </Pressable>
+                <Pressable onPress={() => {}} style={styles.etaButton}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: "black",
+                      textAlign: "center",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Update
+                  </Text>
+                </Pressable>
+              </View>
             </View>
-          </View>
-          <Pressable
-            style={styles.sendBillContent}
-            onPress={() => {
-              this.props.navigation.navigate("FeedbackScreen");
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 14,
-                color: "black",
-                textAlign: "center",
-                fontWeight: "bold",
+            <Pressable
+              style={styles.sendBillContent}
+              onPress={() => {
+                this.props.navigation.navigate("FeedbackScreen");
               }}
             >
-              Send Bill
-            </Text>
-          </Pressable>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "black",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+              >
+                Send Bill
+              </Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+        <View style={styles.bottomView}>
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({
+                showContactModal: !this.state.showContactModal,
+              });
+            }}
+          >
+            <Image
+              source={require("../assets/2-01.png")}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
+          {this.state.showContactModal && (
+            <ContactModal
+              isVisible={this.state.showContactModal}
+              closeModal={() => {
+                this.setState({ showContactModal: false });
+              }}
+            />
+          )}
+          {this.state.showHistroyModal && (
+            <Modal
+              animationType={"slide"}
+              transparent={true}
+              style={styles.modalView}
+              visible={this.state.showHistroyModal}
+              onRequestClose={() => {
+                this.setState({ showHistroyModal: false });
+              }}
+            >
+              <HistoryModal
+                toggle={() => this.setState({ showHistroyModal: false })}
+                navigation={this.props.navigation}
+                currentNotifications={this.state.cuurentNotifications}
+                histroyNotifications={this.state.histroyNotifications}
+              />
+            </Modal>
+          )}
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({ showHistroyModal: true });
+            }}
+          >
+            <Image
+              source={require("../assets/3-01.png")}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate("UserProfileView");
+            }}
+          >
+            <Image
+              source={require("../assets/4-01.png")}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+      </>
     );
   }
 }
@@ -88,6 +160,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9d342",
     width: "100%",
     height: "100%",
+  },
+  bottomView: {
+    backgroundColor: "white",
+    width: "100%",
+    height: 50,
+    position: "absolute",
+    bottom: 0,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingTop: 7,
+    elevation: 10,
+  },
+  iconStyle: {
+    width: 40,
+    height: 40,
+  },
+  modalView: {
+    margin: 0,
+    flex: 1,
+    // justifyContent: "flex-end",
+    alignItems: "center",
   },
   sectionContainer: {
     flex: 1,
