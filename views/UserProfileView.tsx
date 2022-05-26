@@ -79,7 +79,9 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
       this.setState({ showEditableContent: false });
     }
     if (!newUserFlag) this.getUserDetailsForReadableContent(fixitID);
-    this.setState({ loading: false });
+    setTimeout(() => {
+      this.setState({ loading: false });
+    }, 500);
     // this.props.navigation.addListener('beforeRemove', (event: any) => {
     //   event.preventDefault();
     //   Alert.alert('Exit AskMechanics', 'Do you want to exit?', [
@@ -201,7 +203,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
           });
           console.log("Storage in profiel : " + userObject);
           AsyncStorage.setItem("userObject", newUserObject).then(() =>
-            this.props.navigation.navigate("DashBoardView")
+            this.props.navigation.goBack()
           );
         } else {
           errorMessage("Something went wrong :(");
@@ -212,7 +214,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
         errorMessage("Something went wrong :(");
       });
   };
-
+  componentWillUnMount() {}
   render() {
     if (this.state.loading) {
       return (
@@ -315,7 +317,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
               <TouchableOpacity
                 style={styles.buttonStyle}
                 onPress={() => {
-                  this.props.navigation.navigate("DashBoardView");
+                  this.props.navigation.goBack();
                 }}
               >
                 <Text style={styles.buttonTextStyle}>Go Back</Text>

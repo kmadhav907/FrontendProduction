@@ -23,13 +23,15 @@ interface MapRoutingState {
   longitude: number | undefined;
   currentService: any;
   showHistroyModal: boolean;
+  curentNotifications: any;
+  histroyNotifications: any;
   showContactModal: boolean;
 }
 interface MapRoutingProps {
   navigation: any;
 }
-const HEIGHT = Dimensions.get("window").height;
-const WIDTH = Dimensions.get("window").height;
+const HEIGHT = Dimensions.get("screen").height;
+const WIDTH = Dimensions.get("screen").width;
 class MapRoutingScreen extends React.Component<
   MapRoutingProps,
   MapRoutingState
@@ -42,6 +44,8 @@ class MapRoutingScreen extends React.Component<
       latitude: undefined,
       longitude: undefined,
       currentService: {},
+      curentNotifications: [],
+      histroyNotifications: [],
     };
   }
   async componentDidMount() {
@@ -94,12 +98,14 @@ class MapRoutingScreen extends React.Component<
   render() {
     return (
       <View style={styles.mapView}>
-        <Map
-          latitude={this.state.latitude as number}
-          longitude={this.state.longitude as number}
-          selectedRegion={{ latitude: 14.2004, longitude: 74.7922 }}
-          navigation={this.props.navigation}
-        ></Map>
+        <View style={styles.mapContainer}>
+          <Map
+            latitude={this.state.latitude as number}
+            longitude={this.state.longitude as number}
+            selectedRegion={{ latitude: 14.2004, longitude: 74.7922 }}
+            navigation={this.props.navigation}
+          ></Map>
+        </View>
 
         <TouchableOpacity
           style={styles.reachedButton}
@@ -143,7 +149,7 @@ class MapRoutingScreen extends React.Component<
               <HistoryModal
                 toggle={() => this.setState({ showHistroyModal: false })}
                 navigation={this.props.navigation}
-                currentNotifications={this.state.cuurentNotifications}
+                currentNotifications={this.state.curentNotifications}
                 histroyNotifications={this.state.histroyNotifications}
               />
             </Modal>
@@ -175,19 +181,22 @@ class MapRoutingScreen extends React.Component<
 }
 const styles = StyleSheet.create({
   mapView: {
-    height: HEIGHT,
+    flex: 1,
+  },
+  mapContainer: {
+    height: HEIGHT - 40,
     width: WIDTH,
   },
   bottomView: {
     backgroundColor: "white",
-    width: "50%",
-    height: 50,
+    width: WIDTH,
+    height: 40,
     position: "absolute",
-    bottom: 0,
     flexDirection: "row",
-    justifyContent: "space-around",
-    paddingTop: 7,
-    elevation: 10,
+    justifyContent: "space-evenly",
+    bottom: 0,
+    elevation: 100,
+    marginBottom: 10,
   },
   iconStyle: {
     width: 40,
@@ -201,9 +210,9 @@ const styles = StyleSheet.create({
   },
   reachedButton: {
     position: "absolute",
-    bottom: HEIGHT / 14,
-    left: WIDTH / 6,
-    height: HEIGHT / 10,
+    bottom: HEIGHT / 8,
+    right: WIDTH / 10,
+    height: HEIGHT / 15,
     width: WIDTH / 3,
     backgroundColor: "#ebd705",
     justifyContent: "center",

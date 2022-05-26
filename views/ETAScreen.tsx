@@ -17,7 +17,9 @@ import { preventBack } from "../global/utils";
 
 interface ETAScreenState {
   showHistroyModal: boolean;
+  curentNotifications: any;
   showContactModal: boolean;
+  histroyNotifications: any;
 }
 interface ETAScreenProps {
   navigation: any;
@@ -31,6 +33,8 @@ export default class ETAScreen extends React.Component<
     this.state = {
       showHistroyModal: false,
       showContactModal: false,
+      curentNotifications: [],
+      histroyNotifications: [],
     };
   }
   async componentDidMount() {}
@@ -122,7 +126,7 @@ export default class ETAScreen extends React.Component<
               <HistoryModal
                 toggle={() => this.setState({ showHistroyModal: false })}
                 navigation={this.props.navigation}
-                currentNotifications={this.state.cuurentNotifications}
+                currentNotifications={this.state.curentNotifications}
                 histroyNotifications={this.state.histroyNotifications}
               />
             </Modal>
