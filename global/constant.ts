@@ -1,6 +1,6 @@
-export const serviceProviders = [
-  {label: 'Bike', value: 'Bike'},
-  {label: 'Water Wash & Spa', value: 'WaterwashAndSpa'},
-  {label: 'Towing', value: 'Towing'},
-  {label: 'Accessories', value: 'Accessories'},
+export const serviceProviders: any[] = [
+  { value: "Bike", label: "Bike" },
+  { value: "WaterWash&Spa", label: "WaterwashAndSpa" },
+  { value: "Towing", label: "Towing" },
+  { value: "Accessories", label: "Accessories" },
 ];

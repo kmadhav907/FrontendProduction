@@ -1,10 +1,7 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import React from "react";
 import {
-  Alert,
-  BackHandler,
   Image,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,6 +10,7 @@ import {
   View,
   Linking,
   ActivityIndicator,
+  LogBox,
 } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import CheckBox from "@react-native-community/checkbox";
@@ -22,11 +20,10 @@ import {
   uploadProfilePic,
 } from "../apiServices/userProfileApi";
 import { errorMessage } from "../global/utils";
-
-import { serviceProviders } from "../global/constant";
-import DropDownPicker from "react-native-dropdown-picker";
+import SelectMultiple from "react-native-select-multiple";
 import "./drawerModel";
 import SignUpModal from "./drawerModel";
+import { serviceProviders } from "../global/constant";
 
 interface UserProfileProps {
   navigation: any;
@@ -38,7 +35,7 @@ interface UserProfileState {
   userName: string;
   userAddress: string;
   userExperience: string;
-  userServiceProviderType: any;
+  userServiceProviderType: any[] | null;
   dropDownOpen: boolean;
   userPhoneNumber: string;
   showSignUpModal: boolean;
@@ -59,17 +56,17 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
       showSignUpModal: false,
       userAddress: "",
       userName: "",
-      userServiceProviderType: undefined,
+      userServiceProviderType: null,
       dropDownOpen: false,
       userPhoneNumber: "",
       termsAndCondition: true,
       showEditableContent: true,
       loading: false,
     };
-    this.setServiceProviderType = this.setServiceProviderType.bind(this);
   }
   async componentDidMount() {
     this.setState({ loading: true });
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
     const userObject = await AsyncStorage.getItem("userObject");
     const phoneNumber = JSON.parse(userObject as string).userPhoneNumber;
     const fixitID = JSON.parse(userObject as string).fixitId;
@@ -79,9 +76,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
       this.setState({ showEditableContent: false });
     }
     if (!newUserFlag) this.getUserDetailsForReadableContent(fixitID);
-    setTimeout(() => {
-      this.setState({ loading: false });
-    }, 500);
+
     // this.props.navigation.addListener('beforeRemove', (event: any) => {
     //   event.preventDefault();
     //   Alert.alert('Exit AskMechanics', 'Do you want to exit?', [
@@ -97,18 +92,25 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
   getUserDetailsForReadableContent = (fixitId: string) => {
     getUserDetails(fixitId).then((response: any) => {
       const userDetails = response.data;
+      console.log(userDetails["Mr.Fixit Specialization"].length);
+      const userServices = userDetails["Mr.Fixit Specialization"];
+      let services: any = [];
+      userServices.forEach((service: string) => {
+        let serviceObj = { value: service, label: service };
+        services.push(serviceObj);
+      });
+      console.log(services);
       this.setState({
         userEmail: userDetails["Mr.Fixit Email"],
         userAddress: userDetails["Mr.Fixit Worskshop Adress"],
         userExperience: userDetails["Mr.Fixit Experience"],
         userName: userDetails["Mr.FixitName"],
-        userServiceProviderType:
-          userDetails["Mr.Fixit Specialization"] &&
-          userDetails["Mr.Fixit Specialization"][0],
+        userServiceProviderType: services,
       });
     });
+    this.setState({ loading: false });
   };
-  choosePhotoFromTheStorage() {
+  choosePhotoFromTheStorage = () => {
     var options: any = {
       title: "Select Image",
       customButtons: [
@@ -142,7 +144,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
           errorMessage("Please select an image below 3MB");
           return;
         }
-        formData.append("imageFile", asset);
+        formData.append("formData", asset);
         const userObject = await AsyncStorage.getItem("userObject");
         const fixitID = JSON.parse(userObject as string).fixitId;
         console.log(formData);
@@ -155,14 +157,10 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
           });
       }
     });
-  }
-  setServiceProviderType = (callback: any) => {
-    this.setState((state) => ({
-      userServiceProviderType: callback(state.userServiceProviderType),
-    }));
-    console.log(this.state.userServiceProviderType);
   };
+
   handleSubmitProfile = async () => {
+    console.log(this.state.userServiceProviderType);
     if (
       !(
         this.state.userName &&
@@ -182,6 +180,13 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     let userObject = await AsyncStorage.getItem("userObject");
     const fixitId = JSON.parse(userObject as string).fixitId;
     const userType = JSON.parse(userObject as string).userType;
+    const modifiedServiceProviders = this.state.userServiceProviderType!.map(
+      ({ label, value }) => {
+        return label;
+      }
+    );
+
+    this.setState({ userServiceProviderType: modifiedServiceProviders });
     editProfile(
       this.state.userEmail,
       this.state.userExperience,
@@ -214,7 +219,10 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
         errorMessage("Something went wrong :(");
       });
   };
-  componentWillUnMount() {}
+  onSelectedItemsChange = (selectedItems: any) => {
+    console.log(selectedItems);
+    this.setState({ userServiceProviderType: selectedItems });
+  };
   render() {
     if (this.state.loading) {
       return (
@@ -252,7 +260,10 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
           <ScrollView
             style={styles.sectionStyle}
             nestedScrollEnabled={true}
-            contentContainerStyle={{ justifyContent: "center" }}
+            contentContainerStyle={{
+              justifyContent: "center",
+              paddingBottom: 10,
+            }}
           >
             <View style={styles.profilePicSection}>
               {/* <Image
@@ -269,7 +280,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                   marginLeft: "auto",
                   marginRight: "auto",
                 }}
-                // onPress={this.choosePhotoFromTheStorage}
+                onPress={this.choosePhotoFromTheStorage}
               >
                 <Image
                   source={userProfileImage}
@@ -283,11 +294,51 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                 {this.state.userName || "Not Set"}
               </Text>
             </View>
-            <View style={styles.inputContainer}>
+            <View
+              style={[
+                {
+                  height:
+                    this.state.userServiceProviderType !== null
+                      ? this.state.userServiceProviderType!.length * 25
+                      : 1,
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                },
+              ]}
+            >
               <Text style={styles.readAbleTitle}>User Type:</Text>
-              <Text style={styles.fieldTextStyle}>
-                {this.state.userServiceProviderType || "Not Set"}
-              </Text>
+              <View
+                style={[
+                  {
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                  },
+                ]}
+              >
+                {(this.state.userServiceProviderType &&
+                  this.state.userServiceProviderType.map(
+                    (item: any, index: number) => (
+                      <View
+                        style={{
+                          margin: 2,
+                          flexDirection: "column",
+                        }}
+                        key={index}
+                      >
+                        <Text
+                          style={{
+                            color: "black",
+                            fontSize: 16,
+                          }}
+                        >
+                          {item.value}
+                        </Text>
+                      </View>
+                    )
+                  )) || <Text>Not Set</Text>}
+              </View>
             </View>
             <View style={styles.inputContainer}>
               <Text style={[styles.readAbleTitle]}>Phone Number:</Text>
@@ -418,22 +469,6 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                 value={this.state.userExperience}
               />
             </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputTitle}>Service Category:</Text>
-              <DropDownPicker
-                open={this.state.dropDownOpen}
-                value={this.state.userServiceProviderType}
-                items={serviceProviders}
-                zIndex={1000}
-                zIndexInverse={3000}
-                setOpen={() => {
-                  this.setState({ dropDownOpen: !this.state.dropDownOpen });
-                }}
-                setValue={this.setServiceProviderType}
-                style={styles.inputStyle}
-                itemSeparator={true}
-              />
-            </View>
 
             <View style={styles.inputContainer}>
               <Text style={styles.inputTitle}>Workshop Address:</Text>
@@ -447,6 +482,26 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                 value={this.state.userAddress}
               />
             </View>
+            <View style={{ height: 20 }}></View>
+            <Text
+              style={[
+                styles.inputTitle,
+                { flexShrink: 1, height: 50, width: 200 },
+              ]}
+            >
+              Service Category:
+            </Text>
+            <View style={{ flexDirection: "row" }}>
+              <SelectMultiple
+                items={serviceProviders}
+                selectedItems={
+                  this.state.userServiceProviderType &&
+                  this.state.userServiceProviderType
+                }
+                onSelectionsChange={this.onSelectedItemsChange}
+              />
+            </View>
+
             <View style={styles.inputContainer}>
               <Text
                 style={[
@@ -607,6 +662,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "grey",
     fontSize: 14,
+    borderRadius: 4,
+    paddingLeft: 5,
+  },
+  inputStyleForMultipleSelect: {
+    marginLeft: 10,
+    width: "60%",
+    height: "100%",
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "grey",
     borderRadius: 4,
     paddingLeft: 5,
   },
