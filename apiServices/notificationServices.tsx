@@ -71,3 +71,12 @@ export const getHistroy = async (fixitId: string) => {
   console.log(response);
   return response;
 };
+export const getETATimings = (dosId: string) => {
+  const response = axios.get(`${ENDPOINT}/getEstimatedHour/${dosId}`, {
+    headers: {
+      accept: "*/*",
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+};

@@ -1,4 +1,5 @@
 import React from "react";
+import AsyncStorage from "@react-native-community/async-storage";
 import {
   Button,
   Image,
@@ -10,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { getETATimings } from "../apiServices/notificationServices";
 import ContactModal from "../components/modals/ContactModal";
 import HistoryModal from "../components/modals/historyModal";
 
@@ -20,6 +22,7 @@ interface ETAScreenState {
   curentNotifications: any;
   showContactModal: boolean;
   histroyNotifications: any;
+  etaTimings: string;
 }
 interface ETAScreenProps {
   navigation: any;
@@ -35,9 +38,17 @@ export default class ETAScreen extends React.Component<
       showContactModal: false,
       curentNotifications: [],
       histroyNotifications: [],
+      etaTimings: "",
     };
   }
-  async componentDidMount() {}
+  async componentDidMount() {
+    const documentId = await AsyncStorage.getItem("dosId");
+    console.log("DOCID in ETA" + documentId!.toString());
+    const dosId = documentId!.toString();
+    getETATimings(dosId).then((response: any) => {
+      console.log(response);
+    });
+  }
 
   render() {
     return (
