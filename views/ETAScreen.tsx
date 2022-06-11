@@ -2,7 +2,9 @@ import React from "react";
 import AsyncStorage from "@react-native-community/async-storage";
 import {
   Button,
+  Dimensions,
   Image,
+  KeyboardAvoidingViewBase,
   Modal,
   Pressable,
   ScrollView,
@@ -88,6 +90,7 @@ export default class ETAScreen extends React.Component<
                 </Pressable>
               </View>
             </View>
+            <View style={{ height: height / 50, width: width }}></View>
             <View>
               <View style={styles.billingBox}>
                 <Text style={styles.billingTextStyle}>BILLING</Text>
@@ -97,66 +100,80 @@ export default class ETAScreen extends React.Component<
             <View style={styles.centyerStyle}>
               <View style={styles.inputPlaceStyle}>
                 <View style={styles.input0}>
-                  <TextInput style={styles.billingInputStyle} placeholder="1" />
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    value="1"
+                    editable={false}
+                    selectTextOnFocus={false}
+                  />
                 </View>
                 <View style={styles.input1}>
                   <TextInput
                     style={styles.billingInputStyle}
-                    placeholder="smthg"
+                    placeholder="Add your details"
                   />
                 </View>
                 <View style={styles.input2}>
                   <TextInput
                     style={styles.billingInputStyle}
-                    placeholder="20000"
+                    placeholder="Enter the price"
+                    keyboardType="numeric"
                   />
                 </View>
               </View>
               <View style={styles.inputPlaceStyle}>
                 <View style={styles.input0}>
-                  <TextInput style={styles.billingInputStyle} placeholder="2" />
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    value="2"
+                    editable={false}
+                    selectTextOnFocus={false}
+                  />
                 </View>
                 <View style={styles.input1}>
                   <TextInput
                     style={styles.billingInputStyle}
-                    placeholder="smthgagain"
+                    placeholder="Add your details"
                   />
                 </View>
                 <View style={styles.input2}>
                   <TextInput
                     style={styles.billingInputStyle}
-                    placeholder="43645"
+                    placeholder="Enter the price"
+                    keyboardType="numeric"
                   />
                 </View>
               </View>
               <View style={styles.inputPlaceStyle}>
                 <View style={styles.input0}>
-                  <TextInput style={styles.billingInputStyle} placeholder="3" />
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    value="3"
+                    editable={false}
+                    selectTextOnFocus={false}
+                  />
                 </View>
                 <View style={styles.input1}>
                   <TextInput
                     style={styles.billingInputStyle}
-                    placeholder="smthgagain2"
+                    placeholder="Add your details"
                   />
                 </View>
                 <View style={styles.input2}>
                   <TextInput
                     style={styles.billingInputStyle}
-                    placeholder="200"
+                    placeholder="Enter the price"
+                    keyboardType="numeric"
                   />
                 </View>
               </View>
 
               <View style={styles.inputTotalstyle}>
-                <View>
-                  <Text style={styles.billingInputStyle}>TOTAL</Text>
-                </View>
-                <View>
-                  <TextInput
-                    style={styles.inputTotalInputTextStyle}
-                    placeholder="200"
-                  />
-                </View>
+                <Text
+                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                >
+                  TOTAL
+                </Text>
               </View>
             </View>
 
@@ -235,6 +252,8 @@ export default class ETAScreen extends React.Component<
     );
   }
 }
+const height = Dimensions.get("window").height;
+const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -260,50 +279,44 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   inputTotalstyle: {
-    width: "85%",
+    width: width - 40,
     marginTop: 20,
     backgroundColor: "black",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
     borderRadius: 15,
-  },
-  inputTotalTextStyle: {
-    color: "white",
-    fontSize: 20,
+    height: height / 18,
   },
   inputTotalInputTextStyle: {
-    color: "white",
+    color: "black",
     fontSize: 20,
     width: "100%",
-    backgroundColor: "lightgrey",
+    backgroundColor: "#BCBCBC",
   },
   input0: {
     width: "10%",
     marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
-    paddingLeft: 10,
-    backgroundColor: "lightgrey",
+    backgroundColor: "#BCBCBC",
     marginRight: 10,
-    borderTopLeftRadius: 15,
-    borderBottomLeftRadius: 15,
   },
   billingInputStyle: {
-    color: "white",
     fontSize: 15,
     fontWeight: "bold",
+    color: "black",
   },
   input1: {
     width: "40%",
     marginTop: 20,
-    backgroundColor: "lightgrey",
+    backgroundColor: "#BCBCBC",
     marginRight: 10,
   },
   input2: {
     width: "30%",
     marginTop: 20,
-    backgroundColor: "lightgrey",
+    backgroundColor: "#BCBCBC",
   },
   iconStyle: {
     width: 40,
@@ -387,14 +400,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   etaButton: {
-    width: "30%",
-    height: "50%",
+    width: width / 3,
+    height: height / 18,
     backgroundColor: "#f9d342",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
     elevation: 1,
     margin: 5,
+    marginTop: 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
