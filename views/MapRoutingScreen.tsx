@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     bottom: 0,
     elevation: 100,
-    marginBottom: 10,
+    marginTop: 5,
   },
   iconStyle: {
     width: 40,

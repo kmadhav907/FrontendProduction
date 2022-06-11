@@ -8,13 +8,14 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { getETATimings } from "../apiServices/notificationServices";
 import ContactModal from "../components/modals/ContactModal";
 import HistoryModal from "../components/modals/historyModal";
-
+import SignUpModal from "./drawerModel";
 import { preventBack } from "../global/utils";
 
 interface ETAScreenState {
@@ -23,6 +24,7 @@ interface ETAScreenState {
   showContactModal: boolean;
   histroyNotifications: any;
   etaTimings: string;
+  showSignUpModal: boolean;
 }
 interface ETAScreenProps {
   navigation: any;
@@ -34,6 +36,7 @@ export default class ETAScreen extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = {
+      showSignUpModal: false,
       showHistroyModal: false,
       showContactModal: false,
       curentNotifications: [],
@@ -43,66 +46,131 @@ export default class ETAScreen extends React.Component<
   }
   async componentDidMount() {
     const documentId = await AsyncStorage.getItem("dosId");
-    console.log("DOCID in ETA" + documentId!.toString());
-    const dosId = documentId!.toString();
-    getETATimings(dosId).then((response: any) => {
-      console.log(response);
-    });
+    console.log("DOCID in ETA" + documentId);
+    // const dosId = documentId!.toString();
+    // getETATimings(dosId).then((response: any) => {
+    //   console.log(response);
+    // });
   }
 
   render() {
     return (
       <>
         <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.drawerStyle}>
+            <SignUpModal
+              display={this.state.showSignUpModal}
+              toggle={() => {
+                this.setState({ showSignUpModal: false });
+              }}
+            />
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({ showSignUpModal: true });
+              }}
+            >
+              <Image
+                source={require("../assets/menu-black.png")}
+                style={styles.drawerIconStyle}
+              />
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.sectionContainer}>
             <View style={styles.etaContent}>
               <Text style={styles.etaText}>02 Hours</Text>
               <View style={styles.etaActions}>
                 <Pressable onPress={() => {}} style={styles.etaButton}>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: "black",
-                      textAlign: "center",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Change
-                  </Text>
+                  <Text style={styles.buttonTextstyle}>Change</Text>
                 </Pressable>
                 <Pressable onPress={() => {}} style={styles.etaButton}>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: "black",
-                      textAlign: "center",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Update
-                  </Text>
+                  <Text style={styles.buttonTextstyle}>Update</Text>
                 </Pressable>
               </View>
             </View>
+            <View>
+              <View style={styles.billingBox}>
+                <Text style={styles.billingTextStyle}>BILLING</Text>
+              </View>
+            </View>
+
+            <View style={styles.centyerStyle}>
+              <View style={styles.inputPlaceStyle}>
+                <View style={styles.input0}>
+                  <TextInput style={styles.billingInputStyle} placeholder="1" />
+                </View>
+                <View style={styles.input1}>
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    placeholder="smthg"
+                  />
+                </View>
+                <View style={styles.input2}>
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    placeholder="20000"
+                  />
+                </View>
+              </View>
+              <View style={styles.inputPlaceStyle}>
+                <View style={styles.input0}>
+                  <TextInput style={styles.billingInputStyle} placeholder="2" />
+                </View>
+                <View style={styles.input1}>
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    placeholder="smthgagain"
+                  />
+                </View>
+                <View style={styles.input2}>
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    placeholder="43645"
+                  />
+                </View>
+              </View>
+              <View style={styles.inputPlaceStyle}>
+                <View style={styles.input0}>
+                  <TextInput style={styles.billingInputStyle} placeholder="3" />
+                </View>
+                <View style={styles.input1}>
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    placeholder="smthgagain2"
+                  />
+                </View>
+                <View style={styles.input2}>
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    placeholder="200"
+                  />
+                </View>
+              </View>
+
+              <View style={styles.inputTotalstyle}>
+                <View>
+                  <Text style={styles.billingInputStyle}>TOTAL</Text>
+                </View>
+                <View>
+                  <TextInput
+                    style={styles.inputTotalInputTextStyle}
+                    placeholder="200"
+                  />
+                </View>
+              </View>
+            </View>
+
             <Pressable
               style={styles.sendBillContent}
               onPress={() => {
                 this.props.navigation.navigate("FeedbackScreen");
               }}
             >
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: "black",
-                  textAlign: "center",
-                  fontWeight: "bold",
-                }}
-              >
-                Send Bill
-              </Text>
+              <Text style={styles.buttonTextstyle}>Send Bill</Text>
             </Pressable>
           </View>
         </ScrollView>
+
         <View style={styles.bottomView}>
           <TouchableOpacity
             onPress={() => {
@@ -176,6 +244,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+  inputPlaceStyle: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
   bottomView: {
     backgroundColor: "white",
     width: "100%",
@@ -187,6 +259,52 @@ const styles = StyleSheet.create({
     paddingTop: 7,
     elevation: 10,
   },
+  inputTotalstyle: {
+    width: "85%",
+    marginTop: 20,
+    backgroundColor: "black",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    borderRadius: 15,
+  },
+  inputTotalTextStyle: {
+    color: "white",
+    fontSize: 20,
+  },
+  inputTotalInputTextStyle: {
+    color: "white",
+    fontSize: 20,
+    width: "100%",
+    backgroundColor: "lightgrey",
+  },
+  input0: {
+    width: "10%",
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingLeft: 10,
+    backgroundColor: "lightgrey",
+    marginRight: 10,
+    borderTopLeftRadius: 15,
+    borderBottomLeftRadius: 15,
+  },
+  billingInputStyle: {
+    color: "white",
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  input1: {
+    width: "40%",
+    marginTop: 20,
+    backgroundColor: "lightgrey",
+    marginRight: 10,
+  },
+  input2: {
+    width: "30%",
+    marginTop: 20,
+    backgroundColor: "lightgrey",
+  },
   iconStyle: {
     width: 40,
     height: 40,
@@ -197,12 +315,44 @@ const styles = StyleSheet.create({
     // justifyContent: "flex-end",
     alignItems: "center",
   },
+  drawerIconStyle: {
+    width: 60,
+    height: 60,
+  },
+  drawerStyle: {
+    width: "100%",
+    justifyContent: "flex-start",
+    marginTop: 10,
+  },
+
+  buttonTextstyle: {
+    fontSize: 14,
+    color: "black",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  centyerStyle: {
+    alignItems: "center",
+  },
+  billingBox: {
+    width: "100%",
+    backgroundColor: "#f9d342",
+    padding: 10,
+    marginTop: 20,
+  },
+  billingTextStyle: {
+    fontSize: 20,
+    color: "black",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+
   sectionContainer: {
     flex: 1,
     flexDirection: "column",
     alignContent: "center",
     minHeight: "70%",
-    marginTop: "30%",
+    marginTop: "25%",
     backgroundColor: "white",
     width: "100%",
     shadowColor: "#000",
@@ -235,7 +385,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
   },
   etaButton: {
     width: "30%",
@@ -254,9 +403,9 @@ const styles = StyleSheet.create({
   },
   sendBillContent: {
     marginTop: 30,
-    height: 50,
-    width: "60%",
-    marginLeft: "20%",
+    height: 40,
+    width: "40%",
+    marginLeft: "30%",
     backgroundColor: "#f9d342",
     justifyContent: "center",
     alignItems: "center",
