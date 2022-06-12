@@ -27,6 +27,7 @@ interface ETAScreenState {
   histroyNotifications: any;
   etaTimings: string;
   showSignUpModal: boolean;
+  ttoalSum: any;
 }
 interface ETAScreenProps {
   navigation: any;
@@ -44,6 +45,7 @@ export default class ETAScreen extends React.Component<
       curentNotifications: [],
       histroyNotifications: [],
       etaTimings: "",
+      ttoalSum: 0,
     };
   }
   async componentDidMount() {
@@ -53,6 +55,16 @@ export default class ETAScreen extends React.Component<
     // getETATimings(dosId).then((response: any) => {
     //   console.log(response);
     // });
+  }
+
+  values = [];
+
+  _handleChange(e) {
+    const { value } = e.target;
+    var sub = this.state.ttoalSum + parseInt(value);
+    this.setState({
+      ttoalSum: sub,
+    });
   }
 
   render() {
@@ -118,6 +130,7 @@ export default class ETAScreen extends React.Component<
                     style={styles.billingInputStyle}
                     placeholder="Enter the price"
                     keyboardType="numeric"
+                    // onChangeText={this._handleChange}
                   />
                 </View>
               </View>
@@ -141,6 +154,7 @@ export default class ETAScreen extends React.Component<
                     style={styles.billingInputStyle}
                     placeholder="Enter the price"
                     keyboardType="numeric"
+                    // onChangeText={this._handleChange}
                   />
                 </View>
               </View>
@@ -164,6 +178,7 @@ export default class ETAScreen extends React.Component<
                     style={styles.billingInputStyle}
                     placeholder="Enter the price"
                     keyboardType="numeric"
+                    // onChangeText={this._handleChange}
                   />
                 </View>
               </View>
