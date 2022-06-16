@@ -29,7 +29,7 @@ function NotificationItem(props: any) {
   };
 
   return (
-    <View key={props.index}>
+    <View key={props.index} style={{ width: width, height: height / 4 }}>
       <View style={styles.towText}>
         <Text style={styles.towTextText}>TOWING REQUEST</Text>
       </View>
@@ -133,7 +133,8 @@ function NotificationItem(props: any) {
     </View>
   );
 }
-
+const height = Dimensions.get("window").height;
+const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   iconStyle: {
     width: 20,
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: "#f9d342",
     height: "100%",
-    width: "90%",
+    width: "100%",
     alignItems: "center",
     elevation: 7,
     borderRadius: 15,
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   custNameName: {
-    fontSize: 20,
+    fontSize: height / 60,
     fontFamily: "Metropolis",
     fontWeight: "bold",
     color: "black",
@@ -200,7 +201,7 @@ const styles = StyleSheet.create({
     marginLeft: 60,
   },
   towTextText: {
-    fontSize: 20,
+    fontSize: height / 70,
     fontFamily: "Metropolis",
     fontWeight: "bold",
     color: "black",
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "black",
-    fontSize: 10,
+
     padding: 3,
   },
   buttonStyle2: {
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: "Mertropolis",
     fontWeight: "bold",
-    fontSize: 15,
+    fontSize: height / 60,
   },
   buttonTextStyle2: {
     color: "black",

@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   Modal,
@@ -26,6 +27,8 @@ interface MapRoutingState {
   curentNotifications: any;
   histroyNotifications: any;
   showContactModal: boolean;
+  selectedRegion: any;
+  loading: boolean;
 }
 interface MapRoutingProps {
   navigation: any;
@@ -46,10 +49,13 @@ class MapRoutingScreen extends React.Component<
       currentService: {},
       curentNotifications: [],
       histroyNotifications: [],
+      selectedRegion: {},
+      loading: false,
     };
   }
   async componentDidMount() {
     try {
+      this.setState({ loading: true });
       const permissionStatus = await requestLocationPermission();
       if (permissionStatus === true) {
         Geolocation.getCurrentPosition(
@@ -79,10 +85,19 @@ class MapRoutingScreen extends React.Component<
         const fixitID = JSON.parse(userObject as string).fixitId;
         await getCurrentService(fixitID).then((response: any) => {
           console.log("In Current Serive in Map Routing Screen");
-          if (response.data[0]) {
-            console.log(response.data[0]);
-            this.setState({ currentService: response.data[0] });
-            let dosId = response.data[0].DosId;
+          if (response.data.length !== 0) {
+            const service = response.data.pop();
+            console.log(service);
+            const userLocation = {
+              latitude: Number(service["UserLocation"].latitude),
+              longitude: Number(service["UserLocation"].longitude),
+            };
+            console.log(userLocation);
+            this.setState({
+              currentService: service,
+              selectedRegion: userLocation,
+            });
+            let dosId = service.DosId;
             console.log(dosId);
             AsyncStorage.setItem("dosId", dosId).then(() => {
               console.log("data is stored");
@@ -93,16 +108,30 @@ class MapRoutingScreen extends React.Component<
     } catch (err) {
       console.log(err);
     }
+    this.setState({ loading: false });
     // preventBack(this.props.navigation);
   }
   render() {
+    if (this.state.loading === true) {
+      return (
+        <ActivityIndicator
+          animating={this.state.loading}
+          color="yellow"
+          size="large"
+          style={styles.activityIndicator}
+        />
+      );
+    }
     return (
       <View style={styles.mapView}>
         <View style={styles.mapContainer}>
           <Map
             latitude={this.state.latitude as number}
             longitude={this.state.longitude as number}
-            selectedRegion={{ latitude: 14.2004, longitude: 74.7922 }}
+            selectedRegion={{
+              latitude: this.state.selectedRegion?.latitude,
+              longitude: this.state.selectedRegion?.longitude,
+            }}
             navigation={this.props.navigation}
           ></Map>
         </View>
@@ -225,6 +254,11 @@ const styles = StyleSheet.create({
   fontText: {
     color: "black",
     fontSize: 20,
+  },
+  activityIndicator: {
+    alignItems: "center",
+    height: 80,
+    margin: 15,
   },
 });
 export default MapRoutingScreen;

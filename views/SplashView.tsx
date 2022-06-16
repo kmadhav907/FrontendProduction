@@ -52,7 +52,6 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
         <View
           style={{
             width: "100%",
-            height: 20,
             margin: 20,
           }}
         >

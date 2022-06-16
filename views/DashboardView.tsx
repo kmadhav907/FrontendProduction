@@ -249,8 +249,8 @@ class DashboardView extends React.Component<
       const fixitId = JSON.parse(userObject as string).fixitId;
       getCurrentService(fixitId)
         .then((response: any) => {
-          console.log("In Current Service : ");
-          console.log(response.data);
+          // console.log("In Current Service : ");
+          // console.log(response.data);
           this.setState({ cuurentNotifications: response.data });
           // let locations:any =[];
           // currNotification.forEach((item:any, index:number)=> {
@@ -259,7 +259,7 @@ class DashboardView extends React.Component<
           // })
           getHistroy(fixitId)
             .then((response: any) => {
-              console.log(response.data);
+              // console.log(response.data);
               this.setState({ histroyNotifications: response.data });
             })
             .catch((error) => {
@@ -662,7 +662,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     minHeight: "50%",
     marginTop: "10%",
-    backgroundColor: "white",
+
     width: "100%",
     shadowColor: "#000",
     shadowOffset: {

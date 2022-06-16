@@ -27,7 +27,13 @@ interface ETAScreenState {
   histroyNotifications: any;
   etaTimings: string;
   showSignUpModal: boolean;
-  ttoalSum: any;
+  detailsBox1: string;
+  detailsBox2: string;
+  detailsBox3: string;
+  priceBox1: number;
+  priceBox2: number;
+  priceBox3: number;
+  labourChargeBox: number;
 }
 interface ETAScreenProps {
   navigation: any;
@@ -45,32 +51,35 @@ export default class ETAScreen extends React.Component<
       curentNotifications: [],
       histroyNotifications: [],
       etaTimings: "",
-      ttoalSum: 0,
+      detailsBox1: "",
+      detailsBox2: "",
+      detailsBox3: "",
+      priceBox1: 0,
+      priceBox2: 0,
+      priceBox3: 0,
+      labourChargeBox: 0,
     };
   }
   async componentDidMount() {
     const documentId = await AsyncStorage.getItem("dosId");
     console.log("DOCID in ETA" + documentId);
-    // const dosId = documentId!.toString();
-    // getETATimings(dosId).then((response: any) => {
-    //   console.log(response);
-    // });
-  }
-
-  values = [];
-
-  _handleChange(e) {
-    const { value } = e.target;
-    var sub = this.state.ttoalSum + parseInt(value);
-    this.setState({
-      ttoalSum: sub,
+    const dosId = documentId!.toString();
+    getETATimings(dosId).then((response: any) => {
+      console.log(response.data);
     });
   }
-
+  calculateTotal = () => {
+    const sum =
+      this.state.priceBox1 +
+      this.state.priceBox2 +
+      this.state.priceBox3 +
+      this.state.labourChargeBox;
+    return sum + (sum * 5) / 100;
+  };
   render() {
     return (
       <>
-        <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.container}>
           <View style={styles.drawerStyle}>
             <SignUpModal
               display={this.state.showSignUpModal}
@@ -90,7 +99,7 @@ export default class ETAScreen extends React.Component<
             </TouchableOpacity>
           </View>
 
-          <View style={styles.sectionContainer}>
+          <ScrollView style={styles.sectionContainer}>
             <View style={styles.etaContent}>
               <Text style={styles.etaText}>02 Hours</Text>
               <View style={styles.etaActions}>
@@ -123,6 +132,9 @@ export default class ETAScreen extends React.Component<
                   <TextInput
                     style={styles.billingInputStyle}
                     placeholder="Add your details"
+                    onChangeText={(text: string) => {
+                      this.setState({ detailsBox1: text });
+                    }}
                   />
                 </View>
                 <View style={styles.input2}>
@@ -130,7 +142,11 @@ export default class ETAScreen extends React.Component<
                     style={styles.billingInputStyle}
                     placeholder="Enter the price"
                     keyboardType="numeric"
-                    // onChangeText={this._handleChange}
+                    onChangeText={(text: string) => {
+                      this.setState({
+                        priceBox1: Number(text.replace(/[^0-9]/g, "")),
+                      });
+                    }}
                   />
                 </View>
               </View>
@@ -147,6 +163,9 @@ export default class ETAScreen extends React.Component<
                   <TextInput
                     style={styles.billingInputStyle}
                     placeholder="Add your details"
+                    onChangeText={(text: string) => {
+                      this.setState({ detailsBox2: text });
+                    }}
                   />
                 </View>
                 <View style={styles.input2}>
@@ -154,7 +173,11 @@ export default class ETAScreen extends React.Component<
                     style={styles.billingInputStyle}
                     placeholder="Enter the price"
                     keyboardType="numeric"
-                    // onChangeText={this._handleChange}
+                    onChangeText={(text: string) => {
+                      this.setState({
+                        priceBox2: Number(text.replace(/[^0-9]/g, "")),
+                      });
+                    }}
                   />
                 </View>
               </View>
@@ -171,6 +194,9 @@ export default class ETAScreen extends React.Component<
                   <TextInput
                     style={styles.billingInputStyle}
                     placeholder="Add your details"
+                    onChangeText={(text: string) => {
+                      this.setState({ detailsBox3: text });
+                    }}
                   />
                 </View>
                 <View style={styles.input2}>
@@ -178,7 +204,52 @@ export default class ETAScreen extends React.Component<
                     style={styles.billingInputStyle}
                     placeholder="Enter the price"
                     keyboardType="numeric"
+                    onChangeText={(text: string) => {
+                      this.setState({
+                        priceBox3: Number(text.replace(/[^0-9]/g, "")),
+                      });
+                    }}
+                  />
+                </View>
+              </View>
+              <View style={styles.inputPlaceStyle}>
+                <View style={styles.input0}>
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    value="4"
+                    editable={false}
+                    selectTextOnFocus={false}
+                  />
+                </View>
+                <View style={styles.input1}>
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    // placeholder="Add your details"
+                    value={"Labour Charges"}
+                    editable={false}
+                    selectTextOnFocus={false}
+                  />
+                  <Text
+                    style={{
+                      fontSize: height / 85,
+                      color: "black",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Platform Charges 5%
+                  </Text>
+                </View>
+                <View style={styles.input2}>
+                  <TextInput
+                    style={styles.billingInputStyle}
+                    placeholder="Enter the price"
+                    keyboardType="numeric"
                     // onChangeText={this._handleChange}
+                    onChangeText={(text: string) => {
+                      this.setState({
+                        labourChargeBox: Number(text.replace(/[^0-9]/g, "")),
+                      });
+                    }}
                   />
                 </View>
               </View>
@@ -187,21 +258,20 @@ export default class ETAScreen extends React.Component<
                 <Text
                   style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
                 >
-                  TOTAL
+                  {"Total:  Rs" + this.calculateTotal()}
                 </Text>
               </View>
+              <Pressable
+                style={styles.sendBillContent}
+                onPress={() => {
+                  this.props.navigation.navigate("FeedbackScreen");
+                }}
+              >
+                <Text style={styles.buttonTextstyle}>Send Bill</Text>
+              </Pressable>
             </View>
-
-            <Pressable
-              style={styles.sendBillContent}
-              onPress={() => {
-                this.props.navigation.navigate("FeedbackScreen");
-              }}
-            >
-              <Text style={styles.buttonTextstyle}>Send Bill</Text>
-            </Pressable>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
 
         <View style={styles.bottomView}>
           <TouchableOpacity
@@ -295,7 +365,7 @@ const styles = StyleSheet.create({
   },
   inputTotalstyle: {
     width: width - 40,
-    marginTop: 20,
+    marginTop: height / 15,
     backgroundColor: "black",
     flexDirection: "row",
     alignItems: "center",
@@ -316,9 +386,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#BCBCBC",
     marginRight: 10,
+    height: height / 20,
   },
   billingInputStyle: {
-    fontSize: 15,
+    fontSize: height / 70,
     fontWeight: "bold",
     color: "black",
   },
@@ -327,11 +398,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: "#BCBCBC",
     marginRight: 10,
+    height: height / 20,
   },
   input2: {
     width: "30%",
     marginTop: 20,
     backgroundColor: "#BCBCBC",
+    height: height / 20,
   },
   iconStyle: {
     width: 40,
@@ -348,9 +421,10 @@ const styles = StyleSheet.create({
     height: 60,
   },
   drawerStyle: {
-    width: "100%",
     justifyContent: "flex-start",
-    marginTop: 10,
+    position: "absolute",
+    top: 10,
+    left: 10,
   },
 
   buttonTextstyle: {
@@ -379,7 +453,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     alignContent: "center",
-    minHeight: "70%",
+    minHeight: height - height * 0.15,
     marginTop: "25%",
     backgroundColor: "white",
     width: "100%",
@@ -393,6 +467,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 18,
     borderTopRightRadius: 18,
     elevation: 6,
+    paddingBottom: 50,
   },
   etaContent: {
     marginTop: 25,

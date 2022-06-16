@@ -1,6 +1,12 @@
 /* eslint-disable prettier/prettier */
 import React, { Component } from "react";
-import { Animated, View, StyleSheet, ScrollView } from "react-native";
+import {
+  Animated,
+  View,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+} from "react-native";
 import NotificationItem from "./NotificationItem";
 
 // const FIXED_BAR_WIDTH = 280;
@@ -55,14 +61,16 @@ class Notification extends Component<NotificationProps, {}> {
     );
   }
 }
-
+const height = Dimensions.get("window").height;
+const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     marginTop: -180,
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    width: "100%",
+    width: width,
+    height: height / 5,
   },
   track: {
     backgroundColor: "#ccc",

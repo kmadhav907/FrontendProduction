@@ -50,8 +50,8 @@ class CurrentAndHistory extends React.Component<
       const fixitId = JSON.parse(userObject as string).fixitId;
       getCurrentService(fixitId)
         .then((response: any) => {
-          console.log("In Current Service");
-          console.log(response.data);
+          // console.log("In Current Service");
+          // console.log(response.data);
           this.setState({ currentNotifications: response.data });
           getHistroy(fixitId)
             .then((response: any) => {
