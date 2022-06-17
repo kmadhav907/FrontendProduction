@@ -33,6 +33,7 @@ interface ETAScreenState {
   priceBox1: number;
   priceBox2: number;
   priceBox3: number;
+  totalSum: number;
   labourChargeBox: number;
 }
 interface ETAScreenProps {
@@ -58,8 +59,10 @@ export default class ETAScreen extends React.Component<
       priceBox2: 0,
       priceBox3: 0,
       labourChargeBox: 0,
+      totalSum: 0,
     };
   }
+
   async componentDidMount() {
     const documentId = await AsyncStorage.getItem("dosId");
     console.log("DOCID in ETA" + documentId);
@@ -74,6 +77,9 @@ export default class ETAScreen extends React.Component<
       this.state.priceBox2 +
       this.state.priceBox3 +
       this.state.labourChargeBox;
+    this.setState({
+      totalSum: sum + (sum * 5) / 100,
+    });
     return sum + (sum * 5) / 100;
   };
   render() {
