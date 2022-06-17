@@ -2,10 +2,9 @@ import axios from "axios";
 import { ENDPOINT } from "../global/endPoint";
 
 export const uploadProfilePic = async (imageData: any, fixitId: string) => {
-  const params = JSON.stringify(imageData);
   const response = await axios.post(
     `${ENDPOINT}/uploadfixitImage/${fixitId}`,
-    params,
+    imageData,
     {
       headers: {
         accept: "*/*",

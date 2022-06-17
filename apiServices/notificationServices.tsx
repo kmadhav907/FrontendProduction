@@ -80,3 +80,12 @@ export const getETATimings = (dosId: string) => {
   });
   return response;
 };
+export const getCustomerFeedBack = (dosId: string) => {
+  const response = axios.get(`${ENDPOINT}/feedbackReview/${dosId}`, {
+    headers: {
+      accept: "*/*",
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+};

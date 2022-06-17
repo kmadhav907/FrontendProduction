@@ -125,11 +125,11 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
       },
     };
     launchImageLibrary(options, async (response: any) => {
-      console.log("Response = ", response);
+      // console.log("Response = ", response);
       if (response.didCancel) {
         errorMessage("Pick an image");
       } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
+        // console.log("ImagePicker Error: ", response.error);
         errorMessage("Something went wrong :(");
       }
       //   (response.customButton);
@@ -144,7 +144,13 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
           errorMessage("Please select an image below 3MB");
           return;
         }
-        formData.append("formData", asset);
+        console.log("Asset is:");
+        console.log(asset);
+        formData.append("imageFile", {
+          uri: asset.uri,
+          type: asset.type,
+          name: asset.fileName,
+        });
         const userObject = await AsyncStorage.getItem("userObject");
         const fixitID = JSON.parse(userObject as string).fixitId;
         console.log(formData);
@@ -280,7 +286,8 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                   marginLeft: "auto",
                   marginRight: "auto",
                 }}
-                onPress={this.choosePhotoFromTheStorage}
+                disabled={true}
+                // onPress={this.choosePhotoFromTheStorage}
               >
                 <Image
                   source={userProfileImage}
@@ -428,7 +435,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                   marginLeft: "auto",
                   marginRight: "auto",
                 }}
-                // onPress={this.choosePhotoFromTheStorage}
+                onPress={this.choosePhotoFromTheStorage}
               >
                 <Image
                   source={userProfileImage}

@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Appbar } from "react-native-paper";
+import { getCustomerFeedBack } from "../apiServices/notificationServices";
 
 const starImageFilled =
   "https://raw.githubusercontent.com/AboutReact/sampleresource/master/star_filled.png";
@@ -27,6 +28,8 @@ interface State {
   defaultRating: number;
   maxRating: number[];
   loading: boolean;
+  customerFeedBackFlag: boolean;
+  customerFeedBack: any;
 }
 
 class FeedbackScreen extends React.Component<Props, State> {
@@ -46,15 +49,32 @@ class FeedbackScreen extends React.Component<Props, State> {
     this.state = {
       defaultRating: 2,
       maxRating: [1, 2, 3, 4, 5],
-      loading: true,
+      loading: false,
+      customerFeedBackFlag: false,
+      customerFeedBack: {},
     };
-    (() => {
-      setTimeout(() => {
-        this.setState({ loading: false });
-      }, 500);
-    })();
   }
-
+  componentDidMount = () => {
+    this.onLoadFunction();
+  };
+  onLoadFunction = async () => {
+    this.setState({ loading: true });
+    const documentId = await AsyncStorage.getItem("dosId");
+    const dosId = documentId!.toString();
+    getCustomerFeedBack(dosId).then((response: any) => {
+      if (response.data) {
+        console.log(response.data);
+        const { feedback, comment } = response.data;
+        if (feedback != null && comment != null) {
+          this.setState({
+            customerFeedBackFlag: true,
+            customerFeedBack: { feedback: feedback, comment: comment },
+          });
+        }
+      }
+    });
+    this.setState({ loading: false });
+  };
   CustomRatingBar = () => {
     return (
       <View style={styles.customRatingBarStyle}>
@@ -63,7 +83,7 @@ class FeedbackScreen extends React.Component<Props, State> {
             <TouchableOpacity
               activeOpacity={0.7}
               key={item}
-              onPress={() => this.setState({ defaultRating: item })}
+              // onPress={() => this.setState({ defaultRating: item })}
             >
               <Image
                 style={styles.starImageStyle}
@@ -80,6 +100,43 @@ class FeedbackScreen extends React.Component<Props, State> {
     );
   };
   render() {
+    if (
+      this.state.customerFeedBackFlag === false &&
+      this.state.loading !== true
+    ) {
+      return (
+        <SafeAreaView style={styles.container}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+
+              flexDirection: "row",
+              backgroundColor: "white",
+              shadowColor: "#000",
+              paddingTop: "30%",
+              marginTop: "30%",
+              width: "100%",
+
+              shadowOffset: {
+                width: 0,
+                height: 3,
+              },
+
+              shadowOpacity: 0.27,
+              shadowRadius: 4.65,
+              borderTopLeftRadius: 18,
+              borderTopRightRadius: 18,
+              elevation: 6,
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: "bold", color: "black" }}>
+              Come Back Later, Customer Has not given any feedback
+            </Text>
+          </View>
+        </SafeAreaView>
+      );
+    }
     if (this.state.loading === true) {
       return (
         <View style={styles.container}>
@@ -94,14 +151,14 @@ class FeedbackScreen extends React.Component<Props, State> {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.sectionContainer}>
-          <Text style={styles.titleText}>How was your experience with us</Text>
-          <Text style={styles.textStyle}>Please Rate Us</Text>
+          <Text style={styles.titleText}>CUSTOMER FEEDBACK</Text>
+          {/* <Text style={styles.textStyle}>Please Rate Us</Text> */}
           <this.CustomRatingBar />
 
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles.buttonStyle}
-            onPress={this.proceedToSplashScreen}
+            // onPress={this.proceedToSplashScreen}
           >
             <Text style={styles.buttonTextStyle}>Submit</Text>
           </TouchableOpacity>
