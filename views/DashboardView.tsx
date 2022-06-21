@@ -94,7 +94,12 @@ class DashboardView extends React.Component<
     }
     const currentDosId = await AsyncStorage.getItem("dosId");
     if (currentDosId !== null) {
-      this.props.navigation.navigate("RouteMap");
+      const status = JSON.parse(currentDosId).status;
+      if (status === "Reached") {
+        this.props.navigation.navigate("ETAScreen");
+      } else {
+        this.props.navigation.navigate("RouteMap");
+      }
     }
     const fixitID = JSON.parse(userObject as string).fixitId;
     const userName = JSON.parse(userObject as string).userName;

@@ -15,7 +15,10 @@ import Map from "../components/googleMap/Map";
 import { preventBack, requestLocationPermission } from "../global/utils";
 import Geolocation from "react-native-geolocation-service";
 import AsyncStorage from "@react-native-community/async-storage";
-import { getCurrentService } from "../apiServices/notificationServices";
+import {
+  getCurrentService,
+  setReachedStatus,
+} from "../apiServices/notificationServices";
 import HistoryModal from "../components/modals/historyModal";
 import ContactModal from "../components/modals/ContactModal";
 
@@ -92,16 +95,16 @@ class MapRoutingScreen extends React.Component<
               latitude: Number(service["UserLocation"].latitude),
               longitude: Number(service["UserLocation"].longitude),
             };
-            console.log(userLocation);
+            // console.log(userLocation);
             this.setState({
               currentService: service,
               selectedRegion: userLocation,
             });
             let dosId = service.DosId;
             console.log(dosId);
-            AsyncStorage.setItem("dosId", dosId).then(() => {
-              console.log("data is stored");
-            });
+            // AsyncStorage.setItem("dosId", dosId).then(() => {
+            //   console.log("data is stored");
+            // });
           }
         });
       }
@@ -111,6 +114,25 @@ class MapRoutingScreen extends React.Component<
     this.setState({ loading: false });
     // preventBack(this.props.navigation);
   }
+  handleETA = async () => {
+    const status = "Reached";
+    const dosId = this.state.currentService["DosId"];
+    console.log(dosId);
+    setReachedStatus(dosId, status).then((response: any) => {
+      console.log(response.data);
+      if (response.data) {
+        const dosObject = { status: status, dosId: dosId };
+        AsyncStorage.setItem("dosId", JSON.stringify(dosObject)).then(() => {
+          console.log("Data is stored");
+        });
+        this.props.navigation.navigate("ETAScreen");
+      }
+      // AsyncStorage.setItem("dosId", ).then(() => {
+      //   console.log("data is stored");
+      // });
+    });
+    // setReachedStatus(this.state.currentService)
+  };
   render() {
     if (this.state.loading === true) {
       return (
@@ -139,7 +161,8 @@ class MapRoutingScreen extends React.Component<
         <TouchableOpacity
           style={styles.reachedButton}
           onPress={() => {
-            this.props.navigation.navigate("ETAScreen");
+            this.handleETA();
+            // this.props.navigation.navigate("ETAScreen");
           }}
         >
           <Text style={styles.fontText}>Reached</Text>

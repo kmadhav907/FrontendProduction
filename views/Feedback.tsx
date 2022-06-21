@@ -10,6 +10,7 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import { Appbar } from "react-native-paper";
 import { getCustomerFeedBack } from "../apiServices/notificationServices";
@@ -55,24 +56,24 @@ class FeedbackScreen extends React.Component<Props, State> {
     };
   }
   componentDidMount = () => {
-    this.onLoadFunction();
+    // this.onLoadFunction();
   };
   onLoadFunction = async () => {
     this.setState({ loading: true });
-    const documentId = await AsyncStorage.getItem("dosId");
-    const dosId = documentId!.toString();
-    getCustomerFeedBack(dosId).then((response: any) => {
-      if (response.data) {
-        console.log(response.data);
-        const { feedback, comment } = response.data;
-        if (feedback != null && comment != null) {
-          this.setState({
-            customerFeedBackFlag: true,
-            customerFeedBack: { feedback: feedback, comment: comment },
-          });
-        }
-      }
-    });
+    // const documentId = await AsyncStorage.getItem("dosId");
+    // const dosId = documentId!.toString();
+    // getCustomerFeedBack(dosId).then((response: any) => {
+    //   if (response.data) {
+    //     console.log(response.data);
+    //     const { feedback, comment } = response.data;
+    //     if (feedback != null && comment != null) {
+    //       this.setState({
+    //         customerFeedBackFlag: true,
+    //         customerFeedBack: { feedback: feedback, comment: comment },
+    //       });
+    //     }
+    //   }
+    // });
     this.setState({ loading: false });
   };
   CustomRatingBar = () => {
@@ -109,9 +110,8 @@ class FeedbackScreen extends React.Component<Props, State> {
           <View
             style={{
               flex: 1,
-              justifyContent: "center",
-
-              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
               backgroundColor: "white",
               shadowColor: "#000",
               paddingTop: "30%",
@@ -133,6 +133,14 @@ class FeedbackScreen extends React.Component<Props, State> {
             <Text style={{ fontSize: 16, fontWeight: "bold", color: "black" }}>
               Come Back Later, Customer Has not given any feedback
             </Text>
+
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.buttonStyle}
+              onPress={this.proceedToSplashScreen}
+            >
+              <Text style={styles.buttonTextStyle}>Dashboard</Text>
+            </TouchableOpacity>
           </View>
         </SafeAreaView>
       );
@@ -158,7 +166,7 @@ class FeedbackScreen extends React.Component<Props, State> {
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles.buttonStyle}
-            // onPress={this.proceedToSplashScreen}
+            onPress={this.proceedToSplashScreen}
           >
             <Text style={styles.buttonTextStyle}>Submit</Text>
           </TouchableOpacity>
@@ -167,7 +175,8 @@ class FeedbackScreen extends React.Component<Props, State> {
     );
   }
 }
-
+const height = Dimensions.get("window").height;
+const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -222,7 +231,9 @@ const styles = StyleSheet.create({
     marginTop: 30,
     backgroundColor: "#f9d342",
     margin: 16,
-    height: 50,
+    height: height / 18,
+    padding: height / 100,
+    borderRadius: 5,
   },
   buttonTextStyle: {
     color: "black",
