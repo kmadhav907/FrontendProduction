@@ -25,6 +25,7 @@ import {
 } from "../apiServices/loginApis";
 import AsyncStorage from "@react-native-community/async-storage";
 import { MaterialDialog } from "react-native-material-dialog";
+import { CommonActions } from "@react-navigation/native";
 
 interface LoginViewState {
   stepsForLogin: number;
@@ -85,7 +86,13 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
     const userObject = await AsyncStorage.getItem("userObject");
     console.log("loginView" + userObject);
     if (userObject !== null) {
-      this.props.navigation.navigate("DashboardView");
+      // this.props.navigation.navigate("DashboardView");
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{ name: "DashboardView" }],
+        })
+      );
     }
     try {
       const permissionStatus = await requestLocationPermission();
@@ -227,9 +234,21 @@ class LoginView extends React.Component<LoginViewProps, LoginViewState> {
         const newUserFlag = response.data.newUserFlag;
         clearInterval(this.resendOTPInterval);
         if (newUserFlag === false) {
-          this.props.navigation.navigate("DashBoardView");
+          // this.props.navigation.navigate("DashBoardView");
+          this.props.navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{ name: "DashBoardView" }],
+            })
+          );
         } else {
-          this.props.navigation.navigate("UserProfileView");
+          // this.props.navigation.navigate("UserProfileView");
+          this.props.navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{ name: "UserProfileView" }],
+            })
+          );
         }
       } else {
         errorMessage("Enter a valid OTP");

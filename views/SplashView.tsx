@@ -2,6 +2,7 @@ import React from "react";
 import AsyncStorage from "@react-native-community/async-storage";
 import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 import { getCurrentService } from "../apiServices/notificationServices";
+import { CommonActions } from "@react-navigation/native";
 
 interface SplashViewState {
   animating: boolean;
@@ -33,9 +34,21 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
           //   }
           //   this.props.navigation.navigate("RouteMap");
           // });
-          this.props.navigation.navigate("DashBoardView");
+          // this.props.navigation.navigate("DashBoardView");
+          this.props.navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{ name: "DashBoardView" }],
+            })
+          );
         } else {
-          this.props.navigation.navigate("LoginView");
+          // this.props.navigation.navigate("LoginView");
+          this.props.navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{ name: "LoginView" }],
+            })
+          );
         }
       } catch (error) {
         console.log(error);

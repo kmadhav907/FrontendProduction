@@ -158,7 +158,7 @@ class FeedbackScreen extends React.Component<Props, State> {
           <TouchableOpacity
             activeOpacity={0.7}
             style={styles.buttonStyle}
-            // onPress={this.proceedToSplashScreen}
+            onPress={this.proceedToSplashScreen}
           >
             <Text style={styles.buttonTextStyle}>Submit</Text>
           </TouchableOpacity>

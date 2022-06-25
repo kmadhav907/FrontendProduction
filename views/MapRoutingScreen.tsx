@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { getCurrentService } from "../apiServices/notificationServices";
 import HistoryModal from "../components/modals/historyModal";
 import ContactModal from "../components/modals/ContactModal";
+import { CommonActions } from "@react-navigation/native";
 
 interface MapRoutingState {
   latitude: number | undefined;
@@ -139,7 +140,13 @@ class MapRoutingScreen extends React.Component<
         <TouchableOpacity
           style={styles.reachedButton}
           onPress={() => {
-            this.props.navigation.navigate("ETAScreen");
+            // this.props.navigation.navigate("ETAScreen");
+            this.props.navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{ name: "ETAScreen" }],
+              })
+            );
           }}
         >
           <Text style={styles.fontText}>Reached</Text>
@@ -195,7 +202,13 @@ class MapRoutingScreen extends React.Component<
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              this.props.navigation.navigate("UserProfileView");
+              // this.props.navigation.navigate("UserProfileView");
+              this.props.navigation.dispatch(
+                CommonActions.reset({
+                  index: 1,
+                  routes: [{ name: "UserProfileView" }],
+                })
+              );
             }}
           >
             <Image

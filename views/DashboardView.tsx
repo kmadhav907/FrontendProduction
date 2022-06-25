@@ -39,6 +39,7 @@ import HistoryModal from "../components/modals/historyModal";
 import "./drawerModel";
 import SignUpModal from "./drawerModel";
 import ContactModal from "../components/modals/ContactModal";
+import { CommonActions } from "@react-navigation/native";
 
 interface DashboardViewState {
   showSignUpModal: boolean;
@@ -90,7 +91,13 @@ class DashboardView extends React.Component<
     const userObject = await AsyncStorage.getItem("userObject");
     console.log("userobject" + userObject);
     if (userObject === null) {
-      this.props.navigation.navigate("LoginView");
+      // this.props.navigation.navigate("LoginView");
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{ name: "LoginView" }],
+        })
+      );
     }
     const currentDosId = await AsyncStorage.getItem("dosId");
     if (currentDosId !== null) {
@@ -109,7 +116,13 @@ class DashboardView extends React.Component<
     const newUserFlag = JSON.parse(userObject as string).newUser;
     console.log(userObject);
     if (newUserFlag) {
-      this.props.navigation.navigate("UserProfileView");
+      // this.props.navigation.navigate("UserProfileView");
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{ name: "UserProfileView" }],
+        })
+      );
       // this.props.navigation.navigate('Notification');
       return;
       // this.props.navigation.navigate('DashboardView');
@@ -244,7 +257,13 @@ class DashboardView extends React.Component<
   getCurrNotificationsAndHistroy = async () => {
     const userObject = await AsyncStorage.getItem("userObject");
     if (userObject === null) {
-      this.props.navigation.replace("LoginView");
+      // this.props.navigation.replace("LoginView");
+      this.props.navigation.replace(
+        CommonActions.reset({
+          index: 1,
+          routes: [{ name: "LoginView" }],
+        })
+      );
     } else {
       const fixitId = JSON.parse(userObject as string).fixitId;
       getCurrentService(fixitId)
