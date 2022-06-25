@@ -65,11 +65,11 @@ export default class ETAScreen extends React.Component<
 
   async componentDidMount() {
     const documentId = await AsyncStorage.getItem("dosId");
-    console.log("DOCID in ETA" + documentId);
-    const dosId = documentId!.toString();
-    getETATimings(dosId).then((response: any) => {
-      console.log(response.data);
-    });
+
+    // const dosId = documentId!.toString();
+    // getETATimings(dosId).then((response: any) => {
+    //   console.log(response.data);
+    // });
   }
   calculateTotal = () => {
     const sum =
@@ -77,9 +77,9 @@ export default class ETAScreen extends React.Component<
       this.state.priceBox2 +
       this.state.priceBox3 +
       this.state.labourChargeBox;
-    this.setState({
-      totalSum: sum + (sum * 5) / 100,
-    });
+    // this.setState({
+    //   totalSum: sum + (sum * 5) / 100,
+    // });
     return sum + (sum * 5) / 100;
   };
   render() {

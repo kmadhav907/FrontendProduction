@@ -137,7 +137,7 @@ export const getFixitStatus = async (fixitId: string) => {
 const characters =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-const generateString = (length) => {
+const generateString = (length: number) => {
   let result = " ";
   const charactersLength = characters.length;
   for (let i = 0; i < length; i++) {
