@@ -212,7 +212,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   buttonContainer: {
-    width: "40%",
+    width: width / 5,
+    height: height / 24,
     justifyContent: "center",
     alignItems: "center",
     borderColor: "black",
@@ -221,10 +222,10 @@ const styles = StyleSheet.create({
   },
   buttonStyle1: {
     width: "100%",
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "black",
-
     padding: 3,
   },
   buttonStyle2: {
