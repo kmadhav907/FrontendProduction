@@ -281,15 +281,15 @@ class DashboardView extends React.Component<
           //   let location = {latitude: item?.}
           //   locations.push()
           // })
-          getHistroy(fixitId)
-            .then((response: any) => {
-              // console.log(response.data);
-              this.setState({ histroyNotifications: response.data });
-            })
-            .catch((error) => {
-              console.log(error.message);
-              errorMessage("Something went wrong");
-            });
+          // getHistroy(fixitId)
+          //   .then((response: any) => {
+          //     console.log(response.data);
+          //     this.setState({ histroyNotifications: response.data });
+          //   })
+          //   .catch((error) => {
+          //     console.log(error.message);
+          //     errorMessage("Something went wrong in Histroy");
+          //   });
         })
         .catch((error) => errorMessage(error.message));
     }

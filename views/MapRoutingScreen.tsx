@@ -101,11 +101,11 @@ class MapRoutingScreen extends React.Component<
               currentService: service,
               selectedRegion: userLocation,
             });
-            let dosId = service.DosId;
+            let dosId = { reached: "NotReached", dosId: service.DosId };
             console.log(dosId);
-            // AsyncStorage.setItem("dosId", dosId).then(() => {
-            //   console.log("data is stored");
-            // });
+            AsyncStorage.setItem("dosId", JSON.stringify(dosId)).then(() => {
+              console.log("data is stored");
+            });
           }
         });
       }
@@ -117,6 +117,7 @@ class MapRoutingScreen extends React.Component<
   }
   handleETA = async () => {
     const status = "Reached";
+    await AsyncStorage.removeItem("dosId");
     const dosId = this.state.currentService["DosId"];
     console.log(dosId);
     setReachedStatus(dosId, status).then((response: any) => {

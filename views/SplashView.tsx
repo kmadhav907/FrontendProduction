@@ -34,21 +34,21 @@ class SplashView extends React.Component<SplashViewProps, SplashViewState> {
           //   }
           //   this.props.navigation.navigate("RouteMap");
           // });
-          // this.props.navigation.navigate("DashBoardView");
-          this.props.navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{ name: "DashBoardView" }],
-            })
-          );
+          this.props.navigation.navigate("DashBoardView");
+          // this.props.navigation.dispatch(
+          //   CommonActions.reset({
+          //     index: 1,
+          //     routes: [{ name: "DashBoardView" }],
+          //   })
+          // );
         } else {
-          // this.props.navigation.navigate("LoginView");
-          this.props.navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{ name: "LoginView" }],
-            })
-          );
+          this.props.navigation.navigate("LoginView");
+          // this.props.navigation.dispatch(
+          //   CommonActions.reset({
+          //     index: 1,
+          //     routes: [{ name: "LoginView" }],
+          //   })
+          // );
         }
       } catch (error) {
         console.log(error);

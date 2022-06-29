@@ -18,7 +18,9 @@ import { getETATimings } from "../apiServices/notificationServices";
 import ContactModal from "../components/modals/ContactModal";
 import HistoryModal from "../components/modals/historyModal";
 import SignUpModal from "./drawerModel";
-import { preventBack } from "../global/utils";
+import { errorMessage, preventBack } from "../global/utils";
+import { saveDayOfServiceBilling } from "../apiServices/dashboardApi";
+import { CommonActions } from "@react-navigation/native";
 
 interface ETAScreenState {
   showHistroyModal: boolean;
@@ -66,21 +68,71 @@ export default class ETAScreen extends React.Component<
   async componentDidMount() {
     const documentId = await AsyncStorage.getItem("dosId");
 
-    // const dosId = documentId!.toString();
-    // getETATimings(dosId).then((response: any) => {
-    //   console.log(response.data);
-    // });
+    const dosId: string = JSON.parse(documentId!).dosId;
+    getETATimings(dosId).then((response: any) => {
+      console.log(response.data);
+    });
   }
+  componentDidUpdate(prevpros: ETAScreenProps, prevState: ETAScreenState) {
+    if (
+      this.state.priceBox1 !== prevState.priceBox1 ||
+      this.state.priceBox2 !== prevState.priceBox2 ||
+      this.state.priceBox3 !== prevState.priceBox3 ||
+      this.state.labourChargeBox !== prevState.labourChargeBox
+    ) {
+      this.calculateTotal();
+    }
+  }
+  submitTheBill = async () => {
+    if (
+      !(
+        this.state.priceBox1 &&
+        this.state.priceBox2 &&
+        this.state.priceBox3 &&
+        this.state.labourChargeBox &&
+        this.state.detailsBox1 &&
+        this.state.detailsBox2 &&
+        this.state.detailsBox3
+      )
+    ) {
+      errorMessage("Please fill Everything");
+      return;
+    } else {
+      const dosId = await AsyncStorage.getItem("dosId");
+      const docId = JSON.parse(dosId!).dosId;
+      // saveDayOfServiceBilling(
+      //   docId,
+      //   this.state.detailsBox1,
+      //   this.state.detailsBox2,
+      //   this.state.detailsBox3,
+      //   this.state.priceBox1,
+      //   this.state.priceBox2,
+      //   this.state.priceBox3,
+      //   this.state.totalSum
+      // ).then((response: any) => {
+      //   console.log(response);
+      //   if (response.status === 200) {
+
+      // }
+      // });
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{ name: "FeedbackScreen" }],
+        })
+      );
+    }
+  };
   calculateTotal = () => {
     const sum =
       this.state.priceBox1 +
       this.state.priceBox2 +
       this.state.priceBox3 +
       this.state.labourChargeBox;
-    // this.setState({
-    //   totalSum: sum + (sum * 5) / 100,
-    // });
-    return sum + (sum * 5) / 100;
+    this.setState({
+      totalSum: sum + (sum * 5) / 100,
+    });
+    // return sum + (sum * 5) / 100;
   };
   render() {
     return (
@@ -264,14 +316,12 @@ export default class ETAScreen extends React.Component<
                 <Text
                   style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
                 >
-                  {"Total:  Rs" + this.calculateTotal()}
+                  {"Total:  Rs:" + this.state.totalSum}
                 </Text>
               </View>
               <Pressable
                 style={styles.sendBillContent}
-                onPress={() => {
-                  this.props.navigation.navigate("FeedbackScreen");
-                }}
+                onPress={this.submitTheBill}
               >
                 <Text style={styles.buttonTextstyle}>Send Bill</Text>
               </Pressable>
