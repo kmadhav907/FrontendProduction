@@ -20,13 +20,13 @@ function NotificationItem(props: any) {
   const [selectedNotification, setSelectedNotification] = useState<
     any | undefined
   >(undefined);
-  const setProblemDescription = (description: string): string => {
-    if (description.length > 15) {
-      return description.substring(0, 15) + "...";
-    } else {
-      return description;
-    }
-  };
+  // const setProblemDescription = (description: string): string => {
+  //   if (description.length > 15) {
+  //     return description.substring(0, 15) + "...";
+  //   } else {
+  //     return description;
+  //   }
+  // };
 
   return (
     <View key={props.index} style={{ width: width, height: height / 4 }}>
@@ -47,15 +47,16 @@ function NotificationItem(props: any) {
           <View style={styles.desp}>
             <View style={styles.custName}>
               <Text style={styles.custNameName}>
-                {props.item &&
-                  props.item.problemDesciption &&
-                  setProblemDescription(props.item.problemDesciption)}
+                {props.item
+
+                  && props.item["userVehicleDetail:"]?.bikename || "Not Added"}
               </Text>
               <TouchableOpacity
                 onPressIn={() => {
                   props.setSelectedRegion(props.item);
                   setSelectedNotification(props.item);
                   setShowDialog(true);
+                  console.log("this is props.item" + props.item);
                 }}
               >
                 <Image
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   custNameName: {
-    fontSize: height / 60,
+    fontSize: height / 45,
     fontFamily: "Metropolis",
     fontWeight: "bold",
     color: "black",
