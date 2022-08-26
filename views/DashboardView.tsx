@@ -50,7 +50,7 @@ interface DashboardViewState {
   isOn: boolean | false;
   dutyCall: string;
   loading: boolean;
-  notifData: Array<String>;
+  notifData: any;
   selectedRegion: { latitude: string; longitude: string } | undefined;
   cuurentNotifications: any[];
   currentLocations: any[];
@@ -199,10 +199,10 @@ class DashboardView extends React.Component<
                 "Notification data in dashboard : " + res.data[0].userLocation
               );
               this.setState({
-                notifData: res.data,
+                notifData: res.data.reverse(),
                 dutyCall: "ON DUTY",
               });
-              console.log("done");
+              console.log("done" + res.data);
             })
             .catch((err) => {
               console.log("Error in get notif = " + err.message);
