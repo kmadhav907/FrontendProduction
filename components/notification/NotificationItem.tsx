@@ -128,6 +128,9 @@ function NotificationItem(props: any) {
             <Text style={styles.textStyle}>
               Vehicle: {selectedNotification["userVehicleDetail:"]?.bikename}
             </Text>
+            <Text style={styles.textStyle}>
+              Status: {selectedNotification["userTravelStatus:"] === "TravelToMechanic" ? "Travel to Mechanic" : "Need Mechanic to come"}
+            </Text>
           </View>
         </MaterialDialog>
       )}
