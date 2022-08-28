@@ -122,11 +122,24 @@ function NotificationItem(props: any) {
           colorAccent="#000"
         >
           <View>
+
             <Text style={styles.textStyle}>
-              Problem Description: {selectedNotification.problemDesciption}
+              1.Vehicle: {selectedNotification["userVehicleDetail:"]?.bikename}
             </Text>
             <Text style={styles.textStyle}>
-              Vehicle: {selectedNotification["userVehicleDetail:"]?.bikename}
+              2.Status: {selectedNotification["userTravelStatus:"] === "TravelToMechanic" ? "Travel to Mechanic" : "Need Mechanic to come"}
+            </Text>
+            <Text style={styles.textStyle}>
+              3.Problem Description: {selectedNotification["userVehicleProblems:"]?.problemname}
+            </Text>
+            <Text style={styles.textStyle}>
+              4.Latitude: {selectedNotification["userLocation"]?.latitude}
+            </Text>
+            <Text style={styles.textStyle}>
+              5.Longitude: {selectedNotification["userLocation"]?.longitude}
+            </Text>
+            <Text style={styles.textStyle}>
+              6.Description: {selectedNotification.problemDescription}
             </Text>
           </View>
         </MaterialDialog>
