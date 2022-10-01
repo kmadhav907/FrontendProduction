@@ -19,9 +19,10 @@ import ContactModal from "../components/modals/ContactModal";
 import HistoryModal from "../components/modals/historyModal";
 import SignUpModal from "./drawerModel";
 import { errorMessage, preventBack } from "../global/utils";
-import { saveDayOfServiceBilling } from "../apiServices/dashboardApi";
+import { getAccessories, saveDayOfServiceBilling } from "../apiServices/dashboardApi";
 import { CommonActions } from "@react-navigation/native";
-
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import AccesoriesModal from 'react-native-modal/dist/modal';
 interface ETAScreenState {
   showHistroyModal: boolean;
   curentNotifications: any;
@@ -37,6 +38,9 @@ interface ETAScreenState {
   priceBox3: number;
   totalSum: number;
   labourChargeBox: number;
+  accessories: any;
+  showAccessoriesModal: boolean;
+  selectedAccessories: any;
 }
 interface ETAScreenProps {
   navigation: any;
@@ -51,8 +55,11 @@ export default class ETAScreen extends React.Component<
       showSignUpModal: false,
       showHistroyModal: false,
       showContactModal: false,
+      showAccessoriesModal: false,
       curentNotifications: [],
       histroyNotifications: [],
+      accessories: [],
+      selectedAccessories: [],
       etaTimings: "",
       detailsBox1: "",
       detailsBox2: "",
@@ -67,8 +74,13 @@ export default class ETAScreen extends React.Component<
 
   async componentDidMount() {
     const documentId = await AsyncStorage.getItem("dosId");
-
     const dosId: string = JSON.parse(documentId!).dosId;
+    getAccessories().then((response: any) => {
+      this.setState({
+        accessories: response.data
+      })
+      console.log("get accessories new", this.state.accessories);
+    });
     getETATimings(dosId).then((response: any) => {
       console.log(response.data);
     });
@@ -123,6 +135,21 @@ export default class ETAScreen extends React.Component<
       );
     }
   };
+
+  onSelectedItemsChange = (selectedItems: boolean, item: string) => {
+    let newSelectedProblems = this.state.accessories;
+    if (selectedItems === true) {
+      newSelectedProblems = newSelectedProblems.concat(item);
+      this.setState({ selectedAccessories: newSelectedProblems }, () =>
+        console.log("if" , this.state.selectedAccessories),
+      );
+    } else {
+      newSelectedProblems.splice(newSelectedProblems.indexOf(item), 1);
+      this.setState({ selectedAccessories: newSelectedProblems }, () =>
+        console.log("else" , this.state.selectedAccessories),
+      );
+    }
+  };
   calculateTotal = () => {
     const sum =
       this.state.priceBox1 +
@@ -161,10 +188,10 @@ export default class ETAScreen extends React.Component<
             <View style={styles.etaContent}>
               <Text style={styles.etaText}>02 Hours</Text>
               <View style={styles.etaActions}>
-                <Pressable onPress={() => {}} style={styles.etaButton}>
+                <Pressable onPress={() => { }} style={styles.etaButton}>
                   <Text style={styles.buttonTextstyle}>Change</Text>
                 </Pressable>
-                <Pressable onPress={() => {}} style={styles.etaButton}>
+                <Pressable onPress={() => { }} style={styles.etaButton}>
                   <Text style={styles.buttonTextstyle}>Update</Text>
                 </Pressable>
               </View>
@@ -311,13 +338,70 @@ export default class ETAScreen extends React.Component<
                   />
                 </View>
               </View>
-
+              <AccesoriesModal isVisible={this.state.showAccessoriesModal}>
+                <View style={{ backgroundColor: '#353535'}}>
+                  <Text style={{color: 'white' , alignItems: 'center' , textAlign: 'center', marginTop: 5, justifyContent: 'center', fontSize: 20,}}>Please Select Accessories</Text>
+                  <ScrollView
+                    nestedScrollEnabled={true}
+                    contentContainerStyle={{
+                      justifyContent: 'center',
+                      paddingBottom: 10,
+                    }}
+                    style={{
+                      width: width,
+                      flexDirection: 'column',
+                      marginTop: 20,
+                    }}>
+                    {this.state.accessories!.map(
+                      (item: any, index: number) => {
+                        return (
+                          <BouncyCheckbox
+                            key={index}
+                            style={{
+                              marginTop: 10,
+                              backgroundColor: '#353535',
+                              padding: 5,
+                              borderRadius: 4,
+                              width: width * 0.9,
+                              alignItems: 'center',
+                              paddingLeft: 10,
+                            }}
+                            isChecked={
+                              false
+                            }
+                            text={item.accessoriesname}
+                            fillColor="#D35C13"
+                            textStyle={{
+                              textDecorationLine: 'none',
+                              color: '#fff',
+                            }}
+                            onPress={(selected: boolean) => 
+                                this.onSelectedItemsChange(selected, item.accessoriesname)
+                            }
+                          />
+                        );
+                      },
+                    )}
+                  </ScrollView>
+                </View>
+              </AccesoriesModal>
               <View style={styles.inputTotalstyle}>
                 <Text
                   style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
                 >
                   {"Total:  Rs:" + this.state.totalSum}
                 </Text>
+                <TouchableOpacity
+                  style={styles.plusIconContainer}
+                  onPress={() => {
+                    this.setState({
+                      showAccessoriesModal: true,
+                    })
+                    console.log(this.state.showAccessoriesModal)
+                  }}
+                >
+                  <Text style={styles.plusIcon}>+</Text>
+                </TouchableOpacity>
               </View>
               <Pressable
                 style={styles.sendBillContent}
@@ -428,6 +512,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     borderRadius: 15,
     height: height / 18,
+  },
+  plusIconContainer: {
+    backgroundColor: '#f9d342',
+    width: 30,
+    position: 'absolute',
+    right: 0,
+    marginRight: 10,
+    height: height / 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 50,
+  },
+  plusIcon: {
+    fontSize: 25,
+    fontWeight: 'bold',
   },
   inputTotalInputTextStyle: {
     color: "black",
