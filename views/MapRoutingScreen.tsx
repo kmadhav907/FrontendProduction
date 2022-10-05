@@ -6,6 +6,7 @@ import {
   Modal,
   StyleSheet,
   Text,
+  TextInput,
   ToastAndroid,
   Touchable,
   TouchableOpacity,
@@ -33,6 +34,7 @@ interface MapRoutingState {
   showContactModal: boolean;
   selectedRegion: any;
   loading: boolean;
+  registrationNumber: string;
 }
 interface MapRoutingProps {
   navigation: any;
@@ -55,6 +57,7 @@ class MapRoutingScreen extends React.Component<
       histroyNotifications: [],
       selectedRegion: {},
       loading: false,
+      registrationNumber: '',
     };
   }
   async componentDidMount() {
@@ -116,16 +119,17 @@ class MapRoutingScreen extends React.Component<
     // preventBack(this.props.navigation);
   }
   handleETA = async () => {
-    const status = "Reached";
     await AsyncStorage.removeItem("dosId");
+    const registrationNo = this.state.registrationNumber;
+    if(!registrationNo){
+      console.log('Canot Redirect')
+    }
     const dosId = this.state.currentService["DosId"];
-    console.log(dosId);
-    setReachedStatus(dosId, status).then((response: any) => {
-      console.log(response.data);
+    setReachedStatus(dosId, registrationNo).then((response: any) => {
       if (response.data) {
-        const dosObject = { status: status, dosId: dosId };
+        const dosObject = { registrationNo: registrationNo, dosId: dosId };
         AsyncStorage.setItem("dosId", JSON.stringify(dosObject)).then(() => {
-          console.log("Data is stored");
+          console.log("Data is stored" , dosObject);
         });
         this.props.navigation.navigate("ETAScreen");
       }
@@ -135,6 +139,16 @@ class MapRoutingScreen extends React.Component<
     });
     // setReachedStatus(this.state.currentService)
   };
+
+  setRegistrationNumber = async(text: string) => {
+    const regex = /[a-zA-Z][a-zA-Z]\d\d[a-zA-Z]B\d\d\d\d/i;
+    const isMatchRegex = regex.test(text);
+    if(isMatchRegex){
+      this.setState({
+        registrationNumber: text
+      });
+    }
+  };  
   render() {
     if (this.state.loading === true) {
       return (
@@ -159,7 +173,15 @@ class MapRoutingScreen extends React.Component<
             navigation={this.props.navigation}
           ></Map>
         </View>
-
+        <TextInput
+          style={styles.registrationNumberInputTextField}
+          placeholder="Enter the registration number"
+          keyboardType="default"
+          // onChangeText={this._handleChange}
+          onChangeText={(text: string) => {
+           this.setRegistrationNumber(text);
+          }}
+        />
         <TouchableOpacity
           style={styles.reachedButton}
           onPress={() => {
@@ -268,6 +290,21 @@ const styles = StyleSheet.create({
     // justifyContent: "flex-end",
     alignItems: "center",
   },
+
+  registrationNumberInputTextField: {
+    position: "absolute",
+    bottom: HEIGHT / 5,
+    right: WIDTH / 18,
+    height: HEIGHT / 15,
+    width: WIDTH / 2,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 10,
+    elevation: 5,
+  },
+
   reachedButton: {
     position: "absolute",
     bottom: HEIGHT / 8,

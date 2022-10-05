@@ -382,6 +382,17 @@ export default class ETAScreen extends React.Component<
                         );
                       },
                     )}
+                    <TouchableOpacity
+                      style={styles.accessoriesDoneButton}
+                      onPress={() => {
+                        this.setState({
+                          showAccessoriesModal: false,
+                        })
+                        console.log(this.state.showAccessoriesModal)
+                      }}
+                    >
+                  <Text style={styles.plusIcon}>Done</Text>
+                </TouchableOpacity>
                   </ScrollView>
                 </View>
               </AccesoriesModal>
@@ -512,6 +523,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     borderRadius: 15,
     height: height / 18,
+  },
+  accessoriesDoneButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: width / 10,
+    padding: '2%',
+    backgroundColor: "#ebd705",
+    borderRadius: 15,
   },
   plusIconContainer: {
     backgroundColor: '#f9d342',

@@ -89,9 +89,9 @@ export const getCustomerFeedBack = (dosId: string) => {
   });
   return response;
 };
-export const setReachedStatus = (dosId: string, status: string) => {
+export const setReachedStatus = (dosId: string, registrationNo: string) => {
   const response = axios.get(
-    `${ENDPOINT}/fixitreachstatus/${dosId}?status=${status}`
+    `${ENDPOINT}/fixitreachstatus/${dosId}?registrationNo=${registrationNo}`
   );
   return response;
 };

@@ -134,6 +134,11 @@ export const getFixitStatus = async (fixitId: string) => {
   return response;
 };
 
+export const getAccessories = async () => {
+  const response = await axios.get(`${ENDPOINT}/getAccessories`);
+  return response;
+};
+
 const characters =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
