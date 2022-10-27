@@ -1,10 +1,8 @@
 import React from "react";
 import AsyncStorage from "@react-native-community/async-storage";
 import {
-  Button,
   Dimensions,
   Image,
-  KeyboardAvoidingViewBase,
   Modal,
   Pressable,
   ScrollView,
@@ -18,8 +16,8 @@ import { getETATimings } from "../apiServices/notificationServices";
 import ContactModal from "../components/modals/ContactModal";
 import HistoryModal from "../components/modals/historyModal";
 import SignUpModal from "./drawerModel";
-import { errorMessage, preventBack } from "../global/utils";
-import { getAccessories, saveDayOfServiceBilling } from "../apiServices/dashboardApi";
+import { errorMessage } from "../global/utils";
+import { getAccessories } from "../apiServices/dashboardApi";
 import { CommonActions } from "@react-navigation/native";
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import AccesoriesModal from 'react-native-modal/dist/modal';
@@ -79,7 +77,7 @@ export default class ETAScreen extends React.Component<
       this.setState({
         accessories: response.data
       })
-      console.log("get accessories new", this.state.accessories);
+      // console.log("get accessories new", this.state.accessories);
     });
     getETATimings(dosId).then((response: any) => {
       console.log(response.data);
@@ -136,18 +134,19 @@ export default class ETAScreen extends React.Component<
     }
   };
 
-  onSelectedItemsChange = (selectedItems: boolean, item: string) => {
-    let newSelectedProblems = this.state.accessories;
+  onSelectedItemsChange = (selectedItems: boolean, item: any) => {
+    let newSelectedAccessory = this.state.selectedAccessories;
+    // console.log("state accesoried"  , this.state.selectedAccessories);
+    console.log(item)
     if (selectedItems === true) {
-      newSelectedProblems = newSelectedProblems.concat(item);
-      this.setState({ selectedAccessories: newSelectedProblems }, () =>
-        console.log("if" , this.state.selectedAccessories),
-      );
+      console.log('This is in IF');
+      newSelectedAccessory = newSelectedAccessory.concat(item);
+      this.setState({ selectedAccessories: newSelectedAccessory , totalSum: this.state.totalSum + item.accessoriesprice });
     } else {
-      newSelectedProblems.splice(newSelectedProblems.indexOf(item), 1);
-      this.setState({ selectedAccessories: newSelectedProblems }, () =>
-        console.log("else" , this.state.selectedAccessories),
-      );
+      console.log('This is in ELSE');
+      newSelectedAccessory.splice(newSelectedAccessory.indexOf(item), 1);
+      
+      this.setState({ selectedAccessories: newSelectedAccessory , totalSum: this.state.totalSum - item.accessoriesprice });
     }
   };
   calculateTotal = () => {
@@ -156,11 +155,14 @@ export default class ETAScreen extends React.Component<
       this.state.priceBox2 +
       this.state.priceBox3 +
       this.state.labourChargeBox;
+
+
     this.setState({
-      totalSum: sum + (sum * 5) / 100,
+      totalSum: this.state.totalSum + (sum + (sum * 5) / 100),
     });
     // return sum + (sum * 5) / 100;
   };
+
   render() {
     return (
       <>
@@ -367,7 +369,9 @@ export default class ETAScreen extends React.Component<
                               paddingLeft: 10,
                             }}
                             isChecked={
-                              false
+                              this.state.selectedAccessories.filter((eachItem: any) => eachItem.accessoriesname === item.accessoriesname).length > 0
+                              ? true
+                              : false
                             }
                             text={item.accessoriesname}
                             fillColor="#D35C13"
@@ -376,7 +380,7 @@ export default class ETAScreen extends React.Component<
                               color: '#fff',
                             }}
                             onPress={(selected: boolean) => 
-                                this.onSelectedItemsChange(selected, item.accessoriesname)
+                                this.onSelectedItemsChange(selected, item)
                             }
                           />
                         );
@@ -385,13 +389,10 @@ export default class ETAScreen extends React.Component<
                     <TouchableOpacity
                       style={styles.accessoriesDoneButton}
                       onPress={() => {
-                        this.setState({
-                          showAccessoriesModal: false,
-                        })
-                        console.log(this.state.showAccessoriesModal)
+                        this.setState({showAccessoriesModal: false});
                       }}
                     >
-                  <Text style={styles.plusIcon}>Done</Text>
+                  <Text style={{fontSize: 20, fontWeight: '500'}}>Done</Text>
                 </TouchableOpacity>
                   </ScrollView>
                 </View>
@@ -525,10 +526,11 @@ const styles = StyleSheet.create({
     height: height / 18,
   },
   accessoriesDoneButton: {
-    position: 'absolute',
+    marginTop: 20,
+    alignSelf: 'flex-end',
     bottom: 0,
-    right: width / 10,
-    padding: '2%',
+    padding: 7,
+    right: width / 8,
     backgroundColor: "#ebd705",
     borderRadius: 15,
   },
